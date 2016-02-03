@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace MiniAbp.Runtime
 {
     public class AppPath
     {
+        public static string RootPath => AppDomain.CurrentDomain.BaseDirectory;
         public static string ConvertFormatConnection(string path)
         {
             const string pathDirectory = "DataDirectory";
@@ -27,7 +29,7 @@ namespace MiniAbp.Runtime
 
         public static string GetAppDataPath()
         {
-            string p = AppDomain.CurrentDomain.BaseDirectory;
+            string p = RootPath;
             if (p.IndexOf("\\bin\\", StringComparison.Ordinal) > 0)
             {
                 if (p.EndsWith("\\bin\\Debug\\"))
@@ -37,6 +39,31 @@ namespace MiniAbp.Runtime
             }
             if (!p.EndsWith("App_Data\\")) p = p + "App_Data\\";
             return p;
+        }
+
+        /// <summary>
+        /// Get directory, if not exist then create.
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <returns></returns>
+        public static string GetDir(string directory)
+        {
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+            return directory;
+        }
+
+        /// <summary>
+        /// Get relevant directory, if not exist then create.
+        /// </summary>
+        /// <param name="relevantDir"></param>
+        /// <returns></returns>
+        public static string GetRelativeDir(string relevantDir)
+        {
+            var dir = RootPath + relevantDir;
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
         }
     }
 }

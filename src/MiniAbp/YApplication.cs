@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Web;
 using MiniAbp.Authorization;
 using Yooya.Bpm.Framework;
@@ -34,12 +36,16 @@ namespace MiniAbp
             {
                  PrincipalHelper.SetPrincipal(Context.User);
             }
+            else
+            {
+                 PrincipalHelper.SetPrincipal(null);
+            }
             BootStraper.RegisterRoute(sender);
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)
         {
-
+            BootStraper.HandleException(Server.GetLastError().GetBaseException());
         }
 
         protected virtual void Session_End(object sender, EventArgs e)

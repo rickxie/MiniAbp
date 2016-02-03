@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\packages\Yooya.Framework\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm.Designer\packages\Yooya.Framework\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
+    <Compile Include="Authorization\UserManager.cs" />
     <Compile Include="Authorization\YAuthorizeAttribute.cs" />
     <Compile Include="DataAccess\DatabaseType.cs" />
     <Compile Include="Dependency\IocManager.cs" />
@@ -102,9 +103,8 @@
     <Compile Include="Domain\Entity\PagedList.cs" />
     <Compile Include="Domain\Entity\PageInput.cs" />
     <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\LogHelper.cs" />
     <Compile Include="Logging\LoggerLevel.cs" />
-    <Compile Include="Logging\NullLogger.cs" />
+    <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Route\RequestType.cs" />
     <Compile Include="UserFriendlyException.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />

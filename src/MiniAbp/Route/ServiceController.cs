@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using MiniAbp.DataAccess;
+using MiniAbp.Dependency;
+using MiniAbp.Logging;
 using MiniAbp.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -18,6 +20,8 @@ namespace MiniAbp.Route
     {
         private const string ExceptionOfConnectionStringIsNull = "Connection String is Empty.";
         private const string ExceptionOfOneMethodOnly = "Service Method only one Parameter can be defined.";
+
+        private ILogger Logger = IocManager.Instance.Resolve<ILogger>();
         private ServiceController()
         {
             if (string.IsNullOrWhiteSpace(DbDapper.ConnectionString))
@@ -56,6 +60,7 @@ namespace MiniAbp.Route
                         Message = ex.InnerException.Message,
                         CallStack = ex.InnerException.StackTrace
                     };
+                    Logger.Error(ex.Message, ex.InnerException);
                 }
                 else
                 {
@@ -66,6 +71,7 @@ namespace MiniAbp.Route
                         Message = except.Message,
                         CallStack = except.StackTrace
                     };
+                    Logger.Error(ex.Message, except);
                 }
             }
             finally

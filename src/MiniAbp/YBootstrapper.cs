@@ -1,4 +1,6 @@
-﻿using MiniAbp.Dependency;
+﻿using System;
+using MiniAbp.Dependency;
+using MiniAbp.Logging;
 using MiniAbp.Reflection;
 using MiniAbp.Route;
 
@@ -37,6 +39,12 @@ namespace MiniAbp
         private void InitializeDiContainer()
         {
 
+        }
+
+        public void HandleException(Exception ex)
+        {
+            var logger = IocManager.Resolve<ILogger>();
+            logger.Fatal("运行时发生未被捕获的异常。", ex);
         }
     }
 }

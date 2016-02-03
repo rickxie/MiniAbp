@@ -80,7 +80,7 @@ namespace MiniAbp.Extension
                         dataTable.Columns.Add(new DataColumn(propertyInfo.Name, propertyInfo.PropertyType));
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     dataTable.Columns.Add(new DataColumn(propertyInfo.Name, typeof(string)));
                 }

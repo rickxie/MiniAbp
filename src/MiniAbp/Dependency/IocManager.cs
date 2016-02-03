@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using MiniAbp.DataAccess;
+using MiniAbp.Logging;
 using IContainer = Autofac.IContainer;
 
 namespace MiniAbp.Dependency
@@ -44,6 +45,7 @@ namespace MiniAbp.Dependency
             IocBuilder = new ContainerBuilder();
             IocBuilder.RegisterType<SqlConnection>().Named<IDbConnection>(DatabaseType.Sql.ToString());
             IocBuilder.RegisterType<SQLiteConnection>().Named<IDbConnection>(DatabaseType.Sqlite.ToString());
+            IocBuilder.RegisterType<FileLogger>().As<ILogger>().SingleInstance();
         }
 
         public void Initialize()
