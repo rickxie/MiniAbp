@@ -21,7 +21,6 @@ namespace MiniAbp.Route
         private const string ExceptionOfConnectionStringIsNull = "Connection String is Empty.";
         private const string ExceptionOfOneMethodOnly = "Service Method only one Parameter can be defined.";
 
-        private ILogger Logger = IocManager.Instance.Resolve<ILogger>();
         private ServiceController()
         {
             if (string.IsNullOrWhiteSpace(DbDapper.ConnectionString))
@@ -38,47 +37,27 @@ namespace MiniAbp.Route
             var type = YAssembly.FindServiceType(serviceName);
             var method = YAssembly.GetMethodByType(type, methodName);
             object result = null;
-            var dbConnection = DbDapper.NewDbConnection;
-            dbConnection.Open();
-            var dbTransaction = dbConnection.BeginTransaction();
-            try
+            using (var dbConnection = DbDapper.NewDbConnection)
             {
-                var instance = YAssembly.CreateInstance(type.FullName);
-                type.GetProperty("DbConnection").SetValue(instance, dbConnection, null);
-                type.GetProperty("DbTransaction").SetValue(instance, dbTransaction, null);
-                InitializeRepositorys(type, instance, dbConnection, dbTransaction);
-                result = Invoke(method, instance, param);
-                dbTransaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException != null && ex.InnerException.GetType() == typeof (UserFriendlyException))
+                dbConnection.Open();
+                var dbTransaction = dbConnection.BeginTransaction();
+                try
+                {
+                    var instance = YAssembly.CreateInstance(type.FullName);
+                    type.GetProperty("DbConnection").SetValue(instance, dbConnection, null);
+                    type.GetProperty("DbTransaction").SetValue(instance, dbTransaction, null);
+                    InitializeRepositorys(type, instance, dbConnection, dbTransaction);
+                    result = Invoke(method, instance, param);
+                    dbTransaction.Commit();
+                }
+                catch (Exception)
                 {
                     dbTransaction.Rollback();
-                    result = new ExceptionMessage()
-                    {
-                        Message = ex.InnerException.Message,
-                        CallStack = ex.InnerException.StackTrace
-                    };
-                    Logger.Error(ex.Message, ex.InnerException);
+                    throw;
                 }
-                else
-                {
-                    var except = ex.InnerException ?? ex;
-                    dbTransaction.Rollback();
-                    result = new ExceptionMessage()
-                    {
-                        Message = except.Message,
-                        CallStack = except.StackTrace
-                    };
-                    Logger.Error(ex.Message, except);
-                }
-            }
-            finally
-            {
+
                 dbConnection.Close();
             }
-
             return result;
         }
 
