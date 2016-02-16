@@ -150,8 +150,8 @@ namespace MiniAbp.DataAccess
         {
             Func<IDbConnection,string, IEnumerable<T>> action = (dbConnection, w) =>  
             string.IsNullOrWhiteSpace(w) ? 
-            dbConnection.GetList<T>() : 
-            dbConnection.GetList<T>(w); ;
+            dbConnection.GetList<T>(null, transation) : 
+            dbConnection.GetList<T>(w, transation); ;
             IEnumerable<T> result;
 
             if (connection != null && transation != null)

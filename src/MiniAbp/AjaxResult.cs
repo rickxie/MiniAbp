@@ -9,6 +9,7 @@
 
     public class Errors
     {
+        public bool IsFriendlyError { get; set; }
         public string Message { get; set; }
         public string CallStack { get; set; }
     }
