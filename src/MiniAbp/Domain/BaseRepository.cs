@@ -21,6 +21,7 @@ namespace MiniAbp.Domain
         {
             return DbDapper.GetList<T>(where, DbConnection, DbTransaction);
         }
+       
 
         public T Get(string id)
         {

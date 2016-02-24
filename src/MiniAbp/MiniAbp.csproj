@@ -102,6 +102,7 @@
     <Compile Include="Domain\Entity\NameValue.cs" />
     <Compile Include="Domain\Entity\PagedList.cs" />
     <Compile Include="Domain\Entity\PageInput.cs" />
+    <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerLevel.cs" />
     <Compile Include="Logging\FileLogger.cs" />
