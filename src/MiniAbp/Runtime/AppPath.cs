@@ -6,6 +6,9 @@ namespace MiniAbp.Runtime
 {
     public class AppPath
     {
+        /// <summary>
+        /// example c:\\document\projects\company.project\
+        /// </summary>
         public static string RootPath => AppDomain.CurrentDomain.BaseDirectory;
         public static string ConvertFormatConnection(string path)
         {
@@ -26,7 +29,10 @@ namespace MiniAbp.Runtime
                 return path;
             }
         }
-
+        /// <summary>
+        /// example : c:\documents\users\projectA\App_Data\
+        /// </summary>
+        /// <returns></returns>
         public static string GetAppDataPath()
         {
             string p = RootPath;

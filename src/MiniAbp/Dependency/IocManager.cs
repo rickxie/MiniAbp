@@ -1,40 +1,42 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
 using System.Data.SQLite;
-using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 using MiniAbp.DataAccess;
 using MiniAbp.Logging;
-using IContainer = Autofac.IContainer;
 
 namespace MiniAbp.Dependency
 {
     public class IocManager 
     {
         public static IocManager Instance { get; private set; }
-        private IContainer IocContainer { get; set; }
-        private ContainerBuilder IocBuilder { get; set; }
+        private WindsorContainer IocContainer { get; set; }
         static IocManager()
         {
             Instance = new IocManager();
         }
 
-        public IRegistrationBuilder<TImplementer, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<TImplementer>()
+        //public IRegistrationBuilder<TImplementer, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<TImplementer>()
+        //{
+        //    return IocBuilder.RegisterType<TImplementer>();
+        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="serviceName"></param>
+        /// <param name="param">匿名类型参数</param>
+        /// <returns></returns>
+        public T ResolveNamed<T>(string serviceName, object param)
         {
-            return IocBuilder.RegisterType<TImplementer>();
+            return IocContainer.Resolve<T>(serviceName, param);
         }
 
-        public T ResolveNamed<T>(string serviceName, params Parameter[] param)
-        {
-            return IocContainer.ResolveNamed<T>(serviceName, param);
-        }
-
-        public bool IsRegistered(Type type)
-        {
-            return IocContainer.IsRegistered(type);
-        }
+        //public bool IsRegistered(Type type)
+        //{
+        //    return IocContainer.Register(type);
+        //}
         public T Resolve<T>()
         {
             return IocContainer.Resolve<T>();
@@ -42,15 +44,17 @@ namespace MiniAbp.Dependency
 
         public IocManager()
         {
-            IocBuilder = new ContainerBuilder();
-            IocBuilder.RegisterType<SqlConnection>().Named<IDbConnection>(DatabaseType.Sql.ToString());
-            IocBuilder.RegisterType<SQLiteConnection>().Named<IDbConnection>(DatabaseType.Sqlite.ToString());
-            IocBuilder.RegisterType<FileLogger>().As<ILogger>().SingleInstance();
+            IocContainer = new WindsorContainer();
+            IocContainer.Register(
+                Component.For<IDbConnection>().ImplementedBy<SqlConnection>().Named(DatabaseType.Sql.ToString()).LifeStyle.Transient);
+            IocContainer.Register(
+                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(DatabaseType.Sqlite.ToString()).LifeStyle.Transient);
+            IocContainer.Register(Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient);
         }
 
         public void Initialize()
         {
-            IocContainer = IocBuilder.Build();
+
         }
     }
 }

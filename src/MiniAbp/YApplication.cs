@@ -18,6 +18,7 @@ namespace MiniAbp
         protected virtual void Application_Start(object sender, EventArgs e)
         {
             BootStraper.Initialize();
+            BootStraper.PostInitialize();
         }
 
         protected virtual void Session_Start(object sender, EventArgs e)

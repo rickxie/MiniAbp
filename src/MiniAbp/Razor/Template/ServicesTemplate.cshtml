@@ -1,0 +1,49 @@
+﻿@using System.Reflection
+@using System.Web.Mvc
+@using MiniAbp.Extension
+@model Type[]
+@{Layout = null;}
+
+(function(mabp, angular) {
+
+    if (!angular)
+    {
+        return;
+    }
+    var module = angular.module('mabp');
+
+@foreach (Type item in Model)
+{
+    var serviceName = item.Name;
+    if (serviceName.ToUpper().EndsWith("SERVICE"))
+    {
+        serviceName = serviceName.Substring(0, serviceName.Length - 7).ToCamelCase();
+    }
+    else if(serviceName.ToUpper().EndsWith("SV"))
+    {
+        serviceName = serviceName.Substring(0, serviceName.Length - 2).ToCamelCase();
+    }
+    var methods = item.GetMethods().Where(r => !r.IsSpecialName && !r.IsStatic && r.IsPublic && r.IsSecurityCritical && !r.IsSecuritySafeCritical).ToList();
+    @:module.factory('mabp.@serviceName', [
+    @:'$http', function($http) {
+    @:return new function()
+    @:{
+    foreach (MethodInfo m in methods)
+    {
+       
+        @:    this.@m.Name.ToCamelCase() = function(input, httpParams) {
+        @:    return $http(angular.extend({ 
+        @:              abp: true,
+        @:              url: mabp.appPath + 'api/@serviceName/@m.Name',
+        @:              method: 'POST',
+        @:              data:JSON.stringify(input)
+        @:        }, httpParams));
+        @:    };
+    }
+    @:};
+    @:}
+    @:]);
+    @:
+}
+
+})((mabp || (mabp = { })), (angular || undefined));

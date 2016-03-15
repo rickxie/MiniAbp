@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm.Designer\packages\Yooya.Framework\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,8 +38,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -60,6 +64,10 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -86,27 +94,40 @@
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Auditing\AuditInfo.cs" />
+    <Compile Include="Auditing\AuditingManager.cs" />
+    <Compile Include="Auditing\WebAuditInfoProvider.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\UserManager.cs" />
     <Compile Include="Authorization\YAuthorizeAttribute.cs" />
     <Compile Include="DataAccess\DatabaseType.cs" />
     <Compile Include="Dependency\IocManager.cs" />
-    <Compile Include="Domain\Entity\IFileUpload.cs" />
-    <Compile Include="Domain\Entity\FileInput.cs" />
-    <Compile Include="Domain\Entity\IdInput.cs" />
-    <Compile Include="Domain\Entity\IInputDto.cs" />
-    <Compile Include="Domain\Entity\NameValue.cs" />
-    <Compile Include="Domain\Entity\PagedList.cs" />
-    <Compile Include="Domain\Entity\PageInput.cs" />
+    <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\Entitys\IFileUpload.cs" />
+    <Compile Include="Domain\Entitys\FileInput.cs" />
+    <Compile Include="Domain\Entitys\IdInput.cs" />
+    <Compile Include="Domain\Entitys\IInputDto.cs" />
+    <Compile Include="Domain\Entitys\NameValue.cs" />
+    <Compile Include="Domain\Entitys\Output.cs" />
+    <Compile Include="Domain\Entitys\PagedList.cs" />
+    <Compile Include="Domain\Entitys\PageInput.cs" />
+    <Compile Include="Domain\IEntity.cs" />
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerLevel.cs" />
     <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Razor\TemplateManager.cs" />
     <Compile Include="Route\RequestType.cs" />
+    <Compile Include="Runtime\YConst.cs" />
     <Compile Include="UserFriendlyException.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />
     <Compile Include="Reflection\YAssemblyCollection.cs" />
@@ -131,6 +152,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.99.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.99.0\build\net45\System.Data.SQLite.Core.targets')" />

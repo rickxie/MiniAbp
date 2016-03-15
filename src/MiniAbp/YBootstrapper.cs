@@ -1,6 +1,7 @@
 ﻿using System;
 using MiniAbp.Dependency;
 using MiniAbp.Logging;
+using MiniAbp.Razor;
 using MiniAbp.Reflection;
 using MiniAbp.Route;
 
@@ -23,6 +24,11 @@ namespace MiniAbp
         { 
             YAssembly.Initialize();
             IocManager.Initialize();
+        }
+
+        public void PostInitialize()
+        {
+            TemplateManager.GenerateCode(YAssembly.ServiceTypes.ToArray());
         }
 
         public void RegisterRoute(object sender)

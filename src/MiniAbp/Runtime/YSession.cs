@@ -31,24 +31,15 @@ namespace MiniAbp.Runtime
                 return userId;
             }
         }
+        public string LanguageCulture => GetClaims(YConst.LanguageCultrue);
 
         public string Name => GetClaims(ClaimTypes.Name);
        
         private string GetClaims(string type)
         {
             var claimsPrincipal = Thread.CurrentPrincipal as ClaimsPrincipal;
-            if (claimsPrincipal == null)
-            {
-                return null;
-            }
-
-            var claim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == type);
-            if (claim == null || string.IsNullOrEmpty(claim.Value))
-            {
-                return null;
-            }
-            return claim.Value;
-
+            var claim = claimsPrincipal?.Claims.FirstOrDefault(c => c.Type == type);
+            return claim?.Value;
         }
          
     }

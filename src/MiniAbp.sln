@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp", "MiniAbp/MiniAbp.csproj", "{0BE993C4-2E68-404D-8ECD-D25BA1E87BCC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp", "MiniAbp\MiniAbp.csproj", "{0BE993C4-2E68-404D-8ECD-D25BA1E87BCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Test", "MiniAbp.Test\MiniAbp.Test.csproj", "{CC62C42F-61AE-4690-A42A-CDD859E5E452}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.ApplicationTest", "MiniAbp.ApplicationTest\MiniAbp.ApplicationTest.csproj", "{E89310BD-51C5-4F81-A90B-A6989AADA6AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,18 +19,16 @@ Global
 		{0BE993C4-2E68-404D-8ECD-D25BA1E87BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BE993C4-2E68-404D-8ECD-D25BA1E87BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BE993C4-2E68-404D-8ECD-D25BA1E87BCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC62C42F-61AE-4690-A42A-CDD859E5E452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC62C42F-61AE-4690-A42A-CDD859E5E452}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC62C42F-61AE-4690-A42A-CDD859E5E452}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC62C42F-61AE-4690-A42A-CDD859E5E452}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89310BD-51C5-4F81-A90B-A6989AADA6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89310BD-51C5-4F81-A90B-A6989AADA6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89310BD-51C5-4F81-A90B-A6989AADA6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89310BD-51C5-4F81-A90B-A6989AADA6AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 1
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://shatfs.ad.shalu.com:38080/tfs/yooya
-		SccProjectUniqueName0 = MiniAbp.csproj
-		SccProjectName0 = .
-		SccAuxPath0 = http://shatfs.ad.shalu.com:38080/tfs/yooya
-		SccLocalPath0 = .
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 EndGlobal

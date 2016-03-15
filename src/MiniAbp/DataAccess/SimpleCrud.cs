@@ -104,7 +104,7 @@ namespace MiniAbp.DataAccess
                 sb.AppendFormat(" from {0}", name);
                 sb.Append(" where " + GetColumnName(onlyKey) + " = @Id");
 
-                var dynParms = new DynamicParameters();
+                 var dynParms = new DynamicParameters();
                 dynParms.Add("@id", id);
 
                 if (Debugger.IsAttached)
@@ -154,6 +154,35 @@ namespace MiniAbp.DataAccess
                 return connection.Query<T>(sb.ToString(), whereConditions, transaction, true, commandTimeout);
             }
 
+            public static T FirstOrDefault<T>(this IDbConnection connection, object whereConditions, IDbTransaction transaction = null, int? commandTimeout = null)
+            {
+                var currenttype = typeof(T);
+                var idProps = GetIdProperties(currenttype).ToList();
+                if (!idProps.Any())
+                    throw new ArgumentException("Entity must have at least one [Key] property");
+
+                var name = GetTableName(currenttype);
+
+                var sb = new StringBuilder();
+                var whereprops = GetAllProperties(whereConditions).ToArray();
+                sb.Append("Select top 1 ");
+                //create a new empty instance of the type to get the base properties
+                BuildSelect(sb, GetScaffoldableProperties((T)Activator.CreateInstance(typeof(T))).ToArray());
+                sb.AppendFormat(" from {0}", name);
+
+                if (whereprops.Any())
+                {
+                    sb.Append(" where ");
+                    BuildWhere(sb, whereprops, (T)Activator.CreateInstance(typeof(T)), whereConditions);
+                }
+
+                if (Debugger.IsAttached)
+                    Trace.WriteLine(String.Format("GetList<{0}>: {1}", currenttype, sb));
+
+                var result = connection.Query<T>(sb.ToString(), whereConditions, transaction, true, commandTimeout);
+                return result.FirstOrDefault();
+            }
+
             /// <summary>
             /// <para>By default queries the table matching the class name</para>
             /// <para>-Table name can be overridden by adding an attribute on your class [Table("YourTableName")]</para>
@@ -189,7 +218,29 @@ namespace MiniAbp.DataAccess
 
                 return connection.Query<T>(sb.ToString(), null, transaction, true, commandTimeout);
             }
+            public static T First<T>(this IDbConnection connection, string conditions, IDbTransaction transaction = null, int? commandTimeout = null)
+            {
+                var currenttype = typeof(T);
+                var idProps = GetIdProperties(currenttype).ToList();
+                if (!idProps.Any())
+                    throw new ArgumentException("Entity must have at least one [Key] property");
 
+                var name = GetTableName(currenttype);
+
+                var sb = new StringBuilder();
+                sb.Append("Select ");
+                //create a new empty instance of the type to get the base properties
+                BuildSelect(sb, GetScaffoldableProperties((T)Activator.CreateInstance(typeof(T))).ToArray());
+                sb.AppendFormat(" from {0}", name);
+
+                sb.Append(" " + conditions);
+
+                if (Debugger.IsAttached)
+                    Trace.WriteLine(String.Format("GetList<{0}>: {1}", currenttype, sb));
+                var a = connection.Query<T>(sb.ToString(), null, transaction, true, commandTimeout);
+                return a.FirstOrDefault();
+            }
+             
             /// <summary>
             /// <para>By default queries the table matching the class name</para>
             /// <para>-Table name can be overridden by adding an attribute on your class [Table("YourTableName")]</para>

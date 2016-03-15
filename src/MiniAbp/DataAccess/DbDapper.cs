@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Autofac;
 using Dapper;
 using MiniAbp.DataAccess.Dapper;
 using MiniAbp.Dependency;
+using MiniAbp.Domain.Entitys;
 using MiniAbp.Runtime;
-using Yooya.Bpm.Framework.Domain.Entity;
 
 namespace MiniAbp.DataAccess
 {
@@ -37,41 +36,35 @@ namespace MiniAbp.DataAccess
         //    }
         //}
         public static IDbConnection NewDbConnection => IocManager.Instance.ResolveNamed<IDbConnection>(DatabaseType.ToString()
-            ,new TypedParameter(typeof (string), ConnectionString));
+            ,new {ConnectionString });
 
-        public static DataTable RunDataTableSql(string sql)
+        public static DataTable RunDataTableSql(string sql, IDbConnection dbConnection = null)
         {
             DataTable table = new DataTable("MyTable");
-            using (var db = NewDbConnection)
+            if (dbConnection != null)
             {
-                db.Open();
-                using (var reader = db.ExecuteReader(sql))
+                dbConnection.ExecuteReader(sql);
+            }
+            else
+            {
+                using (var db = NewDbConnection)
                 {
-                    table.Load(reader);
+                    db.Open();
+                    using (var reader = db.ExecuteReader(sql))
+                    {
+                        table.Load(reader);
+                    }
+                    db.Close();
                 }
-                db.Close();
             }
             return table;
         }
 
-//
-//        public static DataTable RunDataTableSql(string sql, params SqlParameter[] sqlParas)
-//        {
-//            return DBHelper.RunDataTableSQL(sql, sqlParas);
-//        }
-
-        public static IEnumerable<T> GetAll<T>(string sql)
-        {
-            IEnumerable<T> dy = null;
-            using (IDbConnection db = NewDbConnection)
-            {
-                db.Open();
-                dy = db.Query<T>(sql);
-                db.Close();
-            }
-            return dy;
-        }
-
+        //
+        //        public static DataTable RunDataTableSql(string sql, params SqlParameter[] sqlParas)
+        //        {
+        //            return DBHelper.RunDataTableSQL(sql, sqlParas);
+        //        }
         public static IEnumerable<T> GetAll<T>(string sql, params SqlParameter[] sqlParas)
         {
 
@@ -84,9 +77,8 @@ namespace MiniAbp.DataAccess
             }
             return dy;
         }
-        public static T Get<T>(string sql, IDbConnection connection = null, IDbTransaction transation = null)
+        public static IEnumerable<T> GetAll<T>(string sql)
         {
-
             IEnumerable<T> dy = null;
             using (IDbConnection db = NewDbConnection)
             {
@@ -94,37 +86,86 @@ namespace MiniAbp.DataAccess
                 dy = db.Query<T>(sql);
                 db.Close();
             }
-            return dy.FirstOrDefault();
+            return dy;
         }
 
-        public static T Get<T>(string sql, params SqlParameter[] sqlParas)
+        public static int Count<T>(string condition, IDbConnection connection = null, IDbTransaction transation = null)
         {
-
-            IEnumerable<T> dy = null;
-            using (IDbConnection db = NewDbConnection)
+            int count;
+            if (connection != null)
             {
-                db.Open();
-                dy = db.Query<T>(sql, sqlParas);
-                db.Close();
+                count = connection.RecordCount<T>(condition, transation);
             }
-            return dy.FirstOrDefault();
+            else
+            {
+                using (var db = NewDbConnection)
+                {
+                    count = db.RecordCount<T>(condition);
+                }
+            }
+            return count;
         }
-
-        //执行删除和更新操作 无需返回值
-        public static void ExecuteNonQuery(string sql)
+        public static bool Any<T>(string condition, IDbConnection connection = null, IDbTransaction transation = null)
         {
-            using (IDbConnection db = NewDbConnection)
-            {
-                db.Open();
-                db.Execute(sql);
-                db.Close();
-            }
+            var count = Count<T>(condition, connection, transation);
+            return count > 0;
         }
-        //执行删除和更新操作 无需返回值
-//        public static int ExecuteNonQuery(string sql, params SqlParameter[] para)
+
+        public static T Get<T>(object id, IDbConnection connection = null, IDbTransaction transation = null)
+        {
+            T dy;
+            if (connection != null)
+            {
+                dy = connection.Get<T>(id, transation);
+            }
+            else
+            {
+                using (IDbConnection db = NewDbConnection)
+                {
+                    db.Open();
+                    dy = db.Get<T>(id);
+                    db.Close();
+                }
+            }
+            return dy;
+        }
+
+
+//        public static T Get<T>(string sql, params SqlParameter[] sqlParas)
 //        {
-//            return DBHelper.RunInsertOrUpdateOrDeleteSQL(sql, para);
+//
+//            IEnumerable<T> dy = null;
+//            using (IDbConnection db = NewDbConnection)
+//            {
+//                db.Open();
+//                dy = db.Query<T>(sql, sqlParas);
+//                db.Close();
+//            }
+//            return dy.FirstOrDefault();
 //        }
+
+        //执行删除和更新操作 无需返回值
+        public static void ExecuteNonQuery(string sql,object param, IDbConnection connection = null, IDbTransaction transation = null)
+        {
+            if (connection != null)
+            {
+                connection.Execute(sql, param, transation);
+            }
+            else
+            {
+                using (IDbConnection db = NewDbConnection)
+                {
+                    db.Open();
+                    db.Execute(sql, param);
+                    db.Close();
+                }
+            }
+        }
+        //执行删除和更新操作 无需返回值
+        //        public static int ExecuteNonQuery(string sql, params SqlParameter[] para)
+        //        {
+        //            return DBHelper.RunInsertOrUpdateOrDeleteSQL(sql, para);
+        //        }
 
 
         public static T GetSingle<T>(string id, IDbConnection connection = null, IDbTransaction transation = null)
@@ -170,6 +211,28 @@ namespace MiniAbp.DataAccess
 
             return result.ToList();
         }
+        public static T First<T>(string where, IDbConnection connection = null, IDbTransaction transation = null)
+        {
+            Func<IDbConnection,string, T> action = (dbConnection, w) =>  
+            string.IsNullOrWhiteSpace(w) ? dbConnection.First<T>(null, transation) : dbConnection.First<T>(w, transation); ;
+            T result;
+
+            if (connection != null && transation != null)
+            {
+                result = action(connection, where);
+            }
+            else
+            {
+                using (IDbConnection db = NewDbConnection)
+                {
+                    db.Open();
+                    result = action(db, where);
+                    db.Close();
+                }
+            }
+
+            return result;
+        }
         public static List<T> GetPagedList<T>(PageInput pageinput, string where, IDbConnection connection = null, IDbTransaction transation = null)
         {
             Func<IDbConnection, string, IEnumerable<T>> action =(dbConnection, w) =>
@@ -194,6 +257,22 @@ namespace MiniAbp.DataAccess
             return result.ToList();
         }
 
+        public static List<T> Query<T>(string sql, object param = null, IDbConnection dbConnection = null, IDbTransaction tran = null)
+        {
+            IEnumerable<T> result;
+            if (dbConnection != null)
+            {
+                result = dbConnection.Query<T>(sql, param, tran);
+            }
+            else
+            {
+                using (var db = NewDbConnection)
+                {
+                    result = db.Query<T>(sql, param);
+                }
+            }
+            return result.ToList();
+        } 
         public static List<T> GetList<T>(object whereConditions, IDbConnection connection = null, IDbTransaction transation = null)
         {
 
@@ -212,6 +291,26 @@ namespace MiniAbp.DataAccess
                 }
             }
             return result.ToList();
+        }
+
+        public static T First<T>(object whereConditions, IDbConnection connection = null, IDbTransaction transation = null)
+        {
+
+            T result;
+            if (connection != null && transation != null)
+            {
+                result = connection.FirstOrDefault<T>(whereConditions, transation);
+            }
+            else
+            {
+                using (IDbConnection db = NewDbConnection)
+                {
+                    db.Open();
+                    result = db.FirstOrDefault<T>(whereConditions);
+                    db.Close();
+                }
+            }
+            return result;
         }
 
         public static int Delete<T>(T whereConditions, IDbConnection connection = null, IDbTransaction transation = null)
@@ -297,5 +396,6 @@ namespace MiniAbp.DataAccess
             }
             return result;
         }
+
     }
 }

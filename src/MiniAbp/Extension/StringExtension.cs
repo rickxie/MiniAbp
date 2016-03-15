@@ -35,5 +35,15 @@ namespace MiniAbp.Extension
             }
             return true;
         }
+
+        public static string ToCamelCase(this string str)
+        {
+            if (str.IsEmpty() || str.Length <= 1)
+            {
+                throw new ArgumentNullException("str");
+            }
+
+            return str.Substring(0, 1).ToLower() + str.Substring(1);
+        }
     }
 }

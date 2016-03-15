@@ -1,4 +1,5 @@
 ﻿using System;
+using MiniAbp.Auditing;
 using MiniAbp.Dependency;
 using MiniAbp.Logging;
 using Newtonsoft.Json;
@@ -10,9 +11,12 @@ namespace MiniAbp.Route
     public class YRequestHandler 
     {
         private static readonly ILogger Logger = IocManager.Instance.Resolve<ILogger>();
+
         public static string ApiService(string service, string method, object param)
         {
+            AuditingManager auditing = new AuditingManager();
             AjaxResult result = null;
+                auditing.Start(service, method, param.ToString());
             try
             {
                 var dataResult = ServiceController.Instance.Execute(service, method, param, RequestType.ServiceFile);
@@ -39,12 +43,15 @@ namespace MiniAbp.Route
                 {
                     result.Errors.IsFriendlyError = true;
                 }
+                auditing.Exception(except.Message + except.StackTrace);
                 Logger.Error(ex.Message, except);
             }
-            return JsonConvert.SerializeObject(result, new JsonSerializerSettings()
+            var responseStr = JsonConvert.SerializeObject(result, new JsonSerializerSettings()
             {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
+            auditing.Stop(responseStr);
+            return responseStr;
         }
 
     }

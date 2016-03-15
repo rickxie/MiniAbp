@@ -6,12 +6,12 @@ using System.Reflection;
 using System.Web;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
+using MiniAbp.Domain.Entitys;
 using MiniAbp.Logging;
 using MiniAbp.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Yooya.Bpm.Framework;
-using Yooya.Bpm.Framework.Domain.Entity;
 using Yooya.Bpm.Framework.Route;
 
 namespace MiniAbp.Route
