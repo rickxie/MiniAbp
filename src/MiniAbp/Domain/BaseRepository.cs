@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Castle.Core.Internal;
@@ -65,6 +66,8 @@ namespace MiniAbp.Domain
 
         public void Insert(T model)
         {
+            var creationTime = model.GetType().GetProperty("CreationTime");
+            creationTime?.SetValue(model, DateTime.Now);
             DbDapper.Insert<T>(model, DbConnection, DbTransaction);
         }
 
@@ -129,7 +132,6 @@ namespace MiniAbp.Domain
             else
             {
                 isExists = false;
-
             }
 
             if (isExists)
@@ -148,6 +150,10 @@ namespace MiniAbp.Domain
         public List<TModel> Query<TModel>(string sql, object param = null)
         {
             return DbDapper.Query<TModel>(sql, param, DbConnection, DbTransaction);
+        }
+        public TModel QueryFirst<TModel>(string sql, object param = null)
+        {
+            return DbDapper.Query<TModel>(sql, param, DbConnection, DbTransaction).FirstOrDefault();
         }
         public void Execute(string sql, object param = null)
         {

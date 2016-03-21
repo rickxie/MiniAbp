@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using MiniAbp.DataAccess.Dapper;
+using MiniAbp.DataAccess.Dapper; 
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Runtime;
@@ -22,7 +22,16 @@ namespace MiniAbp.DataAccess
             }
         } 
         //public static DBHelper DbHelper;
-        public static DatabaseType DatabaseType;
+        private static Dialect _dialect;
+        public static Dialect Dialect
+        {
+            get { return _dialect; }
+            set
+            {
+                _dialect = value;
+                SimpleDapper.SetDialect(_dialect);
+            }
+        } 
         //private static string ConnStr
         //{
         //    get
@@ -35,7 +44,7 @@ namespace MiniAbp.DataAccess
         //        return scsb.ConnectionString;
         //    }
         //}
-        public static IDbConnection NewDbConnection => IocManager.Instance.ResolveNamed<IDbConnection>(DatabaseType.ToString()
+        public static IDbConnection NewDbConnection => IocManager.Instance.ResolveNamed<IDbConnection>(Dialect.ToString()
             ,new {ConnectionString });
 
         public static DataTable RunDataTableSql(string sql, IDbConnection dbConnection = null)
@@ -94,13 +103,13 @@ namespace MiniAbp.DataAccess
             int count;
             if (connection != null)
             {
-                count = connection.RecordCount<T>(condition, transation);
+                count = connection.Count<T>(condition, transation);
             }
             else
             {
                 using (var db = NewDbConnection)
                 {
-                    count = db.RecordCount<T>(condition);
+                    count = db.Count<T>(condition);
                 }
             }
             return count;
@@ -236,8 +245,7 @@ namespace MiniAbp.DataAccess
         public static List<T> GetPagedList<T>(PageInput pageinput, string where, IDbConnection connection = null, IDbTransaction transation = null)
         {
             Func<IDbConnection, string, IEnumerable<T>> action =(dbConnection, w) =>
-                    dbConnection.GetListPaged<T>(pageinput.CurrentPage, pageinput.PageSize, where,
-                        pageinput.OrderByProperty + " " + (pageinput.Ascending ? "asc" : "desc"), transation);
+                    dbConnection.GetListPaged<T>( where, pageinput, transation);
 
             IEnumerable<T> result;
             if (connection != null && transation != null)

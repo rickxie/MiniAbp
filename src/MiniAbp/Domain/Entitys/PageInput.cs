@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace MiniAbp.Domain.Entitys
 {
-    public class PageInput
+    public class PageInput : IPaging
     {
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }

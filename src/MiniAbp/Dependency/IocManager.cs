@@ -46,9 +46,9 @@ namespace MiniAbp.Dependency
         {
             IocContainer = new WindsorContainer();
             IocContainer.Register(
-                Component.For<IDbConnection>().ImplementedBy<SqlConnection>().Named(DatabaseType.Sql.ToString()).LifeStyle.Transient);
+                Component.For<IDbConnection>().ImplementedBy<SqlConnection>().Named(Dialect.SqlServer.ToString()).LifeStyle.Transient);
             IocContainer.Register(
-                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(DatabaseType.Sqlite.ToString()).LifeStyle.Transient);
+                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(Dialect.SqLite.ToString()).LifeStyle.Transient);
             IocContainer.Register(Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient);
         }
 

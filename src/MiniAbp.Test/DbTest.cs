@@ -10,7 +10,7 @@ namespace MiniAbp.Test
         {
             DbDapper.ConnectionString =
                 "Data Source=shaappt0001;Initial Catalog=Yooya.bpm.designer-dev;Persist Security Info=true;User ID=sa;PWD=Passw0rd;Packet Size=4096;";
-            DbDapper.DatabaseType = DatabaseType.Sql;
+            DbDapper.Dialect = Dialect.SqlServer;
         }
         [TestMethod]
         public void RunDataTableSqlTest()
