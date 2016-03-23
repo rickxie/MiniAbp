@@ -242,12 +242,12 @@ namespace MiniAbp.DataAccess
 
             return result;
         }
-        public static List<T> GetPagedList<T>(PageInput pageinput, string where, IDbConnection connection = null, IDbTransaction transation = null)
+        public static PagedList<T> GetPagedList<T>(IPaging pageinput, string where, IDbConnection connection = null, IDbTransaction transation = null)
         {
-            Func<IDbConnection, string, IEnumerable<T>> action =(dbConnection, w) =>
+            Func<IDbConnection, string, PagedList<T>> action =(dbConnection, w) =>
                     dbConnection.GetListPaged<T>( where, pageinput, transation);
 
-            IEnumerable<T> result;
+            PagedList<T> result;
             if (connection != null && transation != null)
             {
                 result = action(connection, where);
@@ -262,7 +262,7 @@ namespace MiniAbp.DataAccess
                 }
             }
 
-            return result.ToList();
+            return result;
         }
 
         public static List<T> Query<T>(string sql, object param = null, IDbConnection dbConnection = null, IDbTransaction tran = null)
@@ -280,6 +280,22 @@ namespace MiniAbp.DataAccess
                 }
             }
             return result.ToList();
+        } 
+        public static PagedList<T> Query<T>(string sql, IPaging input, object param = null, IDbConnection dbConnection = null, IDbTransaction tran = null)
+        {
+            PagedList<T> result;
+            if (dbConnection != null)
+            {
+                result = dbConnection.Query<T>(sql, input, param, tran);
+            }
+            else
+            {
+                using (var db = NewDbConnection)
+                {
+                    result = db.Query<T>(sql, input, param);
+                }
+            }
+            return result;
         } 
         public static List<T> GetList<T>(object whereConditions, IDbConnection connection = null, IDbTransaction transation = null)
         {

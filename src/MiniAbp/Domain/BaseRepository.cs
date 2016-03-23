@@ -19,7 +19,7 @@ namespace MiniAbp.Domain
         public IDbConnection DbConnection { get; set; }
         public IDbTransaction DbTransaction { get; set; }
 
-        public List<T> GetPagedList(PageInput pageInput, string where = null)
+        public PagedList<T> GetPagedList(IPaging pageInput, string where = null)
         {
             return DbDapper.GetPagedList<T>(pageInput, where, DbConnection, DbTransaction);
         }
@@ -150,6 +150,10 @@ namespace MiniAbp.Domain
         public List<TModel> Query<TModel>(string sql, object param = null)
         {
             return DbDapper.Query<TModel>(sql, param, DbConnection, DbTransaction);
+        }
+        public PagedList<TModel> Query<TModel>(string sql, IPaging input, object param = null)
+        {
+            return DbDapper.Query<TModel>(sql,input, param, DbConnection, DbTransaction);
         }
         public TModel QueryFirst<TModel>(string sql, object param = null)
         {

@@ -8,6 +8,7 @@ using System.Text;
 using Dapper;
 using Microsoft.CSharp.RuntimeBinder;
 using MiniAbp.Domain.Entitys;
+using MiniAbp.Extension;
 
 namespace MiniAbp.DataAccess
 {
@@ -271,44 +272,35 @@ namespace MiniAbp.DataAccess
             /// <param name="transaction"></param>
             /// <param name="commandTimeout"></param>
             /// <returns>Gets a paged list of entities with optional exact match where conditions</returns>
-            public static IEnumerable<T> GetListPaged<T>(this IDbConnection connection, string conditions, IPaging page, IDbTransaction transaction = null, int? commandTimeout = null)
+            public static PagedList<T> GetListPaged<T>(this IDbConnection connection, string conditions,
+                IPaging page, IDbTransaction transaction = null, int? commandTimeout = null)
             {
-                int pageNumber = page.CurrentPage;
-                int rowsPerPage = page.PageSize;
-                string orderby = page.OrderByProperty + (page.Ascending ? " ASC" : " DESC");
-                if (string.IsNullOrEmpty(_getPagedListSql))
-                    throw new Exception("GetListPage is not supported with the current SQL Dialect");
-
-                if (pageNumber < 1)
-                    throw new Exception("Page must be greater than 0");
-
                 var currenttype = typeof(T);
                 var idProps = GetIdProperties(currenttype).ToList();
                 if (!idProps.Any())
                     throw new ArgumentException("Entity must have at least one [Key] property");
 
                 var name = GetTableName(currenttype);
-                var sb = new StringBuilder();
-                var query = _getPagedListSql;
-                if (string.IsNullOrEmpty(orderby))
-                {
-                    orderby = GetColumnName(idProps.First());
-                }
 
+                var sb = new StringBuilder();
+                sb.Append("Select ");
                 //create a new empty instance of the type to get the base properties
                 BuildSelect(sb, GetScaffoldableProperties((T)Activator.CreateInstance(typeof(T))).ToArray());
-                query = query.Replace("{SelectColumns}", sb.ToString());
-                query = query.Replace("{TableName}", name);
-                query = query.Replace("{PageNumber}", pageNumber.ToString());
-                query = query.Replace("{RowsPerPage}", rowsPerPage.ToString());
-                query = query.Replace("{OrderBy}", orderby);
-                query = query.Replace("{WhereClause}", conditions);
-                query = query.Replace("{Offset}", ((pageNumber - 1) * rowsPerPage).ToString());
+                sb.AppendFormat(" from {0}", name);
+
+                sb.Append(" " + conditions);
 
                 if (Debugger.IsAttached)
-                    Trace.WriteLine(String.Format("GetListPaged<{0}>: {1}", currenttype, query));
+                    Trace.WriteLine(String.Format("GetList<{0}>: {1}", currenttype, sb));
 
-                return connection.Query<T>(query, null, transaction, true, commandTimeout);
+                var result = connection.Query<T>(sb.ToString(), null, transaction, true, commandTimeout);
+                var count = connection.Count<T>(conditions, transaction, commandTimeout);
+                var rtnObj = new PagedList<T>
+                {
+                    Model = result.ToList(),
+                    TotalCount = count
+                };
+                return rtnObj;
             }
 
             /// <summary>
@@ -359,12 +351,12 @@ namespace MiniAbp.DataAccess
                 return rtnObj;
             }
 
-            public static PagedList<T> Query<T>(this IDbConnection connection, string sql, object whereCondition, IPaging page, IDbTransaction transaction = null, int? commandTimeout = null)
+            public static PagedList<T> Query<T>(this IDbConnection connection, string sql, IPaging page, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
                 var sqlWithPaged = BuilderPageSql(sql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
                 var currenttype = typeof(T);
                 var result = connection.Query<T>(sqlWithPaged, whereCondition, transaction, true, commandTimeout);
-                var count = connection.Count<T>(whereCondition, transaction, commandTimeout);
+                var count = connection.Count(sql, whereCondition, transaction, commandTimeout);
                 var rtnObj = new PagedList<T>
                 {
                     Model = result.ToList(),
@@ -683,13 +675,19 @@ namespace MiniAbp.DataAccess
                     Trace.WriteLine(String.Format("RecordCount<{0}>: {1}", currenttype, sb));
 
                 return connection.Query<int>(sb.ToString(), null, transaction, true, commandTimeout).Single();
-            }
+            } 
 
             public static int Query(this IDbConnection connection, string sql , object param, IDbTransaction transaction = null, int? commandTimeout = null)
             {
                 if (Debugger.IsAttached)
                     Trace.WriteLine(String.Format("Count: {0}", sql));
                 return connection.Query<int>(sql, param, transaction, true, commandTimeout).Single();
+            }
+
+            public static int Count(this IDbConnection connection,string sql, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
+            {
+                var sqlStr = "SELECT COUNT(1) FROM ( {0} ) temp_count".Fill(sql);
+                return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
             }
 
             public static int Count<T>(this IDbConnection connection, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
@@ -1009,32 +1007,32 @@ namespace MiniAbp.DataAccess
             /// <summary>
             /// MSSQL分页语句模版
             /// </summary>
-            private const string MssqlPageTemplate = "select * from (select ROW_NUMBER() OVER(order by {0}) AS RowNumber, {1}) as tmp_tbl where RowNumber BETWEEN {{startIndex}} and {{endIndex}} ";
+            private const string MssqlPageTemplate = "select * from (SELECT tmp_paage.*, ROW_NUMBER() OVER(order by {0}) AS RowNumber FROM ({1}) tmp_paage ) as tmp_tbl where RowNumber BETWEEN ##startIndex## and ##endIndex## ";
 
             /// <summary>
             /// MySQL排序分页语句模版
             /// </summary>
-            private const string MysqlOrderPageTemplate = "{0} order by {1} limit {{offset}},{{limit}}";
+            private const string MysqlOrderPageTemplate = "{0} order by {1} limit ##offset##,##limit##";
 
             /// <summary>
             /// MySQL分页语句模板
             /// </summary>
-            private const string MysqlPageTemplate = "{0} limit {{offset}},{{limit}}";
+            private const string MysqlPageTemplate = "{0} limit ##offset##,##limit##";
 
             /// <summary>
             /// SQLite排序分页语句模板
             /// </summary>
-            private const string SqliteOrderPageTemplate = "{0} order by {1} limit {{offset}},{{limit}}";
+            private const string SqliteOrderPageTemplate = "{0} order by {1} limit ##offset##,##limit##";
 
             /// <summary>
             /// SQLite分页语句模板
             /// </summary>
-            private const string SqlitePageTemplate = "{0} limit {{offset}},{{limit}}";
+            private const string SqlitePageTemplate = "{0} limit ##offset##,##limit##";
 
             /// <summary>
             /// ACCESS分页语句模板
             /// </summary>
-            private const string AccessPageTemplate = "select * from (select top {{limit}} * from (select top {{offset}} {0} order by id desc) order by id) order by {1}";
+            private const string AccessPageTemplate = "select * from (select top ##limit## * from (select top ##offset## {0} order by id desc) order by id) order by {1}";
 
             private static string BuilderPageSql(string strSql, string order, bool desc, int currentPage, int pageSize)
             {
@@ -1053,9 +1051,9 @@ namespace MiniAbp.DataAccess
                             " SqlException: order field is null, you must support the order field for sqlserver page. ");
                     }
 
-                    strSql = string.Format(MssqlPageTemplate, orderBy, pageBody);
-                    strSql = strSql.Replace("{{startIndex}}", pageStart.ToString());
-                    strSql = strSql.Replace("{{endIndex}}", pageEnd.ToString());
+                    strSql = string.Format(MssqlPageTemplate, orderBy, strSql);
+                    strSql = strSql.Replace("##startIndex##", pageStart.ToString());
+                    strSql = strSql.Replace("##endIndex##", pageEnd.ToString());
                 }
                 else
                 {
@@ -1091,8 +1089,8 @@ namespace MiniAbp.DataAccess
                             strSql = string.Format(SqlitePageTemplate, strSql);
                         }
                     }
-                    strSql = strSql.Replace("{{limit}}", limit.ToString());
-                    strSql = strSql.Replace("{{offset}}", offset.ToString());
+                    strSql = strSql.Replace("##limit##", limit.ToString());
+                    strSql = strSql.Replace("##offset##", offset.ToString());
                 }
 
                 return strSql;
