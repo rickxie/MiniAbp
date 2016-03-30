@@ -366,6 +366,7 @@ namespace MiniAbp.DataAccess
                     Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, sqlWithPaged));
                 return rtnObj;
             }
+
             /// <summary>
             /// <para>Inserts a row into the database</para>
             /// <para>By default inserts into the table matching the class name</para>
@@ -711,6 +712,7 @@ namespace MiniAbp.DataAccess
 
                 return connection.Query<int>(sb.ToString(), whereCondition, transaction, true, commandTimeout).Single();
             }
+          
 
             //build update statement based on list on an entity
             private static void BuildUpdateSet(object entityToUpdate, StringBuilder sb)

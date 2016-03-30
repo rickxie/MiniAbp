@@ -136,6 +136,7 @@
     <Compile Include="Runtime\AppPath.cs" />
     <Compile Include="Runtime\YSession.cs" />
     <Compile Include="Test\TestBase.cs" />
+    <Compile Include="Utility\Encryptor.cs" />
     <Compile Include="YBootstrapper.cs" />
     <Compile Include="Route\YRequestHandler.cs" />
     <Compile Include="Domain\BaseRepository.cs" />

@@ -38,6 +38,10 @@ namespace MiniAbp.Domain
             return DbDapper.First<T>(where, DbConnection, DbTransaction);
         }
         
+        public bool Any(object whereCondition)
+        {
+            return DbDapper.Any<T>(whereCondition, DbConnection, DbTransaction);
+        }
         public bool Any(string where)
         {
             return DbDapper.Any<T>(where, DbConnection, DbTransaction);
@@ -45,6 +49,10 @@ namespace MiniAbp.Domain
         public int Count(string where)
         {
             return DbDapper.Count<T>(where, DbConnection, DbTransaction);
+        }
+        public int Count(string sql, object param)
+        {
+            return DbDapper.Count(sql, param, DbConnection, DbTransaction);
         }
 
         public T Get(string id)
@@ -81,58 +89,37 @@ namespace MiniAbp.Domain
         {
             var isExists = false;
             //check isExist and refresh Id 
-            if (model.Id != null)
+            var isDefaultValue = EqualityComparer<TPrimaryKey>.Default.Equals(model.Id, default(TPrimaryKey));
+            var idStr = model.Id as string;
+
+            if (!isDefaultValue && dbCheck)
             {
-                var isDefaultValue = EqualityComparer<TPrimaryKey>.Default.Equals(model.Id, default(TPrimaryKey));
-                if (model.Id is string)
+                var entity = Get(idStr);
+                if (entity != null)
                 {
-                    var idStr = model.Id as string;
-                    
-                    if (!isDefaultValue && dbCheck)
-                    {
-                        var entity = Get(idStr);
-                        if (entity != null)
-                        {
-                            isExists = true;
-                        }
-                        else
-                        {
-                            
-                            isExists = false;
-                        }
-                    }
-                    else
-                    {
-                        if (!isDefaultValue)
-                        {
-                            isExists = true;
-                        }
-                        else
-                        {
-                            isExists = false;
-                            if (typeof(T).IsAssignableFrom(typeof(Entity)))
-                            {
-                                var a = model as Entity;
-                                a?.RefreshId();
-                            }
-                            else
-                            {
-                                model.GetType().GetProperty("Id").SetValue(model, Guid.NewGuid().ToString());
-                            }
-                        }
-                        
-                    }
+                    isExists = true;
                 }
-                else
-                {
-                    throw new NotImplementedException("其他主键类型 没有实现此功能。");
-                }
-                
             }
             else
             {
-                isExists = false;
+                if (!isDefaultValue)
+                {
+                    isExists = true;
+                }
+                else
+                {
+                    if (typeof (Entity).IsAssignableFrom(typeof (T)))
+                    {
+                        var a = model as Entity;
+                        a?.RefreshId();
+                    }
+                    else
+                    {
+                        model.GetType().GetProperty("Id").SetValue(model, Guid.NewGuid().ToString());
+                    }
+                }
             }
+
 
             if (isExists)
             {
@@ -143,6 +130,7 @@ namespace MiniAbp.Domain
                 Insert(model);
             }
         }
+
         public int Update(T cate)
         {
             return DbDapper.Update(cate, DbConnection, DbTransaction);

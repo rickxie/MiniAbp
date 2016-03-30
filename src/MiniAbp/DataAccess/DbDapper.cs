@@ -114,6 +114,41 @@ namespace MiniAbp.DataAccess
             }
             return count;
         }
+
+        public static int Count(string sql, object param, IDbConnection connection = null,
+            IDbTransaction transation = null)
+        {
+            int count;
+            if (connection != null)
+            {
+                count = connection.Count(sql, param, transation);
+            }
+            else
+            {
+                using (var db = NewDbConnection)
+                {
+                    count = db.Count(sql, param);
+                }
+            }
+            return count;
+        }
+
+        public static bool Any<T>(object param, IDbConnection connection = null, IDbTransaction transation = null)
+        {
+            int count;
+            if (connection != null)
+            {
+                count = connection.Count<T>(param, transation);
+            }
+            else
+            {
+                using (var db = NewDbConnection)
+                {
+                    count = db.Count<T>(param);
+                }
+            }
+            return count > 0;
+        }
         public static bool Any<T>(string condition, IDbConnection connection = null, IDbTransaction transation = null)
         {
             var count = Count<T>(condition, connection, transation);

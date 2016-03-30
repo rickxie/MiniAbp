@@ -24,7 +24,7 @@
         serviceName = serviceName.Substring(0, serviceName.Length - 2).ToCamelCase();
     }
     var methods = item.GetMethods().Where(r => !r.IsSpecialName && !r.IsStatic && r.IsPublic && r.IsSecurityCritical && !r.IsSecuritySafeCritical).ToList();
-    @:module.factory('mabp.@serviceName', [
+    @:module.factory('mabp.app.@serviceName', [
     @:'$http', function($http) {
     @:return new function()
     @:{
