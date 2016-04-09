@@ -1,5 +1,4 @@
-﻿using Yooya.Bpm.Framework;
-
+﻿
 namespace MiniAbp.Test
 {
     public class TestBase
@@ -12,7 +11,7 @@ namespace MiniAbp.Test
             Bootstrapper.Initialize();
         }
 
-        public virtual void Initialize()
+        public void Initialize()
         {
         }
     }

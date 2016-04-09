@@ -2,8 +2,7 @@
 using MiniAbp.Dependency;
 using MiniAbp.Logging;
 using MiniAbp.Razor;
-using MiniAbp.Reflection;
-using MiniAbp.Route;
+using MiniAbp.Reflection; 
 
 namespace MiniAbp
 {
@@ -30,17 +29,7 @@ namespace MiniAbp
         {
             TemplateManager.GenerateCode(YAssembly.ServiceTypes.ToArray());
         }
-
-        public void RegisterRoute(object sender)
-        {
-            UrlRouting.Instance.HandleApiService(((System.Web.HttpApplication)sender),
-                (response, outputJson) =>
-                {
-                    response.ContentType = "application/json; charset=utf-8";
-                    response.Write(outputJson);
-                    response.End();
-                });
-        }
+ 
 
         private void InitializeDiContainer()
         {

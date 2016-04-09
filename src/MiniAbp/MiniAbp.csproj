@@ -62,10 +62,6 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
@@ -90,33 +86,25 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.99.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auditing\AuditInfo.cs" />
-    <Compile Include="Auditing\AuditingManager.cs" />
-    <Compile Include="Auditing\WebAuditInfoProvider.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\UserManager.cs" />
     <Compile Include="Authorization\YAuthorizeAttribute.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
     <Compile Include="Dependency\IocManager.cs" />
+    <Compile Include="Domain\CreationEntity.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\Entitys\IFileUpload.cs" />
     <Compile Include="Domain\Entitys\FileInput.cs" />
     <Compile Include="Domain\Entitys\IdInput.cs" />
     <Compile Include="Domain\Entitys\IInputDto.cs" />
     <Compile Include="Domain\Entitys\IPaging.cs" />
+    <Compile Include="Domain\Entitys\MabpFiles.cs" />
     <Compile Include="Domain\Entitys\NameValue.cs" />
     <Compile Include="Domain\Entitys\Output.cs" />
     <Compile Include="Domain\Entitys\PagedList.cs" />
@@ -128,7 +116,8 @@
     <Compile Include="Logging\LoggerLevel.cs" />
     <Compile Include="Logging\FileLogger.cs" />
     <Compile Include="Razor\TemplateManager.cs" />
-    <Compile Include="Route\RequestType.cs" />
+    <Compile Include="Reflection\DependsOnAttribute.cs" />
+    <Compile Include="Reflection\MabpModule.cs" />
     <Compile Include="Runtime\YConst.cs" />
     <Compile Include="UserFriendlyException.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />
@@ -138,15 +127,11 @@
     <Compile Include="Test\TestBase.cs" />
     <Compile Include="Utility\Encryptor.cs" />
     <Compile Include="YBootstrapper.cs" />
-    <Compile Include="Route\YRequestHandler.cs" />
     <Compile Include="Domain\BaseRepository.cs" />
     <Compile Include="Domain\BaseService.cs" />
-    <Compile Include="Route\ServiceController.cs" />
     <Compile Include="DataAccess\DbDapper.cs" />
     <Compile Include="AjaxResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Route\UrlRouting.cs" />
-    <Compile Include="YApplication.cs" />
     <Compile Include="Reflection\YAssembly.cs" />
   </ItemGroup>
   <ItemGroup>

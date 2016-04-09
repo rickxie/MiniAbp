@@ -27,10 +27,10 @@ namespace MiniAbp.Reflection
         {
             ServiceTypes = YAssemblyCollection.Types.Where(r => 
             (r.Name.ToUpper().EndsWith("SV") || r.Name.ToUpper().EndsWith("SERVICE")) 
-            && r.IsSubclassOf(typeof(BaseService))).ToList();
+            && typeof(BaseService).IsAssignableFrom(r)).ToList();
             RepositoryTypes = YAssemblyCollection.Types.Where(r => 
             (r.Name.ToUpper().EndsWith("RP") || r.Name.ToUpper().EndsWith("REPOSITORY")) 
-            && r.IsSubclassOf(typeof(BaseRepository<,>))).ToList();
+            && typeof(BaseRepository<,>).IsAssignableFrom(r)).ToList();
         }
 
         public static object CreateInstance(string fullName)

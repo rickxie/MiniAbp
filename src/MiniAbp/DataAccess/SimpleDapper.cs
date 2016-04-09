@@ -28,7 +28,9 @@ namespace MiniAbp.DataAccess
             private static Dialect _dialect;//= Dialect.SqlServer;
             private static string _encapsulation;
             private static string _getIdentitySql;
+#pragma warning disable 414
             private static string _getPagedListSql;
+#pragma warning restore 414
 
             /// <summary>
             /// Returns the current dialect name

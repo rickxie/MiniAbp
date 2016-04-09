@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MiniAbp.Runtime;
 
-namespace MiniAbp.Auditing
+namespace MiniAbp.Web.Auditing
 {
     public class AuditingManager
     {

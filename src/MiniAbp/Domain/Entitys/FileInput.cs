@@ -5,6 +5,6 @@ namespace MiniAbp.Domain.Entitys
 {
     public class FileInput
     {
-        public List<HttpPostedFile> Files { get; set; }
+        public List<MabpFiles> Files { get; set; }
     }
 }

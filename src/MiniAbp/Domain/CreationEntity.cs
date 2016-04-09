@@ -3,15 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiniAbp.Domain
 {
-    public class Entity : IEntity<string>
+    public class CreationEntity : Entity
     {
-        [Key]
-        [StringLength(50)]
-        public string Id { get; set; }
+        public DateTime? CreationTime { get; set; }
 
-        public void RefreshId()
+        public new void RefreshId()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.CreationTime = DateTime.Now;
         }
     }
 }
