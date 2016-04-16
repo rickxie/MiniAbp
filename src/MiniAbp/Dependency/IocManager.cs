@@ -4,7 +4,9 @@ using System.Data.SQLite;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using MiniAbp.DataAccess;
+using MiniAbp.Domain;
 using MiniAbp.Logging;
+using MiniAbp.Reflection;
 
 namespace MiniAbp.Dependency
 {
@@ -16,11 +18,6 @@ namespace MiniAbp.Dependency
         {
             Instance = new IocManager();
         }
-
-        //public IRegistrationBuilder<TImplementer, ConcreteReflectionActivatorData, SingleRegistrationStyle> RegisterType<TImplementer>()
-        //{
-        //    return IocBuilder.RegisterType<TImplementer>();
-        //}
         /// <summary>
         /// 
         /// </summary>
@@ -33,10 +30,6 @@ namespace MiniAbp.Dependency
             return IocContainer.Resolve<T>(serviceName, param);
         }
 
-        //public bool IsRegistered(Type type)
-        //{
-        //    return IocContainer.Register(type);
-        //}
         public T Resolve<T>()
         {
             return IocContainer.Resolve<T>();
@@ -54,7 +47,9 @@ namespace MiniAbp.Dependency
 
         public void Initialize()
         {
-
+            YAssembly.Initialize();
+            IocContainer.Register(Classes.From(YAssembly.ServiceTypes).BasedOn<BaseService>().LifestyleTransient());
+            IocContainer.Register(Classes.From(YAssembly.RepositoryTypes).BasedOn<BaseService>().LifestyleTransient());
         }
     }
 }

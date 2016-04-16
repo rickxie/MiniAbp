@@ -21,7 +21,6 @@ namespace MiniAbp
 
         public void Initialize()
         { 
-            YAssembly.Initialize();
             IocManager.Initialize();
         }
 
