@@ -33,7 +33,7 @@ namespace MiniAbp.Runtime
         }
         public string LanguageCulture => GetClaims(YConst.LanguageCultrue);
 
-        public string Name => GetClaims(ClaimTypes.Name);
+        //public string Name => GetClaims(ClaimTypes.Name);
        
         private string GetClaims(string type)
         {

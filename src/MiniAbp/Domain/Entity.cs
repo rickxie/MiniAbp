@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MiniAbp.Domain
 {
-    public class Entity : IEntity<string>
+    public abstract class Entity : IEntity<string>
     {
         [Key]
         [StringLength(50)]
-        public string Id { get; set; }
+        public virtual string Id { get; set; }
 
         public void RefreshId()
         {

@@ -156,8 +156,20 @@ namespace MiniAbp.Logging
         {
             var logDir = AppPath.GetRelativeDir("Logs/");
             var filePath = logDir + "logs.txt";
-            File.AppendAllText(filePath, content);
-            var attr = File.GetAttributes(filePath);
+            using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+            {
+                using (var sr = new StreamWriter(fs, System.Text.Encoding.Default))
+                {
+                    sr.Write(content);
+                    sr.Close();
+                }
+                fs.Close();
+            }
+
+
+
+
+
             var info = new FileInfo(filePath);
             var mbSize = info.Length/(1024*1024);
             if (mbSize >= 2)

@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using Dapper;
 using Microsoft.CSharp.RuntimeBinder;
+using MiniAbp.Configuration;
+using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Extension;
 
@@ -21,7 +23,7 @@ namespace MiniAbp.DataAccess
         {
             static SimpleDapper()
             {
-                _dialect = DbDapper.Dialect;
+                _dialect = IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
                 SetDialect(_dialect);
             }
 

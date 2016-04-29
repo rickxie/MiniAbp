@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Castle.MicroKernel.Registration;
+using MiniAbp.Dependency;
 using MiniAbp.Domain;
 
 namespace MiniAbp.Reflection
@@ -11,6 +13,7 @@ namespace MiniAbp.Reflection
         public static List<Type> Types;
         public static List<Type> ServiceTypes;
         public static List<Type> RepositoryTypes;
+
         public static void Regist(Assembly assembly)
         {
             YAssemblyCollection.Add(assembly);
@@ -21,16 +24,18 @@ namespace MiniAbp.Reflection
             YAssemblyCollection.Add(Assembly.GetExecutingAssembly());
             YAssemblyCollection.Initialize();
             LoadAllTypes();
+            IocManager.Instance.IocContainer.Register(Classes.From(YAssembly.ServiceTypes).BasedOn<IApplicationService>().LifestyleTransient());
+            IocManager.Instance.IocContainer.Register(Classes.From(YAssembly.RepositoryTypes).BasedOn<IRepository>().LifestyleTransient());
         }
 
-        public static void LoadAllTypes()
+        private static void LoadAllTypes()
         {
             ServiceTypes = YAssemblyCollection.Types.Where(r => 
             (r.Name.ToUpper().EndsWith("SV") || r.Name.ToUpper().EndsWith("SERVICE")) 
-            && typeof(BaseService).IsAssignableFrom(r)).ToList();
+            && typeof(IApplicationService).IsAssignableFrom(r)).ToList();
             RepositoryTypes = YAssemblyCollection.Types.Where(r => 
             (r.Name.ToUpper().EndsWith("RP") || r.Name.ToUpper().EndsWith("REPOSITORY")) 
-            && typeof(BaseRepository<,>).IsAssignableFrom(r)).ToList();
+            && typeof(IRepository).IsAssignableFrom(r)).ToList();
         }
 
         public static object CreateInstance(string fullName)
@@ -54,7 +59,7 @@ namespace MiniAbp.Reflection
         {
             var methods = type.GetMethods();
 
-            return methods.FirstOrDefault(r => r.Name.ToUpper().Contains(methodName));
+            return methods.FirstOrDefault(r => r.Name.ToUpper().Equals(methodName));
         }
     }
 }

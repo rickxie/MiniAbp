@@ -55,6 +55,7 @@
     <Compile Include="Route\ServiceController.cs" />
     <Compile Include="Route\UrlRouting.cs" />
     <Compile Include="Route\YRequestHandler.cs" />
+    <Compile Include="Web\WebAssemblyFinder.cs" />
     <Compile Include="YApplication.cs" />
   </ItemGroup>
   <ItemGroup>

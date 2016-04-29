@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.ApplicationTest", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Web", "MiniAbp.Web\MiniAbp.Web.csproj", "{AE640FE9-A6EB-4029-8348-14C96616EC7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Ado", "MiniAbp.Ado\MiniAbp.Ado.csproj", "{491C7A84-9EAF-4077-9C49-B55209E5C60D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AE640FE9-A6EB-4029-8348-14C96616EC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE640FE9-A6EB-4029-8348-14C96616EC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE640FE9-A6EB-4029-8348-14C96616EC7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

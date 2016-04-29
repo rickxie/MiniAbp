@@ -11,7 +11,7 @@ namespace MiniAbp.Test
 
         public TemplateManagerTest()
         {
-           DbDapper.ConnectionString = Connection; 
+           Initialize(Connection, Dialect.SqlServer);
         }
 
         [TestMethod]

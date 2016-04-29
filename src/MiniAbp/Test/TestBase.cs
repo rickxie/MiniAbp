@@ -2,6 +2,8 @@
 using System;
 using System.Security.Principal;
 using System.Threading;
+using MiniAbp.Configuration;
+using MiniAbp.DataAccess;
 
 namespace MiniAbp.Test
 {
@@ -11,11 +13,14 @@ namespace MiniAbp.Test
         public TestBase()
         {
             Bootstrapper = new YBootstrapper(); 
-        }
+        } 
 
-        public  virtual void Initialize()
+        public void Initialize(string connectionStr, Dialect dialect)
         {
             Bootstrapper.Initialize();
+            var dbSetting = Bootstrapper.IocManager.Resolve<DatabaseSetting>();
+            dbSetting.ConnectionString = connectionStr;
+            dbSetting.Dialect = dialect;
         }
 
         public void SetPrincipal(IPrincipal principal)

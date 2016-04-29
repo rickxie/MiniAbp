@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.MicroKernel.Registration;
+using MiniAbp.Configuration;
 using MiniAbp.Dependency;
+using MiniAbp.Domain;
 
 namespace MiniAbp.Reflection
 {
     public abstract class MabpModule
     {
         protected internal  IocManager IocManager{ get; internal set; }
+        protected internal IStartupConfiguration Configuration { get; internal set; }
 
         public virtual void PreInitialize()
         {
@@ -23,7 +27,7 @@ namespace MiniAbp.Reflection
 
         public virtual void PostInitialize()
         {
-            
+          
         }
 
         public virtual void Shutdown()

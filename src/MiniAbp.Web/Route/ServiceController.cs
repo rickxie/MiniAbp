@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using MiniAbp.DataAccess;
+using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Reflection;
 using Newtonsoft.Json;
@@ -39,7 +40,7 @@ namespace MiniAbp.Web.Route
                 var dbTransaction = dbConnection.BeginTransaction();
                 try
                 {
-                    var instance = YAssembly.CreateInstance(type.FullName);
+                    var instance = IocManager.Instance.Resolve(type);// YAssembly.CreateInstance(type.FullName);
                     type.GetProperty("DbConnection").SetValue(instance, dbConnection, null);
                     type.GetProperty("DbTransaction").SetValue(instance, dbTransaction, null);
                     InitializeRepositorys(type, instance, dbConnection, dbTransaction);

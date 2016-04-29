@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
+using MiniAbp.Configuration;
 using MiniAbp.DataAccess.Dapper; 
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
@@ -12,26 +13,10 @@ using MiniAbp.Runtime;
 namespace MiniAbp.DataAccess
 {
     public class DbDapper
-    {
-        private static string _connStr;
-        public static string ConnectionString {
-            get { return _connStr; } 
-            set
-            {
-                _connStr = AppPath.ConvertFormatConnection(value);
-            }
-        } 
-        //public static DBHelper DbHelper;
-        private static Dialect _dialect;
-        public static Dialect Dialect
-        {
-            get { return _dialect; }
-            set
-            {
-                _dialect = value;
-                SimpleDapper.SetDialect(_dialect);
-            }
-        } 
+    { 
+        public static string ConnectionString => AppPath.ConvertFormatConnection(IocManager.Instance.Resolve<DatabaseSetting>().ConnectionString);
+        public static Dialect Dialect => IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
+
         //private static string ConnStr
         //{
         //    get

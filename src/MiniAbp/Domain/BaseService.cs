@@ -3,7 +3,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public class BaseService
+    public class BaseService : IApplicationService
     {
         protected YSession Session = YSession.GetInstance();
         public IDbConnection DbConnection { get; set; }

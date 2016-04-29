@@ -13,7 +13,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public class BaseRepository<T, TPrimaryKey> where T : IEntity<TPrimaryKey>
+    public class BaseRepository<T, TPrimaryKey> : IRepository where T : IEntity<TPrimaryKey> 
     {
         protected YSession Session = YSession.GetInstance();
         public IDbConnection DbConnection { get; set; }

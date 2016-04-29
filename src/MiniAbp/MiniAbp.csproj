@@ -28,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <RegisterForComInterop>false</RegisterForComInterop>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -96,8 +97,20 @@
     <Compile Include="Authorization\UserManager.cs" />
     <Compile Include="Authorization\YAuthorizeAttribute.cs" />
     <Compile Include="Configuration\Configuration.cs" />
+    <Compile Include="Configuration\DatabaseSetting.cs" />
+    <Compile Include="Configuration\DictionaryBasedConfig.cs" />
+    <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
+    <Compile Include="Configuration\StartupConfiguration.cs" />
+    <Compile Include="Configuration\IStartupConfiguration.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
+    <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
+    <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\IConventionalDependencyRegistrar.cs" />
+    <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\Installer\CoreInstaller.cs" />
     <Compile Include="Dependency\IocManager.cs" />
+    <Compile Include="Dependency\IocRegistrarExtensions.cs" />
+    <Compile Include="Domain\BasicConventionalRegistrar.cs" />
     <Compile Include="Domain\CreationEntity.cs" />
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\Entitys\IFileUpload.cs" />
@@ -110,9 +123,26 @@
     <Compile Include="Domain\Entitys\Output.cs" />
     <Compile Include="Domain\Entitys\PagedList.cs" />
     <Compile Include="Domain\Entitys\PageInput.cs" />
+    <Compile Include="Domain\IApplicationService.cs" />
     <Compile Include="Domain\IEntity.cs" />
+    <Compile Include="Domain\IInterceptor.cs" />
+    <Compile Include="Domain\IRepository.cs" />
+    <Compile Include="Domain\ISingletonDenpendency.cs" />
+    <Compile Include="Domain\ITransientDependency.cs" />
+    <Compile Include="Domain\Uow\CallContextCurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\IActiveUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\ICurrentUnitOfWorkProvider.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWork.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkDefaultOptions.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkFailedEventArgs.cs" />
+    <Compile Include="Extension\DictionaryExtension.cs" />
+    <Compile Include="Extension\EventHandlerExtension.cs" />
+    <Compile Include="Extension\ListExtensions.cs" />
     <Compile Include="Extension\ObjectExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="KernelModule.cs" />
     <Compile Include="Localization\LanguageInfo.cs" />
     <Compile Include="Localization\LocalizationProvider.cs" />
     <Compile Include="Localization\LocalizationManager.cs" />
@@ -122,9 +152,16 @@
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerLevel.cs" />
     <Compile Include="Logging\FileLogger.cs" />
+    <Compile Include="Modules\ModuleCollection.cs" />
+    <Compile Include="Modules\ModuleFinder.cs" />
+    <Compile Include="Modules\ModuleInfo.cs" />
+    <Compile Include="Modules\ModuleManager.cs" />
     <Compile Include="Razor\TemplateManager.cs" />
+    <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
+    <Compile Include="Reflection\IAssemblyFinder.cs" />
     <Compile Include="Reflection\DependsOnAttribute.cs" />
     <Compile Include="Reflection\MabpModule.cs" />
+    <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Runtime\YConst.cs" />
     <Compile Include="UserFriendlyException.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />
