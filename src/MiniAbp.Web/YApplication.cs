@@ -5,7 +5,6 @@ using MiniAbp.Configuration;
 using MiniAbp.Dependency;
 using MiniAbp.Reflection;
 using MiniAbp.Web.Route;
-using MiniAbp.Web.Web;
 
 namespace MiniAbp.Web
 {

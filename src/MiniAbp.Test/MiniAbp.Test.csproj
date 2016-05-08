@@ -26,7 +26,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,6 +40,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MiniAbp.Ado, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\MiniAbp.Ado.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web" />
@@ -62,11 +66,16 @@
     <Compile Include="Service\WorkflowService.cs" />
     <Compile Include="TemplateManagerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniAbp.Web\MiniAbp.Web.csproj">
+      <Project>{ae640fe9-a6eb-4029-8348-14c96616ec7b}</Project>
+      <Name>MiniAbp.Web</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
       <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
       <Name>MiniAbp</Name>

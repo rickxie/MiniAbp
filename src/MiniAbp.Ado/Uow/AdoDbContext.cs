@@ -5,24 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MiniAbp.DataAccess;
+using MiniAbp.Domain;
 
 namespace MiniAbp.Ado.Uow
 {
     public class AdoDbContext : IDbContext
     {
         public IDbConnection DbConnection { get; set; }
-        public IDbTransaction DbTransaction { get; set; }
-        public string NameOrConnectionString;
-        public Dialect Dialect;
+        public IDbTransaction DbTransaction { get; set; } 
 
         public AdoDbContext()
         {
             
         }
-        public AdoDbContext(string connectionString, Dialect dialect)
+        public AdoDbContext(IDbConnection dbConnection)
         {
-            this.NameOrConnectionString = connectionString;
-            this.Dialect = dialect;
+            this.DbConnection = dbConnection;
         }
     }
 }

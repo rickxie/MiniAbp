@@ -10,8 +10,6 @@ namespace MiniAbp.Domain.Uow
     public interface IUnitOfWorkDefaultOptions
     {
         bool IsTransactional { get; set; }
-        TimeSpan? Timeout { get; set; }
-        string ConnectionString { get; set; }
-        Dialect Dialect { get; set; }
+        TimeSpan? Timeout { get; set; } 
     }
 }

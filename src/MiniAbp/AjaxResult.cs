@@ -3,6 +3,7 @@
     public class AjaxResult
     {
         public bool IsSuccess { get; set; }
+        public bool IsAuthorized { get; set; }
         public Errors Errors { get; set; }
         public object Result { get; set; }
     }

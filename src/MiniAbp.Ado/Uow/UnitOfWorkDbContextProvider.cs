@@ -3,7 +3,7 @@ using MiniAbp.Domain.Uow;
 
 namespace MiniAbp.Ado.Uow
 {
-    public class UnitOfWorkDbContextProvider: AdoDbContext, IDbContextProvider
+    public class UnitOfWorkDbContextProvider: IDbContextProvider
     {
         private readonly ICurrentUnitOfWorkProvider _currentUnitOfWorkProvider;
         public UnitOfWorkDbContextProvider(ICurrentUnitOfWorkProvider currentUnitOfWorkProvider)

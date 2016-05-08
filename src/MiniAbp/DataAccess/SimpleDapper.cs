@@ -370,6 +370,15 @@ namespace MiniAbp.DataAccess
                     Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, sqlWithPaged));
                 return rtnObj;
             }
+            public static T QueryFirst<T>(this IDbConnection connection, string sql, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
+            {
+                var sqlS = "SELECT TOP 1 * FROM ( {0}) T".Fill(sql);
+                  var currenttype = typeof(T);
+                var result = connection.Query<T>(sqlS, whereCondition, transaction, true, commandTimeout);
+                if (Debugger.IsAttached)
+                    Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, sqlS));
+                return result.FirstOrDefault();
+            }
 
             /// <summary>
             /// <para>Inserts a row into the database</para>

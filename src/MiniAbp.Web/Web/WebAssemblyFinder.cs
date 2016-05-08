@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Compilation;
 using MiniAbp.Reflection;
 
-namespace MiniAbp.Web.Web
+namespace MiniAbp.Web
 {
     /// <summary>
     /// This class is used to get all assemblies in bin folder of a web application.

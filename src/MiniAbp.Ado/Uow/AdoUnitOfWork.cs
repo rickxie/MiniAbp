@@ -12,8 +12,9 @@ namespace MiniAbp.Ado.Uow
     {
         private readonly IDictionary<Type, IDbContext> _activeDbContexts;
         private readonly IocManager _iocResolver;
-        private IDbTransaction _transaction;
-
+        private IDbContext _dbContext => GetOrCreateDbContext();
+        private IDbConnection dbConnection => _dbContext.DbConnection;
+        private IDbTransaction dbTransaction;
         public AdoUnitOfWork(IocManager iocManager)
         {
             _iocResolver = iocManager;
@@ -21,29 +22,34 @@ namespace MiniAbp.Ado.Uow
         }
         protected override void BeginUow()
         {
-            _iocResolver.Resolve<IDbConnection>();
+            dbConnection?.Open();
+            if(_dbContext!=null)
+            _dbContext.DbTransaction = dbTransaction = dbConnection?.BeginTransaction();
         }
 
         protected override void CompleteUow()
         {
-            throw new NotImplementedException();
+            dbTransaction?.Commit();
+            dbConnection?.Close();
         }
 
-        protected override Task CompleteUowAsync()
+        protected override void OnFailed(Exception exception)
         {
-            throw new NotImplementedException();
+            dbTransaction?.Rollback();
         }
 
         protected override void DisposeUow()
         {
-            throw new NotImplementedException();
+            dbTransaction?.Dispose();
+            dbConnection?.Dispose();
         }
+
         internal IDbContext GetOrCreateDbContext()
         {
             IDbContext dbContext;
             if (!_activeDbContexts.TryGetValue(typeof(IDbContext), out dbContext))
             {
-                dbContext = _iocResolver.Resolve<IDbContext>();
+                dbContext = _iocResolver.Resolve<AdoDbContext>();
                 _activeDbContexts[typeof(IDbContext)] = dbContext;
             }
 

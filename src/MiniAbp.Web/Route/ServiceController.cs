@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using MiniAbp.Authorization;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
@@ -33,28 +34,21 @@ namespace MiniAbp.Web.Route
             methodName = methodName.ToUpper();
             var type = YAssembly.FindServiceType(serviceName);
             var method = YAssembly.GetMethodByType(type, methodName);
-            object result = null;
-            using (var dbConnection = DbDapper.NewDbConnection)
-            {
-                dbConnection.Open();
-                var dbTransaction = dbConnection.BeginTransaction();
-                try
+            //权限安全检查
+            var authorizeAttrList = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MabpAuthorizeAttribute>(method
+                  );
+            if (authorizeAttrList.Count > 0)
+            { 
+                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
                 {
-                    var instance = IocManager.Instance.Resolve(type);// YAssembly.CreateInstance(type.FullName);
-                    type.GetProperty("DbConnection").SetValue(instance, dbConnection, null);
-                    type.GetProperty("DbTransaction").SetValue(instance, dbTransaction, null);
-                    InitializeRepositorys(type, instance, dbConnection, dbTransaction);
-                    result = Invoke(method, instance, param);
-                    dbTransaction.Commit();
+                    authorizationAttributeHelper.Object.Authorize(authorizeAttrList);
                 }
-                catch (Exception)
-                {
-                    dbTransaction.Rollback();
-                    throw;
-                }
-
-                dbConnection.Close();
             }
+
+            object result = null; 
+            var instance = IocManager.Instance.Resolve(type); 
+            result = Invoke(method, instance, param);
+             
             return result;
         }
 
@@ -145,8 +139,8 @@ namespace MiniAbp.Web.Route
                     var fieldInfo = ((PropertyInfo) memberInfo);
                     var typeofMember = YAssembly.GetType(fieldInfo.PropertyType.FullName);
                     var instanceOfMember = YAssembly.CreateInstance(fieldInfo.PropertyType.FullName);
-                    typeofMember.GetProperty("DbConnection").SetValue(instanceOfMember, dbConnection, null);
-                    typeofMember.GetProperty("DbTransaction").SetValue(instanceOfMember, dbTransaction, null);
+                    typeofMember.GetProperty("Connection").SetValue(instanceOfMember, dbConnection, null);
+                    typeofMember.GetProperty("Transaction").SetValue(instanceOfMember, dbTransaction, null);
                     type.GetProperty(memberInfo.Name).SetValue(instance, instanceOfMember, null);
                 }
             }

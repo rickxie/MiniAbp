@@ -11,12 +11,16 @@
     <AssemblyName>MiniAbp.Ado</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -38,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm\packages\MiniAbp\Castle.Windsor.dll</HintPath>
     </Reference>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm\packages\MiniAbp\Dapper.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,18 +59,14 @@
     <Compile Include="AdoModule.cs" />
     <Compile Include="Dependency\AdoConventionalRegisterer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repository\AdoRepositoryBaseOfEntity.cs" />
+    <Compile Include="Repository\AdoRepositoryBase.cs" />
     <Compile Include="Uow\AdoUnitOfWork.cs" />
     <Compile Include="Uow\AdoDbContext.cs" />
     <Compile Include="Uow\IDbContext.cs" />
     <Compile Include="Uow\IDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkExtension.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
-      <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
-      <Name>MiniAbp</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

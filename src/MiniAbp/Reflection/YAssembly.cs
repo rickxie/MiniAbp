@@ -58,7 +58,6 @@ namespace MiniAbp.Reflection
         public static MethodInfo GetMethodByType(Type type, string methodName)
         {
             var methods = type.GetMethods();
-
             return methods.FirstOrDefault(r => r.Name.ToUpper().Equals(methodName));
         }
     }

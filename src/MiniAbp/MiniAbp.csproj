@@ -92,6 +92,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authorization\AuthorizeAttributeHelper.cs" />
+    <Compile Include="Authorization\IAuthorizeAttributeHelper.cs" />
+    <Compile Include="Authorization\IMabpAuthorizeAttribute.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptor.cs" />
+    <Compile Include="Authorization\Interceptors\AuthorizationInterceptorRegistrar.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\UserManager.cs" />
@@ -105,11 +110,16 @@
     <Compile Include="DataAccess\Dialect.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\IConventionalDependencyRegistrar.cs" />
     <Compile Include="Dependency\IConventionalRegistrationContext.cs" />
+    <Compile Include="Dependency\IDisposableDependencyObjectWrapper.cs" />
+    <Compile Include="Dependency\IDisposableDependencyObjectWrapperOfT.cs" />
     <Compile Include="Dependency\Installer\CoreInstaller.cs" />
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\IocRegistrarExtensions.cs" />
+    <Compile Include="Dependency\IocResolverExtensions.cs" />
+    <Compile Include="Domain\BaseRepository.cs" />
     <Compile Include="Domain\BasicConventionalRegistrar.cs" />
     <Compile Include="Domain\CreationEntity.cs" />
     <Compile Include="Domain\Entity.cs" />
@@ -125,7 +135,6 @@
     <Compile Include="Domain\Entitys\PageInput.cs" />
     <Compile Include="Domain\IApplicationService.cs" />
     <Compile Include="Domain\IEntity.cs" />
-    <Compile Include="Domain\IInterceptor.cs" />
     <Compile Include="Domain\IRepository.cs" />
     <Compile Include="Domain\ISingletonDenpendency.cs" />
     <Compile Include="Domain\ITransientDependency.cs" />
@@ -135,8 +144,15 @@
     <Compile Include="Domain\Uow\IUnitOfWork.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkCompleteHandle.cs" />
     <Compile Include="Domain\Uow\IUnitOfWorkDefaultOptions.cs" />
+    <Compile Include="Domain\Uow\IUnitOfWorkManager.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkBase.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkFailedEventArgs.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkHelper.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkInterceptor.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkManager.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
+    <Compile Include="Domain\Uow\UnitOfWorkRegistrar.cs" />
+    <Compile Include="Exception\AuthorizationException.cs" />
     <Compile Include="Extension\DictionaryExtension.cs" />
     <Compile Include="Extension\EventHandlerExtension.cs" />
     <Compile Include="Extension\ListExtensions.cs" />
@@ -161,17 +177,17 @@
     <Compile Include="Reflection\IAssemblyFinder.cs" />
     <Compile Include="Reflection\DependsOnAttribute.cs" />
     <Compile Include="Reflection\MabpModule.cs" />
+    <Compile Include="Reflection\ReflectionHelper.cs" />
     <Compile Include="Reflection\TypeFinder.cs" />
     <Compile Include="Runtime\YConst.cs" />
-    <Compile Include="UserFriendlyException.cs" />
+    <Compile Include="Exception\UserFriendlyException.cs" />
     <Compile Include="Extension\CollectionExtension.cs" />
     <Compile Include="Reflection\YAssemblyCollection.cs" />
     <Compile Include="Runtime\AppPath.cs" />
     <Compile Include="Runtime\YSession.cs" />
-    <Compile Include="Test\TestBase.cs" />
     <Compile Include="Utility\Encryptor.cs" />
     <Compile Include="YBootstrapper.cs" />
-    <Compile Include="Domain\BaseRepository.cs" />
+    <Compile Include="Domain\BaseRepositoryOfEntity.cs" />
     <Compile Include="Domain\BaseService.cs" />
     <Compile Include="DataAccess\DbDapper.cs" />
     <Compile Include="AjaxResult.cs" />

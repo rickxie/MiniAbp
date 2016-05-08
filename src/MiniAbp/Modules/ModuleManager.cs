@@ -97,34 +97,34 @@ namespace MiniAbp.Modules
 
         private void SetDependencies()
         {
-            //foreach (var moduleInfo in _modules)
-            //{
-            //    //Set dependencies according to assembly dependency
-            //    foreach (var referencedAssemblyName in moduleInfo.Assembly.GetReferencedAssemblies())
-            //    {
-            //        var referencedAssembly = Assembly.Load(referencedAssemblyName);
-            //        var dependedModuleList = _modules.Where(m => m.Assembly == referencedAssembly).ToList();
-            //        if (dependedModuleList.Count > 0)
-            //        {
-            //            moduleInfo.Dependencies.AddRange(dependedModuleList);
-            //        }
-            //    }
+            foreach (var moduleInfo in _modules)
+            {
+                //Set dependencies according to assembly dependency
+                foreach (var referencedAssemblyName in moduleInfo.Assembly.GetReferencedAssemblies())
+                {
+                    var referencedAssembly = Assembly.Load(referencedAssemblyName);
+                    var dependedModuleList = _modules.Where(m => m.Assembly == referencedAssembly).ToList();
+                    if (dependedModuleList.Count > 0)
+                    {
+                        moduleInfo.Dependencies.AddRange(dependedModuleList);
+                    }
+                }
 
-            //    //Set dependencies for defined DependsOnAttribute attribute(s).
-            //    foreach (var dependedModuleType in AbpModule.FindDependedModuleTypes(moduleInfo.Type))
-            //    {
-            //        var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
-            //        if (dependedModuleInfo == null)
-            //        {
-            //            throw new AbpInitializationException("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
-            //        }
+                //Set dependencies for defined DependsOnAttribute attribute(s).
+                foreach (var dependedModuleType in MabpModule.FindDependedModuleTypes(moduleInfo.Type))
+                {
+                    var dependedModuleInfo = _modules.FirstOrDefault(m => m.Type == dependedModuleType);
+                    if (dependedModuleInfo == null)
+                    {
+                        throw new Exception("Could not find a depended module " + dependedModuleType.AssemblyQualifiedName + " for " + moduleInfo.Type.AssemblyQualifiedName);
+                    }
 
-            //        if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
-            //        {
-            //            moduleInfo.Dependencies.Add(dependedModuleInfo);
-            //        }
-            //    }
-            //}
+                    if ((moduleInfo.Dependencies.FirstOrDefault(dm => dm.Type == dependedModuleType) == null))
+                    {
+                        moduleInfo.Dependencies.Add(dependedModuleInfo);
+                    }
+                }
+            }
         }
 
         private static ICollection<Type> AddMissingDependedModules(ICollection<Type> allModules)

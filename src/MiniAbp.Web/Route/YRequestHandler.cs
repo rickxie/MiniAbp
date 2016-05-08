@@ -28,6 +28,7 @@ namespace MiniAbp.Web.Route
             catch (Exception ex)
             {
                 var except = ex.InnerException ?? ex;
+
                 result = new AjaxResult()
                 {
                     IsSuccess = false,
@@ -38,10 +39,18 @@ namespace MiniAbp.Web.Route
                         CallStack = except.StackTrace
                     }
                 };
+
+
                 if (except.GetType() == typeof (UserFriendlyException))
                 {
                     result.Errors.IsFriendlyError = true;
                 }
+                else if (except.GetType() == typeof (AuthorizationException))
+                {
+                    result.Errors.IsFriendlyError = false;
+                    result.IsAuthorized = false;
+                }
+                 
                 auditing.Exception(except.Message + except.StackTrace);
                 Logger.Error(ex.Message, except);
             }

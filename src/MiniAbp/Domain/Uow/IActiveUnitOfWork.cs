@@ -15,6 +15,7 @@ namespace MiniAbp.Domain.Uow
         /// </summary>
         event EventHandler Disposed;
 
+        event EventHandler<UnitOfWorkFailedEventArgs> Failed;
         /// <summary>
         /// Is this UOW disposed?
         /// </summary>
@@ -28,5 +29,6 @@ namespace MiniAbp.Domain.Uow
         /// since all changes saved at end of a unit of work automatically.
         /// </summary>
         void SaveChanges();
+
     }
 }

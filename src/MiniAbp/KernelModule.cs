@@ -5,8 +5,10 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
+using MiniAbp.Authorization.Interceptors;
 using MiniAbp.Dependency;
 using MiniAbp.Domain;
+using MiniAbp.Domain.Uow;
 using MiniAbp.Reflection;
 
 namespace MiniAbp
@@ -18,9 +20,9 @@ namespace MiniAbp
     {
         public override void PreInitialize()
         {
-            //TODO: 注册UnitOfWork功能
-            //TODO: 注册授权验证功能
             IocManager.AddConventionalRegistrar(new BasicConventionalRegistrar());
+            UnitOfWorkRegistrar.Initialize(IocManager);
+            AuthorizationInterceptorRegistrar.Initialize(IocManager);
             base.PreInitialize();
 
         }

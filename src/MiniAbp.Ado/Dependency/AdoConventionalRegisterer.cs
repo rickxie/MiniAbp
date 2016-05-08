@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +27,9 @@ namespace MiniAbp.Ado.Dependency
                         var dbSetting = context.IocManager.Resolve<DatabaseSetting>();
                         if (!string.IsNullOrWhiteSpace(dbSetting.ConnectionString))
                         {
-                            dynamicParams["connectionString"] = dbSetting.ConnectionString;
-                            dynamicParams["dialect"] = dbSetting.Dialect;
+                            dynamicParams["dbConnection"] =
+                                IocManager.Instance.ResolveNamed<IDbConnection>(dbSetting.Dialect.ToString()
+                                    , new {dbSetting.ConnectionString});
                         }
                     })));
         }

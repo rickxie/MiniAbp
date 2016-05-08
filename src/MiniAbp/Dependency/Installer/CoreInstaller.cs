@@ -11,6 +11,7 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using MiniAbp.Configuration;
 using MiniAbp.DataAccess;
+using MiniAbp.Domain.Uow;
 using MiniAbp.Logging;
 using MiniAbp.Modules;
 using MiniAbp.Reflection;
@@ -29,6 +30,7 @@ namespace MiniAbp.Dependency.Installer
                 Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(Dialect.SqLite.ToString()).LifeStyle.Transient,
                 Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient,
                 Component.For<IStartupConfiguration>().ImplementedBy<StartupConfiguration>().LifestyleSingleton(),
+                Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkOptions>().LifestyleSingleton(),
                 Component.For<DatabaseSetting>().ImplementedBy<DatabaseSetting>().LifestyleSingleton());
         }
     }

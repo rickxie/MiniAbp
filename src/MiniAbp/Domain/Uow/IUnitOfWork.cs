@@ -8,6 +8,6 @@ namespace MiniAbp.Domain.Uow
 {
     public interface IUnitOfWork : IActiveUnitOfWork, IUnitOfWorkCompleteHandle
     {
-        void Begin();
+        void Begin(UnitOfWorkOptions options);
     }
 }

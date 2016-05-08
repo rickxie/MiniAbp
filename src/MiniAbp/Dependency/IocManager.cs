@@ -7,10 +7,6 @@ using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using MiniAbp.DataAccess;
-using MiniAbp.Domain;
-using MiniAbp.Logging;
-using MiniAbp.Reflection;
 
 namespace MiniAbp.Dependency
 {
@@ -39,9 +35,33 @@ namespace MiniAbp.Dependency
         {
             return IocContainer.Resolve<T>();
         }
+
         /// <summary>
         /// Gets an object from IOC container.
-        /// Returning object must be Released (see <see cref="IIocResolver.Release"/>) after usage.
+        /// Returning object must be Released (see <see cref="IocManager.Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to get</typeparam>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object</returns>
+        public T Resolve<T>(object argumentsAsAnonymousType)
+        {
+            return IocContainer.Resolve<T>(argumentsAsAnonymousType);
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocManager.Release"/>) after usage.
+        /// </summary> 
+        /// <param name="type">Type of the object to get</param>
+        /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
+        /// <returns>The instance object</returns>
+        public object Resolve(Type type, object argumentsAsAnonymousType)
+        {
+            return IocContainer.Resolve(type, argumentsAsAnonymousType);
+        }
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="IocManager.Release"/>) after usage.
         /// </summary> 
         /// <param name="type">Type of the object to get</param>
         /// <returns>The instance object</returns>
@@ -133,7 +153,10 @@ namespace MiniAbp.Dependency
         {
             RegisterAssemblyByConvention(assembly, new ConventionalRegistrationConfig());
         }
-
+        public void Release(object obj)
+        {
+            IocContainer.Release(obj);
+        }
         /// <summary>
         /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
         /// </summary>

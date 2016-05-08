@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using Castle.Core;
 
 namespace MiniAbp.Domain.Uow
 {
@@ -68,7 +69,7 @@ namespace MiniAbp.Domain.Uow
                 CallContext.LogicalSetData(ContextKey, unitOfWorkKey);
             }
         }
-
+        [DoNotWire]
         public IUnitOfWork Current
         {
             get { return StaticUow; } set { StaticUow = value; }

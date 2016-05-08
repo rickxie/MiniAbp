@@ -17,6 +17,7 @@ namespace MiniAbp.DataAccess
         public static string ConnectionString => AppPath.ConvertFormatConnection(IocManager.Instance.Resolve<DatabaseSetting>().ConnectionString);
         public static Dialect Dialect => IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
 
+
         //private static string ConnStr
         //{
         //    get
@@ -174,7 +175,7 @@ namespace MiniAbp.DataAccess
 //        }
 
         //执行删除和更新操作 无需返回值
-        public static void ExecuteNonQuery(string sql,object param, IDbConnection connection = null, IDbTransaction transation = null)
+        public static void ExecuteNonQuery(string sql, object param =null, IDbConnection connection = null, IDbTransaction transation = null)
         {
             if (connection != null)
             {

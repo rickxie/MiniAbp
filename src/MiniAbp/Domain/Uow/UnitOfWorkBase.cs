@@ -27,10 +27,10 @@ namespace MiniAbp.Domain.Uow
         /// </summary>
         protected abstract void CompleteUow();
 
-        /// <summary>
-        /// Should be implemented by derived classes to complete UOW.
-        /// </summary>
-        protected abstract Task CompleteUowAsync();
+        ///// <summary>
+        ///// Should be implemented by derived classes to complete UOW.
+        ///// </summary>
+        //protected abstract Task CompleteUowAsync();
 
         /// <summary>
         /// Should be implemented by derived classes to dispose UOW.
@@ -56,7 +56,7 @@ namespace MiniAbp.Domain.Uow
                 throw;
             }
         }
-        public void Begin()
+        public void Begin(UnitOfWorkOptions options)
         {
             PreventMultipleBegin();
             BeginUow();
