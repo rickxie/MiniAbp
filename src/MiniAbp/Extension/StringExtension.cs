@@ -36,6 +36,16 @@ namespace MiniAbp.Extension
             return true;
         }
 
+        /// <summary>
+        /// isNotNullOrEmptyWhite()
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool HasValue(this string str)
+        {
+            return !IsEmpty(str);
+        }
+
         public static string ToCamelCase(this string str)
         {
             if (str.IsEmpty() || str.Length <= 1)

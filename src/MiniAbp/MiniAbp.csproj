@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -99,8 +99,7 @@
     <Compile Include="Authorization\Interceptors\AuthorizationInterceptorRegistrar.cs" />
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
-    <Compile Include="Authorization\UserManager.cs" />
-    <Compile Include="Authorization\YAuthorizeAttribute.cs" />
+    <Compile Include="Authorization\MabpAuthorizeAttribute.cs" />
     <Compile Include="Configuration\Configuration.cs" />
     <Compile Include="Configuration\DatabaseSetting.cs" />
     <Compile Include="Configuration\DictionaryBasedConfig.cs" />

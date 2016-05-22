@@ -8,6 +8,7 @@ using MiniAbp.Authorization;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
+using MiniAbp.Extension;
 using MiniAbp.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -69,10 +70,18 @@ namespace MiniAbp.Web.Route
 
         public object GetMethoParam(MethodInfo info, object param)
         {
-
             if (param is string)
             {
-                return GetStringObject(info, param.ToString());
+                object paraObject = null;
+                try
+                {
+                    paraObject = GetStringObject(info, param.ToString());
+                }
+                catch (Exception)
+                {
+                    throw new UserFriendlyException("{0} 方法的请求参数出错".Fill(info.ToString()));
+                }
+                return paraObject;
             }
             else if (param is List<HttpPostedFile>)
             {

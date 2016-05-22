@@ -12,7 +12,7 @@ using MiniAbp.Reflection;
 
 namespace MiniAbp.Ado
 {
-    public class AdoModule:MabpModule
+    public class AdoModule : MabpModule
     {
         private readonly TypeFinder _typeFinder;
         public AdoModule(TypeFinder typeFinder)

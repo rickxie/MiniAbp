@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
@@ -17,35 +18,25 @@ namespace MiniAbp.DataAccess
         public static string ConnectionString => AppPath.ConvertFormatConnection(IocManager.Instance.Resolve<DatabaseSetting>().ConnectionString);
         public static Dialect Dialect => IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
 
-
-        //private static string ConnStr
-        //{
-        //    get
-        //    {
-        //        var cs = ConnectionString;
-        //        var scsb = new SqlConnectionStringBuilder(cs)
-        //        {
-        //            MultipleActiveResultSets = true
-        //        };
-        //        return scsb.ConnectionString;
-        //    }
-        //}
         public static IDbConnection NewDbConnection => IocManager.Instance.ResolveNamed<IDbConnection>(Dialect.ToString()
             ,new {ConnectionString });
 
-        public static DataTable RunDataTableSql(string sql, IDbConnection dbConnection = null)
+        public static DataTable RunDataTableSql(string sql, object param = null, IDbConnection dbConnection = null, IDbTransaction tran = null)
         {
-            DataTable table = new DataTable("MyTable");
+            DataTable table = new DataTable("Table1");
             if (dbConnection != null)
             {
-                dbConnection.ExecuteReader(sql);
+                using (var reader = dbConnection.ExecuteReader(sql, param, tran))
+                {
+                    table.Load(reader);
+                }
             }
             else
             {
                 using (var db = NewDbConnection)
                 {
                     db.Open();
-                    using (var reader = db.ExecuteReader(sql))
+                    using (var reader = db.ExecuteReader(sql, param))
                     {
                         table.Load(reader);
                     }
@@ -55,11 +46,6 @@ namespace MiniAbp.DataAccess
             return table;
         }
 
-        //
-        //        public static DataTable RunDataTableSql(string sql, params SqlParameter[] sqlParas)
-        //        {
-        //            return DBHelper.RunDataTableSQL(sql, sqlParas);
-        //        }
         public static IEnumerable<T> GetAll<T>(string sql, params SqlParameter[] sqlParas)
         {
 

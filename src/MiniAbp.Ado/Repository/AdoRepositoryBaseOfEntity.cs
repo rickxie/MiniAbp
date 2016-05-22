@@ -106,6 +106,12 @@ namespace MiniAbp.Ado.Repository
                 }
                 else
                 {
+                    if (typeof (CreationEntity).IsAssignableFrom(typeof (TEntity)))
+                    {
+                        var a = model as CreationEntity;
+                        a?.RefreshId();
+                    }
+                    else
                     if (typeof (Entity).IsAssignableFrom(typeof (TEntity)))
                     {
                         var a = model as Entity;

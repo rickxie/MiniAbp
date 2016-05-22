@@ -11,7 +11,8 @@ namespace MiniAbp.Test
 
         public TemplateManagerTest()
         {
-           Initialize(Connection, Dialect.SqlServer);
+            //Connection, Dialect.SqlServer
+            Initialize();
         }
 
         [TestMethod]

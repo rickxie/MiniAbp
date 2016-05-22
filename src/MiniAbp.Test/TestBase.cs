@@ -16,14 +16,10 @@ namespace MiniAbp.Test
             Bootstrapper = new YBootstrapper(); 
         }
 
-        public virtual void Initialize(string connectionStr, Dialect dialect)
+        public virtual void Initialize()
         {
-            //Bootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             PreInitialize();
             Bootstrapper.Initialize();
-            var dbSetting = Bootstrapper.IocManager.Resolve<DatabaseSetting>();
-            dbSetting.ConnectionString = connectionStr;
-            dbSetting.Dialect = dialect;
         }
 
         public virtual void PreInitialize()

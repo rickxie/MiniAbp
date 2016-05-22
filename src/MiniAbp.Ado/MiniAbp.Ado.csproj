@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -67,6 +67,12 @@
     <Compile Include="Uow\IDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkExtension.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
+      <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
+      <Name>MiniAbp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

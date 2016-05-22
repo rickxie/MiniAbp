@@ -51,8 +51,8 @@ namespace MiniAbp.Web.Route
                     result.IsAuthorized = false;
                 }
                  
-                auditing.Exception(except.Message + except.StackTrace);
-                Logger.Error(ex.Message, except);
+                auditing.Exception(ex.Message + ex.StackTrace);
+                Logger.Error(ex.Message, ex);
             }
             var responseStr = JsonConvert.SerializeObject(result, new JsonSerializerSettings()
             {
