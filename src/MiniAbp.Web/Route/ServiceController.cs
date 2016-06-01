@@ -33,10 +33,12 @@ namespace MiniAbp.Web.Route
         {
             serviceName = serviceName.ToUpper();
             methodName = methodName.ToUpper();
-            var type = YAssembly.FindServiceType(serviceName);
-            var method = YAssembly.GetMethodByType(type, methodName);
+            var svType = YAssembly.FindServiceType(serviceName);
+            var interfaceType = YAssembly.ServiceDic[svType];
+            var methodForCheck = YAssembly.GetMethodByType(svType, methodName);
+            var method = YAssembly.GetMethodByType(interfaceType, methodName);
             //权限安全检查
-            var authorizeAttrList = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MabpAuthorizeAttribute>(method
+            var authorizeAttrList = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MabpAuthorizeAttribute>(methodForCheck
                   );
             if (authorizeAttrList.Count > 0)
             { 
@@ -47,7 +49,7 @@ namespace MiniAbp.Web.Route
             }
 
             object result = null; 
-            var instance = IocManager.Instance.Resolve(type); 
+            var instance = IocManager.Instance.Resolve(interfaceType); 
             result = Invoke(method, instance, param);
              
             return result;

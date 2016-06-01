@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MiniAbp.Configuration;
 using MiniAbp.Dependency;
 using MiniAbp.Dependency.Installer;
@@ -34,7 +35,9 @@ namespace MiniAbp
 
         public void PostInitialize()
         {
-            TemplateManager.GenerateCode(YAssembly.ServiceTypes.ToArray());
+            var serviceTypes = YAssembly.ServiceDic.Select(r => r.Key).ToList();
+            var serviceInterface = YAssembly.ServiceDic.Select(r => r.Value).ToList();
+            TemplateManager.GenerateCode(serviceTypes, serviceInterface);
         }
         
         public void HandleException(Exception ex)

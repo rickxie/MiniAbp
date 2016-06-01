@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniAbp.Domain
 {
-    public interface IApplicationService
+    public interface IApplicationService : ITransientDependency
     {
     }
 }

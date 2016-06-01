@@ -15,8 +15,8 @@ namespace MiniAbp.DataAccess
 {
     public class DbDapper
     { 
-        public static string ConnectionString => AppPath.ConvertFormatConnection(IocManager.Instance.Resolve<DatabaseSetting>().ConnectionString);
-        public static Dialect Dialect => IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
+        public static string ConnectionString => AppPath.ConvertFormatConnection(IocManager.Instance.Resolve<DatabaseConfiguration>().ConnectionString);
+        public static Dialect Dialect => IocManager.Instance.Resolve<DatabaseConfiguration>().Dialect;
 
         public static IDbConnection NewDbConnection => IocManager.Instance.ResolveNamed<IDbConnection>(Dialect.ToString()
             ,new {ConnectionString });

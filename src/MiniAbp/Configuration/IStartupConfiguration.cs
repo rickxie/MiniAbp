@@ -13,7 +13,9 @@ namespace MiniAbp.Configuration
         /// Gets the IOC manager associated with this configuration.
         /// </summary>
         IocManager IocManager { get; }
-        DatabaseSetting DbSetting {get;}
+        DatabaseConfiguration Database {get;}
+        AuditConfiguration Auditing {get;}
+        LocalizationConfiguration Localization { get;}
         void Initialize();
 
     }

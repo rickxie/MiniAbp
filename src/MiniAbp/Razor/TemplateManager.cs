@@ -18,17 +18,47 @@ namespace MiniAbp.Razor
 {
     public static class TemplateManager
     {
-        public static void GenerateCode(Type[] types)
+        public static void GenerateCode(List<Type> svTypes, List<Type> itTypes )
         {
-            if (types == null || types.Length == 0)
+            if (svTypes == null || svTypes.Count == 0)
                return;
             var config = new TemplateServiceConfiguration {EncodedStringFactory = new RawStringFactory()};
             var service = RazorEngineService.Create(config);
             Engine.Razor = service;
             var template = ReadTemplate("ServicesTemplate.cshtml");
-            var result = Engine.Razor.RunCompile(template, "Services", typeof(Type[]), types.ToArray());
+            var model = Build(svTypes, itTypes);
+            var result = Engine.Razor.RunCompile(template, "Services", typeof(List<ServiceWithMethod>), model);
             var savePath = AppPath.GetRelativeDir("Content\\Lib\\miniAbp\\auto\\");
             File.WriteAllText(savePath + "mabpProxy.js", result);
+        }
+
+        private static List<ServiceWithMethod> Build(List<Type> svTypes, List<Type> itTypes)
+        {
+            var result = new List<ServiceWithMethod>();
+
+            for (var i = 0; i < svTypes.Count; i ++)
+            {
+                var item = svTypes[i];
+                var serviceName = item.Name;
+                if (serviceName.ToUpper().EndsWith("SERVICE"))
+                {
+                    serviceName = serviceName.Substring(0, serviceName.Length - 7);
+                }
+                else if (serviceName.ToUpper().EndsWith("SV"))
+                {
+                    serviceName = serviceName.Substring(0, serviceName.Length - 2);
+                }
+                var methods =
+                    itTypes[i].GetMethods()
+                        .Where(
+                            r =>
+                                !r.IsSpecialName && !r.IsStatic && r.IsPublic && r.IsSecurityCritical &&
+                                !r.IsSecuritySafeCritical)
+                        .ToList();
+                var names = methods.Select(r => r.Name).ToList();
+                result.Add(new ServiceWithMethod() {MethodNames = names, ServiceName = serviceName});
+            }
+            return result;
         }
 
         private static string ReadTemplate(string fileName)

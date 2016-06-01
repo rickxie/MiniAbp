@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using MiniAbp.Configuration;
+using MiniAbp.Dependency;
+using MiniAbp.Domain;
+using MiniAbp.Logging;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.Web.Auditing
 {
-    public class AuditingManager
+    public class AuditingManager: ISingletonDependency
     {
         private readonly YSession _session;
         private AuditInfo _auditInfo;
@@ -17,7 +21,6 @@ namespace MiniAbp.Web.Auditing
             provider = new WebAuditInfoProvider();
         }
         //SaveLog to DB;
-        public static Action<AuditInfo> Save = info => { };
         public void Start(string service, string method, string param)
         {
             sp.Start();
@@ -41,7 +44,8 @@ namespace MiniAbp.Web.Auditing
             sp.Stop();
             _auditInfo.Duration = Convert.ToInt32(sp.Elapsed.TotalMilliseconds);
             _auditInfo.ResponseJson = responseStr;
-            Save(_auditInfo);
+            var auditSetting = IocManager.Instance.Resolve<AuditConfiguration>();
+            auditSetting.Save(_auditInfo);
         }
     }
 }

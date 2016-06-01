@@ -1,7 +1,8 @@
 ﻿@using System.Reflection
 @using System.Web.Mvc
 @using MiniAbp.Extension
-@model Type[]
+@using MiniAbp.Razor
+@model List<ServiceWithMethod>
 @{Layout = null;}
 
 (function(mabp, angular) {
@@ -12,29 +13,20 @@
     }
     var module = angular.module('mabp');
 
-@foreach (Type item in Model)
+@foreach (ServiceWithMethod item in Model)
 {
-    var serviceName = item.Name;
-    if (serviceName.ToUpper().EndsWith("SERVICE"))
-    {
-        serviceName = serviceName.Substring(0, serviceName.Length - 7).ToCamelCase();
-    }
-    else if(serviceName.ToUpper().EndsWith("SV"))
-    {
-        serviceName = serviceName.Substring(0, serviceName.Length - 2).ToCamelCase();
-    }
-    var methods = item.GetMethods().Where(r => !r.IsSpecialName && !r.IsStatic && r.IsPublic && r.IsSecurityCritical && !r.IsSecuritySafeCritical).ToList();
+    var serviceName = item.ServiceName.ToCamelCase(); 
     @:module.factory('mabp.app.@serviceName', [
     @:'$http', function($http) {
     @:return new function()
     @:{
-    foreach (MethodInfo m in methods)
+    foreach (var m in item.MethodNames)
     {
        
-        @:    this.@m.Name.ToCamelCase() = function(input, httpParams) {
+        @:    this.@m.ToCamelCase() = function(input, httpParams) {
         @:    return $http(angular.extend({ 
         @:              abp: true,
-        @:              url: mabp.appPath + 'api/@serviceName/@m.Name',
+        @:              url: mabp.appPath + 'api/@serviceName/@m',
         @:              method: 'POST',
         @:              data:JSON.stringify(input)
         @:        }, httpParams));

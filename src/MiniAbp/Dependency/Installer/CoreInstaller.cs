@@ -12,6 +12,7 @@ using Castle.Windsor;
 using MiniAbp.Configuration;
 using MiniAbp.DataAccess;
 using MiniAbp.Domain.Uow;
+using MiniAbp.Localization;
 using MiniAbp.Logging;
 using MiniAbp.Modules;
 using MiniAbp.Reflection;
@@ -31,7 +32,10 @@ namespace MiniAbp.Dependency.Installer
                 Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient,
                 Component.For<IStartupConfiguration>().ImplementedBy<StartupConfiguration>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkOptions>().LifestyleSingleton(),
-                Component.For<DatabaseSetting>().ImplementedBy<DatabaseSetting>().LifestyleSingleton());
+                Component.For<LocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton(),
+                Component.For<DatabaseConfiguration>().ImplementedBy<DatabaseConfiguration>().LifestyleSingleton(),
+                Component.For<AuditConfiguration>().ImplementedBy<AuditConfiguration>().LifestyleSingleton(),
+                Component.For<LocalizationConfiguration>().ImplementedBy<LocalizationConfiguration>().LifestyleSingleton());
         }
     }
 }

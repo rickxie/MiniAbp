@@ -24,7 +24,7 @@ namespace MiniAbp.Ado.Dependency
                     .LifestyleTransient()
                     .Configure(c => c.DynamicParameters((kernel, dynamicParams) =>
                     {
-                        var dbSetting = context.IocManager.Resolve<DatabaseSetting>();
+                        var dbSetting = context.IocManager.Resolve<DatabaseConfiguration>();
                         if (!string.IsNullOrWhiteSpace(dbSetting.ConnectionString))
                         {
                             dynamicParams["dbConnection"] =

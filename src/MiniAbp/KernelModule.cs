@@ -9,6 +9,7 @@ using MiniAbp.Authorization.Interceptors;
 using MiniAbp.Dependency;
 using MiniAbp.Domain;
 using MiniAbp.Domain.Uow;
+using MiniAbp.Localization;
 using MiniAbp.Reflection;
 
 namespace MiniAbp
@@ -47,6 +48,7 @@ namespace MiniAbp
               {
                   InstallInstallers = false
               });
+            IocManager.Resolve<LocalizationManager>().Initialize();
         }
 
         public override void Shutdown()

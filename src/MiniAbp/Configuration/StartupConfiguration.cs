@@ -10,7 +10,9 @@ namespace MiniAbp.Configuration
     public class StartupConfiguration : DictionayBasedConfig, IStartupConfiguration
     {
         public IocManager IocManager { get; private set; }
-        public DatabaseSetting DbSetting { get; set; }
+        public DatabaseConfiguration Database { get; set; }
+        public AuditConfiguration Auditing { get; set; }
+        public LocalizationConfiguration Localization { get; set; }
 
         public StartupConfiguration(IocManager iocManager)
         {
@@ -19,7 +21,10 @@ namespace MiniAbp.Configuration
 
         public void Initialize()
         {
-            this.DbSetting = IocManager.Resolve<DatabaseSetting>();
+            Database = IocManager.Resolve<DatabaseConfiguration>();
+            Localization = IocManager.Resolve<LocalizationConfiguration>();
+            Auditing = IocManager.Resolve<AuditConfiguration>();
+         
         }
     }
 }

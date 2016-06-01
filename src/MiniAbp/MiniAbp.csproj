@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Bpm\packages\MiniAbp\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Yooya.Designer\packages\MiniAbp\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -63,6 +63,10 @@
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
@@ -100,10 +104,11 @@
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\MabpAuthorizeAttribute.cs" />
-    <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Configuration\DatabaseSetting.cs" />
+    <Compile Include="Configuration\AuditConfiguration.cs" />
+    <Compile Include="Configuration\DatabaseConfiguration.cs" />
     <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
+    <Compile Include="Configuration\LocalizationConfiguration.cs" />
     <Compile Include="Configuration\StartupConfiguration.cs" />
     <Compile Include="Configuration\IStartupConfiguration.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
@@ -118,6 +123,7 @@
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\IocRegistrarExtensions.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
+    <Compile Include="Domain\ApplicationService.cs" />
     <Compile Include="Domain\BaseModuleRepository.cs" />
     <Compile Include="Domain\BaseRepository.cs" />
     <Compile Include="Domain\BasicConventionalRegistrar.cs" />
@@ -162,9 +168,11 @@
     <Compile Include="Localization\LanguageInfo.cs" />
     <Compile Include="Localization\LocalizationProvider.cs" />
     <Compile Include="Localization\LocalizationManager.cs" />
+    <Compile Include="Localization\LocalizedJson.cs" />
     <Compile Include="Localization\LocalizationSource.cs" />
     <Compile Include="Localization\LocalizedString.cs" />
     <Compile Include="Localization\ResourceFileLocalizationSource.cs" />
+    <Compile Include="Logging\AuditInfo.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\LoggerLevel.cs" />
     <Compile Include="Logging\FileLogger.cs" />
@@ -172,6 +180,7 @@
     <Compile Include="Modules\ModuleFinder.cs" />
     <Compile Include="Modules\ModuleInfo.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
+    <Compile Include="Razor\ServiceWithMethod.cs" />
     <Compile Include="Razor\TemplateManager.cs" />
     <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />

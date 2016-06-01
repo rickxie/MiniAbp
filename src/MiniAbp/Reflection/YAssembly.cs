@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Castle.DynamicProxy.Internal;
 using Castle.MicroKernel.Registration;
 using MiniAbp.Dependency;
 using MiniAbp.Domain;
+using MiniAbp.Extension;
 
 namespace MiniAbp.Reflection
 {
@@ -13,7 +15,7 @@ namespace MiniAbp.Reflection
         public static List<Type> Types;
         public static List<Type> ServiceTypes;
         public static List<Type> RepositoryTypes;
-
+        public static Dictionary<Type, Type> ServiceDic; 
         public static void Regist(Assembly assembly)
         {
             YAssemblyCollection.Add(assembly);
@@ -21,6 +23,7 @@ namespace MiniAbp.Reflection
 
         public static void Initialize()
         {
+            ServiceDic = new Dictionary<Type, Type>();
             YAssemblyCollection.Add(Assembly.GetExecutingAssembly());
             YAssemblyCollection.Initialize();
             LoadAllTypes();
@@ -31,11 +34,38 @@ namespace MiniAbp.Reflection
         private static void LoadAllTypes()
         {
             ServiceTypes = YAssemblyCollection.Types.Where(r => 
-            (r.Name.ToUpper().EndsWith("SV") || r.Name.ToUpper().EndsWith("SERVICE")) 
-            && typeof(IApplicationService).IsAssignableFrom(r)).ToList();
+            (r.Name.ToUpper().EndsWith("SV") || r.Name.ToUpper().EndsWith("SERVICE")) && r.IsClass && !r.IsAbstract
+            && typeof(IApplicationService).IsAssignableFrom(r)).ToList()  ;
             RepositoryTypes = YAssemblyCollection.Types.Where(r => 
-            (r.Name.ToUpper().EndsWith("RP") || r.Name.ToUpper().EndsWith("REPOSITORY")) 
+            (r.Name.ToUpper().EndsWith("RP") || r.Name.ToUpper().EndsWith("REPOSITORY")) && r.IsClass && !r.IsAbstract
             && typeof(IRepository).IsAssignableFrom(r)).ToList();
+
+            var exceptServiceType = ServiceTypes.FindAll(r => r.Name == "IApplicationService" || r.Name == "BaseService" || r.Name == "ApplicationService" );
+            exceptServiceType.ForEach(r=> ServiceTypes.Remove(r));
+            var exceptRpType = RepositoryTypes.FindAll(r => r.Name == "BaseRepository" || r.Name == "IRepository");
+            exceptRpType.ForEach(r=> RepositoryTypes.Remove(r));
+            ServiceTypes = ServiceTypes.Distinct().ToList();
+            RepositoryTypes = RepositoryTypes.Distinct().ToList();
+            //Regist all interface for service
+            ServiceTypes.ForEach(r =>
+            {
+                var faces = r.GetAllInterfaces();
+                var it = faces.Where(r1 => typeof (IApplicationService).IsAssignableFrom(r1) && r1 != typeof(IApplicationService)).ToList();
+               
+                if (it.Count == 1)
+                {
+                    ServiceDic.Add(r, it.First());
+                }
+                else if (it.Count == 0)
+                {
+                    throw new Exception("Service '{0}' must inherit from one interface which inherit from IApplicationService".Fill(r.FullName));
+                }
+                else if(it.Count > 1)
+                {
+                    var itStr = string.Join(",", it.Select(r2 => r2.Name));
+                    throw new Exception("Service '{0}' can't have multi interface which inherit from IApplicationService, which is {1}".Fill(r.FullName, itStr));
+                }
+            });
         }
 
         public static object CreateInstance(string fullName)

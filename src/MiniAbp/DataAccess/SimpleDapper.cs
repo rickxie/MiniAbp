@@ -23,7 +23,7 @@ namespace MiniAbp.DataAccess
         {
             static SimpleDapper()
             {
-                _dialect = IocManager.Instance.Resolve<DatabaseSetting>().Dialect;
+                _dialect = IocManager.Instance.Resolve<DatabaseConfiguration>().Dialect;
                 SetDialect(_dialect);
             }
 
