@@ -8,13 +8,12 @@ namespace MiniAbp.Test
     {
         public DbTest()
         {
-           
+            
         }
         [TestMethod]
         public void RunDataTableSqlTest()
         {
-            var table = DbDapper.RunDataTableSql("Select * from wfdworkflow");
-            Assert.IsNotNull(table);
+
         }
     }
 }

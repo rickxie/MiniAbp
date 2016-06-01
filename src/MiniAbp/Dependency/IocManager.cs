@@ -15,6 +15,7 @@ namespace MiniAbp.Dependency
         public static IocManager Instance { get; private set; }
         public WindsorContainer IocContainer { get; set; }
         private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
+
         static IocManager()
         {
             Instance = new IocManager();

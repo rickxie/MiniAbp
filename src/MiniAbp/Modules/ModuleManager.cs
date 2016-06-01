@@ -34,17 +34,18 @@ namespace MiniAbp.Modules
             var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.ForEach(module => module.Instance.PreInitialize());
             sortedModules.ForEach(module => module.Instance.Initialize());
-            sortedModules.ForEach(module => module.Instance.PostInitialize());
-
+            //Regist all Rp and Sv
             sortedModules.ForEach(module => YAssembly.Regist(module.Assembly));
             YAssembly.Initialize();
+            sortedModules.ForEach(module => module.Instance.PostInitialize());
+
         }
 
         public virtual void ShutdownModules()
         {
-            //var sortedModules = _modules.GetSortedModuleListByDependency();
-            //sortedModules.Reverse();
-            //sortedModules.ForEach(sm => sm.Instance.Shutdown());
+            var sortedModules = _modules.GetSortedModuleListByDependency();
+            sortedModules.Reverse();
+            sortedModules.ForEach(sm => sm.Instance.Shutdown());
         }
 
         private void LoadAll()

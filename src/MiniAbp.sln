@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Web", "MiniAbp.Web\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Ado", "MiniAbp.Ado\MiniAbp.Ado.csproj", "{491C7A84-9EAF-4077-9C49-B55209E5C60D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Console", "MiniAbp.Console\MiniAbp.Console.csproj", "{7A0F8BFE-4DE1-41D1-8168-F9E1F9E4CF4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiniAbp.Identity", "MiniAbp.Identity\MiniAbp.Identity.csproj", "{F53F18E4-2542-464D-B670-EBE6AC534C2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{491C7A84-9EAF-4077-9C49-B55209E5C60D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A0F8BFE-4DE1-41D1-8168-F9E1F9E4CF4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A0F8BFE-4DE1-41D1-8168-F9E1F9E4CF4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A0F8BFE-4DE1-41D1-8168-F9E1F9E4CF4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A0F8BFE-4DE1-41D1-8168-F9E1F9E4CF4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F53F18E4-2542-464D-B670-EBE6AC534C2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F53F18E4-2542-464D-B670-EBE6AC534C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F53F18E4-2542-464D-B670-EBE6AC534C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F53F18E4-2542-464D-B670-EBE6AC534C2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

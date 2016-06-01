@@ -46,7 +46,7 @@ namespace MiniAbp.DataAccess
             return table;
         }
 
-        public static IEnumerable<T> GetAll<T>(string sql, params SqlParameter[] sqlParas)
+        public static IEnumerable<T> GetAll<T>(string sql, object sqlParas)
         {
 
             IEnumerable<T> dy = null;
@@ -87,7 +87,7 @@ namespace MiniAbp.DataAccess
             return count;
         }
 
-        public static int Count(string sql, object param, IDbConnection connection = null,
+        public static int Count(string sql, object param = null, IDbConnection connection = null,
             IDbTransaction transation = null)
         {
             int count;
@@ -161,21 +161,23 @@ namespace MiniAbp.DataAccess
 //        }
 
         //执行删除和更新操作 无需返回值
-        public static void ExecuteNonQuery(string sql, object param =null, IDbConnection connection = null, IDbTransaction transation = null)
+        public static int ExecuteNonQuery(string sql, object param =null, IDbConnection connection = null, IDbTransaction transation = null)
         {
+            int result;
             if (connection != null)
             {
-                connection.Execute(sql, param, transation);
+                result = connection.Execute(sql, param, transation);
             }
             else
             {
                 using (IDbConnection db = NewDbConnection)
                 {
                     db.Open();
-                    db.Execute(sql, param);
+                    result = db.Execute(sql, param);
                     db.Close();
                 }
             }
+            return result;
         }
         //执行删除和更新操作 无需返回值
         //        public static int ExecuteNonQuery(string sql, params SqlParameter[] para)

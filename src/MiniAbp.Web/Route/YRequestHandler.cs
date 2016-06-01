@@ -50,9 +50,19 @@ namespace MiniAbp.Web.Route
                     result.Errors.IsFriendlyError = false;
                     result.IsAuthorized = false;
                 }
-                 
-                auditing.Exception(ex.Message + ex.StackTrace);
-                Logger.Error(ex.Message, ex);
+                if (except.GetType() == typeof (UserFriendlyException))
+                {
+                    var exc = except as UserFriendlyException;
+                    var newExc = exc?.InnerException ?? exc;
+                    auditing.Exception(newExc?.Message + newExc?.StackTrace);
+                    Logger.Error(newExc?.Message, newExc);
+                }
+                else
+                {
+                    auditing.Exception(ex.Message + ex.StackTrace);
+                    Logger.Error(ex.Message, ex);
+                }
+               
             }
             var responseStr = JsonConvert.SerializeObject(result, new JsonSerializerSettings()
             {

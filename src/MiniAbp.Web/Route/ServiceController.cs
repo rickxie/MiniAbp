@@ -77,9 +77,11 @@ namespace MiniAbp.Web.Route
                 {
                     paraObject = GetStringObject(info, param.ToString());
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw new UserFriendlyException("{0} 方法的请求参数出错".Fill(info.ToString()));
+                    var friendlyEx = new UserFriendlyException("{0} 方法的请求参数出错".Fill(info.ToString()));
+                    friendlyEx.InnerException = ex;
+                    throw friendlyEx;
                 }
                 return paraObject;
             }

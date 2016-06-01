@@ -49,7 +49,8 @@ namespace MiniAbp.Reflection
 
         public static Type FindServiceType(string typeName)
         {
-            return ServiceTypes.FirstOrDefault(r => r.Name.ToUpper().Contains(typeName));
+            
+            return ServiceTypes.FirstOrDefault(r => (r.Name).ToUpper() == typeName + "SV" || (r.Name ).ToUpper() == typeName + "SERVICE");
         }
         public static Type FindRepositoryType(string typeName)
         {

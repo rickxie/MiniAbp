@@ -81,6 +81,10 @@
       <Name>MiniAbp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll" />
+    <Analyzer Include="..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll" />
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

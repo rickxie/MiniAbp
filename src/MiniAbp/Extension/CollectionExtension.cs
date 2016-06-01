@@ -169,5 +169,38 @@ namespace MiniAbp.Extension
             }
             return dt;
         }
+
+
+        public static void Foreach<T>(this IEnumerable<T> list, Action<T> action)
+        {
+            if (list == null || action == null)
+                return;
+            foreach (T obj in list)
+                action(obj);
+        }
+
+        public static void Foreach<T>(this IEnumerable<T> list, Action<T, int> action)
+        {
+            if (list == null || action == null)
+                return;
+            int num = 0;
+            foreach (T obj in list)
+            {
+                action(obj, num);
+                ++num;
+            }
+        }
+
+        public static void Foreach<T>(this IList<T> list, Action<T, bool> action)
+        {
+            if (list == null || action == null)
+                return;
+            int num = 0;
+            foreach (T obj in (IEnumerable<T>)list)
+            {
+                action(obj, num >= list.Count - 1);
+                ++num;
+            }
+        }
     }
 }

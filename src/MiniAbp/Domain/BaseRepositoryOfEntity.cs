@@ -159,7 +159,6 @@ namespace MiniAbp.Domain
         {
             DbDapper.ExecuteNonQuery(sql, param, Connection, Transaction);
         }
-
         public virtual DataTable GetDataTable(string sql, object param = null)
         {
             return DbDapper.RunDataTableSql(sql, param, Connection, Transaction);
