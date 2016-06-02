@@ -22,6 +22,7 @@ namespace MiniAbp.Localization
         public LocalizationManager(LocalizationConfiguration config)
         {
             Config = config;
+            Sources = new Dictionary<string, Dictionary<string, string>>();
         }
 
         public Dictionary<string, string> GetResouce(string source, string lang)

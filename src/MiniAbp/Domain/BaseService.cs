@@ -12,7 +12,7 @@ namespace MiniAbp.Domain
         protected YSession Session => YSession.GetInstance();
         public IDbConnection DbConnection { get; set; }
         public IDbTransaction DbTransaction { get; set; }
-        private LocalizationManager Localization { get; set; }
+        public LocalizationManager Localization { get; set; }
         public BaseService()
         {
         }
@@ -24,7 +24,7 @@ namespace MiniAbp.Domain
         /// <returns></returns>
         public string L(string name)
         {
-            if (LocalizationSource.ContainsKey(name))
+            if (!LocalizationSource.ContainsKey(name))
             {
                 throw new NullReferenceException("{0} not fund in localization dictionary".Fill(name));
             }

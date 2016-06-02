@@ -34,6 +34,10 @@ namespace MiniAbp.Web.Route
             serviceName = serviceName.ToUpper();
             methodName = methodName.ToUpper();
             var svType = YAssembly.FindServiceType(serviceName);
+            if (svType == null)
+            {
+                throw new UserFriendlyException("'{0}' Service 不存在".Fill(serviceName.ToLower()));
+            }
             var interfaceType = YAssembly.ServiceDic[svType];
             var methodForCheck = YAssembly.GetMethodByType(svType, methodName);
             var method = YAssembly.GetMethodByType(interfaceType, methodName);
