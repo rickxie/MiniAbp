@@ -42,15 +42,23 @@ namespace MiniAbp.Localization
                 else
                 {
                     var langStr = File.ReadAllText(filePath);
-                    var json = JsonConvert.DeserializeObject<List<NameValue>>(langStr,
-                        new JsonSerializerSettings() {ContractResolver = new CamelCasePropertyNamesContractResolver()});
-                    for (int i = 0; i < json.Count; i++)
+                    List<NameValue> json;
+                    try
                     {
-                        if (langDic.ContainsKey(json[i].Name))
+                        json = JsonConvert.DeserializeObject<List<NameValue>>(langStr,
+                            new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Localization file load failed, please check the format. "+ filePath + ex.Message + ex.StackTrace);
+                    }
+                    foreach (NameValue t in json)
+                    {
+                        if (langDic.ContainsKey(t.Name))
                         {
-                            throw new Exception("name '{0}' is duplicate. at {1}".Fill(json[i].Name, filePath));
+                            throw new Exception("name '{0}' is duplicate. at {1}".Fill(t.Name, filePath));
                         }
-                        langDic.Add(json[i].Name, json[i].Value);
+                        langDic.Add(t.Name, t.Value);
                     }
                 }
                 sourceDict.Add(source.Source +"."+ languageInfo.Name, langDic);

@@ -71,7 +71,14 @@ namespace MiniAbp.Identity.Application
             userModel = user;
             return result;
         }
-
+        public LoginViewModel UpdateLoginLanguage(string userId, string language)
+        {
+            var result = new LoginViewModel();
+            dynamic d = new { UserId = userId, LanguageCulture = language };
+            var identity = GetClaimsPrincipal(d);
+            result.Identity = identity;
+            return result;
+        }
 
         internal static ClaimsIdentity GetClaimsPrincipal(dynamic user)
         {

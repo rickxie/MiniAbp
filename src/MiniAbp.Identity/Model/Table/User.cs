@@ -7,7 +7,7 @@ using MiniAbp.Domain;
 namespace MiniAbp.Identity.Model.Table
 {
     [Table("AppUser")]
-    public class User: CreationEntity//, IUser<string>
+    public class User: CreationAndDeletionEntity 
     {
         [Key]
         [StringLength(50)]
@@ -25,8 +25,7 @@ namespace MiniAbp.Identity.Model.Table
         public string EmailAddress { get; set; }
         [StringLength(50)]
         public string CellPhone { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; } 
         //public bool IsOut { get; set; }
         [StringLength(50)]
         public string InitialPassword { get; set; }
@@ -74,11 +73,5 @@ namespace MiniAbp.Identity.Model.Table
         public string Location { get; set; }
 
         public DateTime? LastModificationTime { get; set; }
-
-        //public void SetDefaultPassword()
-        //{
-        //    var pwd = Guid.NewGuid().ToString("N");
-        //    InitialPassword = pwd.Substring(pwd.Length - 6);
-        //}
     }
 }

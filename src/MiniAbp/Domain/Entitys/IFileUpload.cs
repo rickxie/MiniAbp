@@ -1,4 +1,6 @@
-﻿namespace MiniAbp.Domain.Entitys
+﻿using System.Collections.Generic;
+
+namespace MiniAbp.Domain.Entitys
 {
     public interface IFileUpload
     {
@@ -7,6 +9,6 @@
         /// </summary>
         /// <param name="input">所有文件列表</param>
         /// <returns></returns>
-        bool UploadFiles(FileInput input);
+        List<FileModel> UploadFiles(FileInput input);
     }
 }

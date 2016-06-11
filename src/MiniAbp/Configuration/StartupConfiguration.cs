@@ -13,6 +13,7 @@ namespace MiniAbp.Configuration
         public DatabaseConfiguration Database { get; set; }
         public AuditConfiguration Auditing { get; set; }
         public LocalizationConfiguration Localization { get; set; }
+        public CustomConfiguration Custom { get; set; }
 
         public StartupConfiguration(IocManager iocManager)
         {
@@ -24,7 +25,7 @@ namespace MiniAbp.Configuration
             Database = IocManager.Resolve<DatabaseConfiguration>();
             Localization = IocManager.Resolve<LocalizationConfiguration>();
             Auditing = IocManager.Resolve<AuditConfiguration>();
-         
+            Custom = IocManager.Resolve<CustomConfiguration>();
         }
     }
 }

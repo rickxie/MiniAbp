@@ -35,7 +35,8 @@ namespace MiniAbp.Dependency.Installer
                 Component.For<LocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton(),
                 Component.For<DatabaseConfiguration>().ImplementedBy<DatabaseConfiguration>().LifestyleSingleton(),
                 Component.For<AuditConfiguration>().ImplementedBy<AuditConfiguration>().LifestyleSingleton(),
-                Component.For<LocalizationConfiguration>().ImplementedBy<LocalizationConfiguration>().LifestyleSingleton());
+                Component.For<LocalizationConfiguration>().ImplementedBy<LocalizationConfiguration>().LifestyleSingleton(),
+                Component.For<CustomConfiguration>().ImplementedBy<CustomConfiguration>().LifestyleSingleton());
         }
     }
 }

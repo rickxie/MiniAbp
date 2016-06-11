@@ -16,6 +16,7 @@ namespace MiniAbp.Configuration
         DatabaseConfiguration Database {get;}
         AuditConfiguration Auditing {get;}
         LocalizationConfiguration Localization { get;}
+        CustomConfiguration Custom { get;}
         void Initialize();
 
     }

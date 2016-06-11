@@ -36,7 +36,7 @@ namespace MiniAbp.Web.Route
                     Errors = new Errors()
                     {
                         Message = except.Message,
-                        CallStack = except.StackTrace
+                        //CallStack = except.StackTrace
                     }
                 };
 

@@ -105,6 +105,7 @@
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\MabpAuthorizeAttribute.cs" />
     <Compile Include="Configuration\AuditConfiguration.cs" />
+    <Compile Include="Configuration\CustomerConfiguration.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
     <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
@@ -127,14 +128,16 @@
     <Compile Include="Domain\BaseModuleRepository.cs" />
     <Compile Include="Domain\BaseRepository.cs" />
     <Compile Include="Domain\BasicConventionalRegistrar.cs" />
+    <Compile Include="Domain\CreationAndDeletionEntity.cs" />
     <Compile Include="Domain\CreationEntity.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\Entitys\FileModel.cs" />
     <Compile Include="Domain\Entitys\IFileUpload.cs" />
     <Compile Include="Domain\Entitys\FileInput.cs" />
     <Compile Include="Domain\Entitys\IdInput.cs" />
     <Compile Include="Domain\Entitys\IInputDto.cs" />
     <Compile Include="Domain\Entitys\IPaging.cs" />
-    <Compile Include="Domain\Entitys\MabpFiles.cs" />
+    <Compile Include="Domain\Entitys\FileInfo.cs" />
     <Compile Include="Domain\Entitys\NameValue.cs" />
     <Compile Include="Domain\Entitys\Output.cs" />
     <Compile Include="Domain\Entitys\PagedList.cs" />
@@ -210,6 +213,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />
+    <EmbeddedResource Include="Razor\Template\LocalizationTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks; 
 using MiniAbp.Domain;
 using MiniAbp.Extension;
+using MiniAbp.Localization;
 using MiniAbp.Runtime;
 using RazorEngine;
 using RazorEngine.Configuration;
 using RazorEngine.Templating;
 using RazorEngine.Text;
+using Encoding = System.Text.Encoding;
+
 // For extension methods.
 
 
@@ -18,7 +21,7 @@ namespace MiniAbp.Razor
 {
     public static class TemplateManager
     {
-        public static void GenerateCode(List<Type> svTypes, List<Type> itTypes )
+        public static void GenerateProxyJs(List<Type> svTypes, List<Type> itTypes )
         {
             if (svTypes == null || svTypes.Count == 0)
                return;
@@ -29,9 +32,16 @@ namespace MiniAbp.Razor
             var model = Build(svTypes, itTypes);
             var result = Engine.Razor.RunCompile(template, "Services", typeof(List<ServiceWithMethod>), model);
             var savePath = AppPath.GetRelativeDir("Content\\Lib\\miniAbp\\auto\\");
-            File.WriteAllText(savePath + "mabpProxy.js", result);
+            File.WriteAllText(savePath + "mabpProxy.js", result, Encoding.UTF8);
         }
 
+        public static void GenerateLocalization(LocalizationManager localizationManager)
+        {
+            var template = ReadTemplate("LocalizationTemplate.cshtml");
+            var result = Engine.Razor.RunCompile(template, "Localization", typeof(Dictionary<string, Dictionary<string, string>>), localizationManager.Sources);
+            var savePath = AppPath.GetRelativeDir("Content\\Lib\\miniAbp\\auto\\");
+            File.WriteAllText(savePath + "localization.js", result, Encoding.UTF8);
+        }
         private static List<ServiceWithMethod> Build(List<Type> svTypes, List<Type> itTypes)
         {
             var result = new List<ServiceWithMethod>();

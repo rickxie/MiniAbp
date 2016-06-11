@@ -17,7 +17,7 @@ namespace MiniAbp.Localization
         /// <para>first string is the [resourceName.languageName]</para>
         /// <para>second string is the [language.Key] [language.Value] pair</para>
         /// </summary>
-        private Dictionary<string, Dictionary<string, string>> Sources { get; set; }
+        public Dictionary<string, Dictionary<string, string>> Sources { get; set; }
 
         public LocalizationManager(LocalizationConfiguration config)
         {

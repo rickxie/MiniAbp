@@ -79,6 +79,12 @@ namespace MiniAbp.Domain
             return DbDapper.Delete<T>(entity, Connection, Transaction);
         }
 
+        public virtual int SoftDelete<TModel>(TModel entity) where TModel : CreationAndDeletionEntity
+        {
+            entity.MarkDeleted();
+            return DbDapper.Update(entity, Connection, Transaction);
+        }
+
 
         public virtual void Insert(T model)
         {

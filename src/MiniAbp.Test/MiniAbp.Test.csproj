@@ -72,6 +72,10 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniAbp.Identity\MiniAbp.Identity.csproj">
+      <Project>{f53f18e4-2542-464d-b670-ebe6ac534c2c}</Project>
+      <Name>MiniAbp.Identity</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniAbp.Web\MiniAbp.Web.csproj">
       <Project>{ae640fe9-a6eb-4029-8348-14c96616ec7b}</Project>
       <Name>MiniAbp.Web</Name>

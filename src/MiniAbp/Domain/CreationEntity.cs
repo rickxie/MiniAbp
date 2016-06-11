@@ -4,17 +4,18 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class CreationEntity : Entity
+    public abstract class CreationAndDeletionEntity : CreationEntity
     {
-        public virtual DateTime? CreationTime { get; set; }
+        public virtual DateTime? DeletionTime { get; set; }
         [StringLength(50)]
-        public virtual string CreatorUserId { get; set; }
+        public virtual string DeleterUserId { get; set; }
+        public virtual bool IsDeleted { get; set; }
 
-        public new void RefreshId()
+        public virtual void MarkDeleted()
         {
-            this.Id = Guid.NewGuid().ToString();
-            this.CreationTime = DateTime.Now;
-            this.CreatorUserId = YSession.GetInstance().UserId;
+            this.IsDeleted = true;
+            this.DeletionTime = DateTime.Now;
+            this.DeleterUserId = YSession.GetInstance().UserId;
         }
     }
 }
