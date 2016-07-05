@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Castle.Core;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
+using Castle.Components.DictionaryAdapter;
 using Castle.DynamicProxy;
-using Castle.MicroKernel.Registration;
-using Castle.Windsor;
-using Console = System.Console;
+using Newtonsoft.Json;
 
 namespace MiniAbp.Console
 {
@@ -15,34 +10,20 @@ namespace MiniAbp.Console
     {
         private static void Main(string[] args)
         {
-            List<string> a = new List<string>();
-            a.Add("1");
-            var b = a.Where(r => r == "3").ToList();
-            WindsorContainer iocContainer = new WindsorContainer();
-            iocContainer.Register(Component.For<SimpleInterceptor>().LifestyleTransient());
-            iocContainer.Kernel.ComponentRegistered += (key, handler1) =>
-            {
-                handler1.ComponentModel.Interceptors.Add(new InterceptorReference(typeof (SimpleInterceptor)));
-            };
-            iocContainer.Register(Component.For<ICar>().ImplementedBy<Car>().LifestyleTransient());
-            //给Car类生成代理   
-            //ProxyGenerator generator = new ProxyGenerator();
-            //IInterceptor handler = new SimpleInterceptor();
-            //Type[] interfaces = {typeof (ICar)};
-            //ICar car = new Car();
-            //ICar carA = (generator.CreateInterfaceProxyWithTarget(interfaces, handler, car) as ICar;
-
-            //ICar car = generator.CreateClassProxy<Car>(new IInterceptor[] { interceptor });
-            var ct = typeof (ICar);
-            var car = iocContainer.Resolve(ct);
-            var start = car.GetType().GetMethod("Start");
-            start.Invoke(car, null);
-//            car.Start();
+            Dictionary<string, List<NameVal>> nv = new Dictionary<string, List<NameVal>>();
+            nv.Add("admin05", new EditableList<NameVal>() {new NameVal() {Name = "Name", Value = "xiaoming"},new NameVal() {Name = "Sex", Value = "0"} });
+            nv.Add("admin01", new EditableList<NameVal>() {new NameVal() {Name = "Name", Value = "XX"},new NameVal() {Name = "Sex", Value = "1"} });
+            var jsong = JsonConvert.SerializeObject(nv);
             System.Console.Read();
 
         }
     }
 
+    public class NameVal
+    {
+        public string Name { get; set; }
+        public string Value { get; set; }
+    }
     public interface ICar
     {
         void Start();

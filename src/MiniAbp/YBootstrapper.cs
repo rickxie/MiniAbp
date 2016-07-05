@@ -6,7 +6,6 @@ using MiniAbp.Dependency.Installer;
 using MiniAbp.Localization;
 using MiniAbp.Logging;
 using MiniAbp.Modules;
-using MiniAbp.Razor;
 using MiniAbp.Reflection; 
 
 namespace MiniAbp
@@ -36,11 +35,7 @@ namespace MiniAbp
 
         public void PostInitialize()
         {
-            var serviceTypes = YAssembly.ServiceDic.Select(r => r.Key).ToList();
-            var serviceInterface = YAssembly.ServiceDic.Select(r => r.Value).ToList();
-            var resouce = IocManager.Resolve<LocalizationManager>();
-            TemplateManager.GenerateProxyJs(serviceTypes, serviceInterface);
-            TemplateManager.GenerateLocalization(resouce);
+          
         }
         
         public void HandleException(Exception ex)

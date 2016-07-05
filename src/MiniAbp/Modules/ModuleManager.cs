@@ -12,8 +12,6 @@ namespace MiniAbp.Modules
 {
     internal class ModuleManager
     {
-        //public ILogger Logger { get; set; }
-
         private readonly ModuleCollection _modules;
 
         private readonly IocManager _iocManager;

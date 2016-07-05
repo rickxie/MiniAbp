@@ -19,9 +19,9 @@ namespace MiniAbp.Domain
             return DbDapper.RunDataTableSql(sql, param, Connection, Transaction);
         }
 
-        public virtual void Execute(string sql, object param = null)
+        public virtual int Execute(string sql, object param = null)
         {
-            DbDapper.ExecuteNonQuery(sql, param, Connection, Transaction);
+            return DbDapper.ExecuteNonQuery(sql, param, Connection, Transaction);
         }
 
     }

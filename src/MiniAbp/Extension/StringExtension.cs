@@ -55,5 +55,18 @@ namespace MiniAbp.Extension
 
             return str.Substring(0, 1).ToLower() + str.Substring(1);
         }
+
+        public static bool IsGuid(this string str)
+        {
+            try
+            {
+                Guid guid = new Guid(str);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

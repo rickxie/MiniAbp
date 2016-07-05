@@ -39,7 +39,7 @@ namespace MiniAbp.Web.Mvc
         /// </summary>
         /// <param name="requestContext">Request context</param>
         /// <param name="controllerType">Controller type</param>
-        /// <returns></returns>
+        /// <returns></returns>F
         protected override IController GetControllerInstance(RequestContext requestContext, Type controllerType)
         {
             if (controllerType == null)

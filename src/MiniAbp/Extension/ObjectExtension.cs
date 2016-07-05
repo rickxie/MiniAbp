@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
-using RazorEngine.Compilation.ImpromptuInterface.Dynamic;
 
 namespace MiniAbp.Extension
 {
@@ -46,7 +45,5 @@ namespace MiniAbp.Extension
             }
             return targetInstance;
         }
-
-       
     }
 }

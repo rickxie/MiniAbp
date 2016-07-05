@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MiniAbp.DataAccess;
-using MiniAbp.Razor;
 
 namespace MiniAbp.Test
 {

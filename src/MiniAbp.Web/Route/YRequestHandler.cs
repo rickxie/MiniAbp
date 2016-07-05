@@ -55,12 +55,26 @@ namespace MiniAbp.Web.Route
                     var exc = except as UserFriendlyException;
                     var newExc = exc?.InnerException ?? exc;
                     auditing.Exception(newExc?.Message + newExc?.StackTrace);
-                    Logger.Error(newExc?.Message, newExc);
+                    try
+                    {
+                        Logger.Error(newExc?.Message, newExc);
+                    }
+                    catch (Exception)
+                    {
+                        auditing._auditInfo.Exception += "Logs文件夹没有权限。";
+                    }
                 }
                 else
                 {
                     auditing.Exception(ex.Message + ex.StackTrace);
-                    Logger.Error(ex.Message, ex);
+                    try
+                    {
+                        Logger.Error(ex.Message, ex);
+                    }
+                    catch (Exception)
+                    {
+                        auditing._auditInfo.Exception += "Logs文件夹没有权限。";
+                    }
                 }
                
             }

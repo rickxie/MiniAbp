@@ -11,7 +11,7 @@ namespace MiniAbp.Web.Auditing
     public class AuditingManager: ISingletonDependency
     {
         private readonly YSession _session;
-        private AuditInfo _auditInfo;
+        public AuditInfo _auditInfo;
         private WebAuditInfoProvider provider;
         private Stopwatch sp;
         public AuditingManager()

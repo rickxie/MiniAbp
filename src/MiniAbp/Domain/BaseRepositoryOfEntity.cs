@@ -126,6 +126,10 @@ namespace MiniAbp.Domain
                     {
                         var a = model as Entity;
                         a?.RefreshId();
+                    }else if (typeof (CreationEntity).IsAssignableFrom(typeof (T)))
+                    {
+                        var a = model as CreationEntity;
+                        a?.RefreshId();
                     }
                     else
                     {

@@ -67,10 +67,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
-      <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6\System.ComponentModel.DataAnnotations.dll</HintPath>
@@ -162,11 +158,13 @@
     <Compile Include="Domain\Uow\UnitOfWorkOptions.cs" />
     <Compile Include="Domain\Uow\UnitOfWorkRegistrar.cs" />
     <Compile Include="Exception\AuthorizationException.cs" />
+    <Compile Include="Extension\DataTableExtension.cs" />
     <Compile Include="Extension\DictionaryExtension.cs" />
     <Compile Include="Extension\EventHandlerExtension.cs" />
     <Compile Include="Extension\ListExtensions.cs" />
     <Compile Include="Extension\ObjectExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="Extension\StringHelper.cs" />
     <Compile Include="KernelModule.cs" />
     <Compile Include="Localization\LanguageInfo.cs" />
     <Compile Include="Localization\LocalizationProvider.cs" />
@@ -183,8 +181,6 @@
     <Compile Include="Modules\ModuleFinder.cs" />
     <Compile Include="Modules\ModuleInfo.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
-    <Compile Include="Razor\ServiceWithMethod.cs" />
-    <Compile Include="Razor\TemplateManager.cs" />
     <Compile Include="Reflection\CurrentDomainAssemblyFinder.cs" />
     <Compile Include="Reflection\IAssemblyFinder.cs" />
     <Compile Include="Reflection\DependsOnAttribute.cs" />
@@ -212,8 +208,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />
-    <EmbeddedResource Include="Razor\Template\LocalizationTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

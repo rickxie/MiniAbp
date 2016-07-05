@@ -42,11 +42,16 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RazorEngine, Version=3.7.7.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\RazorEngine.3.7.7\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +62,8 @@
   <ItemGroup>
     <Compile Include="Auditing\AuditingManager.cs" />
     <Compile Include="Auditing\WebAuditInfoProvider.cs" />
+    <Compile Include="Razor\ServiceWithMethod.cs" />
+    <Compile Include="Razor\TemplateManager.cs" />
     <Compile Include="WebModule.cs" />
     <Compile Include="Mvc\ControllerConventionalRegistrar.cs" />
     <Compile Include="Mvc\WindsorControllerFactory.cs" />
@@ -70,6 +77,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Razor\Template\LocalizationTemplate.cshtml" />
+    <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MiniAbp.Ado\MiniAbp.Ado.csproj">

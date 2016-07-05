@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.Security.Claims;
 using MiniAbp.Authorization;
 using MiniAbp.Domain;
@@ -65,22 +66,81 @@ namespace MiniAbp.Identity.Application
                 return null;
             }
 
-            dynamic d = new { UserId = user.Id, LanguageCulture = user.Language };
+            var d = new UserIdentity { UserId = user.Id, LanguageCulture = user.Language };
             var identity = GetClaimsPrincipal(d);
             result.Identity = identity;
             userModel = user;
             return result;
         }
+
+        /// <summary>
+        /// 域登陆验证
+        /// </summary>
+        /// <param name="adPath"></param>
+        /// <param name="loginModel"></param>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        public LoginViewModel LoginWithAd(string adPath, LoginViewModel loginModel, out TUser userModel)
+        {
+            var usn = loginModel.UsernameOrEmailAddress;
+            var pwd = loginModel.Password;
+            var user = _userManagerRp.GetUser(usn);
+            if (user == null || !user.IsActive)
+            {
+                userModel = null;
+                return null;
+            }
+            var isValid = IsAuthenticated(adPath, usn, pwd);
+            if (isValid)
+            {
+                var result = new LoginViewModel();
+                var d = new UserIdentity {UserId = user.Id, LanguageCulture = user.Language};
+                var identity = GetClaimsPrincipal(d);
+                result.Identity = identity;
+                userModel = user;
+                return result;
+            }
+            userModel = null;
+            return null;
+        }
+        public bool IsAuthenticated(string path, string username, string pwd)
+        {
+            try
+            {
+                DirectoryEntry entry = new DirectoryEntry(path, username, pwd);
+                // 绑定到本机 AdsObject 以强制身份验证。
+                Object obj = entry.NativeObject;
+                DirectorySearcher search = new DirectorySearcher(entry);
+                search.Filter = "(SAMAccountName=" + username + ")";
+                search.PropertiesToLoad.Add("cn");
+                SearchResult result = search.FindOne();
+                if (null == result)
+                {
+                    return false;
+                }
+                // 更新目录中的用户的新路径
+                //path = result.Path;
+                //_filterAttribute = (String)result.Properties["cn"][0];
+            }
+            catch (Exception ex)
+            {
+                string strMsg = ex.Message;
+                //    throw new Exception("对用户进行身份验证时出错。 " + ex.Message);
+                return false;
+            }
+            return true;
+        }
+
         public LoginViewModel UpdateLoginLanguage(string userId, string language)
         {
             var result = new LoginViewModel();
-            dynamic d = new { UserId = userId, LanguageCulture = language };
+            var d = new UserIdentity { UserId = userId, LanguageCulture = language };
             var identity = GetClaimsPrincipal(d);
             result.Identity = identity;
             return result;
         }
 
-        internal static ClaimsIdentity GetClaimsPrincipal(dynamic user)
+        public static ClaimsIdentity GetClaimsPrincipal(UserIdentity user)
         {
             var claims = new List<Claim>
             {
@@ -90,7 +150,7 @@ namespace MiniAbp.Identity.Application
             var identity = new ClaimsIdentity(claims, "ApplicationCookie");
             return identity;
         }
-
+        
 
         /// <summary>
         /// 被邀请的未注册用户首次登录需填写昵称，修改密码
@@ -250,13 +310,14 @@ namespace MiniAbp.Identity.Application
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="password"></param>
+        /// <param name="newPassword"></param>
         [MabpAuthorize]
-        public void UpdatePassword(string userId, string password)
+        public void UpdatePassword(string userId, string password, string newPassword)
         {
             //校验密码
             var exist = CheckPassword(password, userId);
 
-            exist.Password = password;
+            exist.Password = newPassword;
             _userManagerRp.UpdatePwd(exist);
         }
 
@@ -464,5 +525,11 @@ namespace MiniAbp.Identity.Application
 
         
 
+    }
+
+    public class UserIdentity
+    {
+        public string UserId { get; set; }
+        public string LanguageCulture { get; set; }
     }
 }

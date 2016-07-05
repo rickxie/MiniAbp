@@ -1,0 +1,24 @@
+﻿@using System.Collections.Generic
+@using System.Reflection
+@using System.Web.Mvc
+@using MiniAbp.Extension
+@model Dictionary<string, Dictionary<string, string>>
+@{Layout = null;}
+
+(function() {
+
+mabp.localization = {};
+ @foreach (KeyValuePair<string, Dictionary<string, string>> local in Model)
+{
+@:     mabp.localization['@local.Key'] = {
+             foreach (KeyValuePair<string, string> v in local.Value)
+            {
+@:             '@v.Key' : '@v.Value',
+                             }
+@:}
+ }
+
+mabp.localization.getResouce = function(sourceName){
+return mabp.localization[sourceName].texts;
+}
+})();
