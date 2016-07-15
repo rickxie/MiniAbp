@@ -197,6 +197,7 @@ namespace MiniAbp.DataAccess
             {
                 using (IDbConnection db = NewDbConnection)
                 {
+
                     db.Open();
                     dy = db.Get<T>(id);
                     db.Close();
