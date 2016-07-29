@@ -1,12 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Data;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MiniAbp.DataAccess;
+using MiniAbp.Dependency;
+using MiniAbp.Domain.Entitys;
 
 namespace MiniAbp.Test
 {
     [TestClass]
     public class TemplateManagerTest : TestBase
     {
-        public string Connection = @"Data Source=shaappt0001;Initial Catalog=Shalu_Bpm_m;Persist Security Info=true;User ID=sa;PWD=Passw0rd;Packet Size=4096;";
+        
 
         public TemplateManagerTest()
         {
@@ -17,6 +20,24 @@ namespace MiniAbp.Test
         [TestMethod]
         public void TestTpl()
         {
+            var a = DbDapper.RunDataTableSql(@"With a as (select * from  appuser)
+SELECT * FROM a", new PageInput()
+            {
+                Ascending = false,
+                CurrentPage = 2, Filters = null, OrderByProperty = "CreationTime", PageSize = 10
+            });
+            var b = DbDapper.Query<UserDto>(@"With a as (select * from  appuser)
+SELECT * FROM a", new PageInput()
+            {
+                Ascending = false,
+                CurrentPage = 2, Filters = null, OrderByProperty = "CreationTime", PageSize = 10
+            });
         }
+        
+    }
+
+    public class UserDto
+    {
+        public string Id { get; set; }
     }
 }

@@ -42,5 +42,9 @@ namespace MiniAbp.Domain
         {
             return DbDapper.RunDataTableSql(sql, param, Connection, Transaction);
         }
+        public virtual PagedDatatable GetDataTable(string sql, IPaging input, object param = null)
+        {
+            return DbDapper.RunDataTableSql(sql, input, param, Connection, Transaction);
+        }
     }
 }

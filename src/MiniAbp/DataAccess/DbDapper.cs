@@ -9,6 +9,7 @@ using MiniAbp.Configuration;
 using MiniAbp.DataAccess.Dapper; 
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
+using MiniAbp.Extension;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.DataAccess
@@ -44,6 +45,35 @@ namespace MiniAbp.DataAccess
                 }
             }
             return table;
+        }
+        /// <summary>
+        /// 获取数据表并分页
+        /// </summary>
+        /// <param name="sql">查询脚本</param>
+        /// <param name="page">分页对象</param>
+        /// <param name="param">参数</param>
+        /// <param name="dbConnection">Connection</param>
+        /// <param name="tran">Transaction</param>
+        /// <returns></returns>
+        public static PagedDatatable RunDataTableSql(string sql, IPaging page, object param = null,  IDbConnection dbConnection = null, IDbTransaction tran = null)
+        {
+
+            var cte = string.Empty;
+            var selectSql = string.Empty;
+            SimpleDapper.SplitCte(sql, ref cte, ref selectSql);
+            string orderBy = page.OrderByProperty + (!page.Ascending ? " desc " : " asc ");
+            string pagedSql = @"SELECT temp_paged.* FROM (SELECT TOP {0} * FROM 
+                    (SELECT ROW_NUMBER() OVER (ORDER BY " + orderBy + @") AS rownumber, * 
+                    FROM ({1}) temp_tb) A WHERE A.rownumber > {2}) temp_paged";
+            var query = cte + pagedSql.Fill(page.PageSize, selectSql, page.PageSize * (page.CurrentPage - 1));
+            var table = RunDataTableSql(query, param, dbConnection, tran);
+            var totalCount = Count(sql, param, dbConnection, tran);
+
+            return new PagedDatatable()
+            {
+                Data = table,
+                TotalCount = totalCount
+            };
         }
 
         public static IEnumerable<T> GetAll<T>(string sql, object sqlParas)

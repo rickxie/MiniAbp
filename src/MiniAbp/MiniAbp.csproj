@@ -136,6 +136,7 @@
     <Compile Include="Domain\Entitys\FileInfo.cs" />
     <Compile Include="Domain\Entitys\NameValue.cs" />
     <Compile Include="Domain\Entitys\Output.cs" />
+    <Compile Include="Domain\Entitys\PagedDatatable.cs" />
     <Compile Include="Domain\Entitys\PagedList.cs" />
     <Compile Include="Domain\Entitys\PageInput.cs" />
     <Compile Include="Domain\IApplicationService.cs" />

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using Dapper;
 using Microsoft.CSharp.RuntimeBinder;
 using MiniAbp.Configuration;
@@ -354,12 +355,26 @@ namespace MiniAbp.DataAccess
                 };
                 return rtnObj;
             }
-
+            /// <summary>
+            /// 分页查询 支持CTE
+            /// </summary>
+            /// <typeparam name="T"></typeparam>
+            /// <param name="connection"></param>
+            /// <param name="sql"></param>
+            /// <param name="page"></param>
+            /// <param name="whereCondition"></param>
+            /// <param name="transaction"></param>
+            /// <param name="commandTimeout"></param>
+            /// <returns></returns>
             public static PagedList<T> Query<T>(this IDbConnection connection, string sql, IPaging page, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
-                var sqlWithPaged = BuilderPageSql(sql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
+                var cte = string.Empty;
+                var selectSql = string.Empty;
+                SplitCte(sql, ref cte, ref selectSql);
+
+                var sqlWithPaged = BuilderPageSql(selectSql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
                 var currenttype = typeof(T);
-                var result = connection.Query<T>(sqlWithPaged, whereCondition, transaction, true, commandTimeout);
+                var result = connection.Query<T>(cte + sqlWithPaged, whereCondition, transaction, true, commandTimeout);
                 var count = connection.Count(sql, whereCondition, transaction, commandTimeout);
                 var rtnObj = new PagedList<T>
                 {
@@ -369,6 +384,30 @@ namespace MiniAbp.DataAccess
                 if (Debugger.IsAttached)
                     Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, sqlWithPaged));
                 return rtnObj;
+            }
+            /// <summary>
+            /// CTE拆分
+            /// </summary>
+            /// <param name="sql"></param>
+            /// <param name="cte"></param>
+            /// <param name="selectSql"></param>
+            public static void SplitCte(string sql, ref string cte, ref string selectSql)
+            {
+                cte = cte ?? string.Empty;
+                selectSql = selectSql ?? string.Empty;
+                var rx = new Regex("\\)[\\s\\r\\n]*select", RegexOptions.IgnoreCase);
+                var matchs = rx.Matches(sql);
+                if (matchs.Count == 1)
+                {
+                    var indexOfSql = sql.IndexOf(matchs[0].Value, StringComparison.Ordinal);
+                    cte = sql.Substring(0, indexOfSql + 1);
+                    selectSql = sql.Substring(indexOfSql + 1, sql.Length - indexOfSql - 1);
+                }
+                else
+                {
+                    selectSql = sql;
+                    cte = string.Empty;
+                }
             }
             public static T QueryFirst<T>(this IDbConnection connection, string sql, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
@@ -697,13 +736,23 @@ namespace MiniAbp.DataAccess
                     Trace.WriteLine(String.Format("Count: {0}", sql));
                 return connection.Query<int>(sql, param, transaction, true, commandTimeout).Single();
             }
-
+            /// <summary>
+            /// 支持CTE
+            /// </summary>
+            /// <param name="connection"></param>
+            /// <param name="sql"></param>
+            /// <param name="whereCondition"></param>
+            /// <param name="transaction"></param>
+            /// <param name="commandTimeout"></param>
+            /// <returns></returns>
             public static int Count(this IDbConnection connection,string sql, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
             {
-                var sqlStr = "SELECT COUNT(1) FROM ( {0} ) temp_count".Fill(sql);
+                var cte = string.Empty;
+                var selectSql = string.Empty;
+                SplitCte(sql, ref cte, ref selectSql);
+                var sqlStr = cte + "SELECT COUNT(1) FROM ( {0} ) temp_count".Fill(selectSql);
                 return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
             }
-
             public static int Count<T>(this IDbConnection connection, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
             {
                 var currenttype = typeof(T);

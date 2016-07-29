@@ -14,19 +14,8 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class BaseRepository<T, TPrimaryKey> : IRepository where T : IEntity<TPrimaryKey> 
+    public abstract class BaseRepository<T, TPrimaryKey> : BaseRepository, IRepository where T : IEntity<TPrimaryKey> 
     {
-        protected YSession Session = YSession.GetInstance();
-
-        protected virtual IDbConnection Connection { get; set; }
-        protected virtual IDbTransaction Transaction { get; set; }
-        public virtual void QueryMultiple(Action<SqlMapper.GridReader> func, string sql, object param = null)
-        {
-            using (var multi = Connection.QueryMultiple(sql, param))
-            {
-                func(multi);
-            }
-        }
         public virtual PagedList<T> GetPagedList(IPaging pageInput, string where = null)
         {
             return DbDapper.GetPagedList<T>(pageInput, where, Connection, Transaction);
@@ -152,26 +141,6 @@ namespace MiniAbp.Domain
         public virtual int Update(T cate)
         {
             return DbDapper.Update(cate, Connection, Transaction);
-        }
-        public virtual List<TModel> Query<TModel>(string sql, object param = null)
-        {
-            return DbDapper.Query<TModel>(sql, param, Connection, Transaction);
-        }
-        public virtual PagedList<TModel> Query<TModel>(string sql, IPaging input, object param = null)
-        {
-            return DbDapper.Query<TModel>(sql,input, param, Connection, Transaction);
-        }
-        public virtual TModel QueryFirst<TModel>(string sql, object param = null)
-        {
-            return DbDapper.Query<TModel>(sql, param, Connection, Transaction).FirstOrDefault();
-        }
-        public virtual void Execute(string sql, object param = null)
-        {
-            DbDapper.ExecuteNonQuery(sql, param, Connection, Transaction);
-        }
-        public virtual DataTable GetDataTable(string sql, object param = null)
-        {
-            return DbDapper.RunDataTableSql(sql, param, Connection, Transaction);
         }
     }
 }
