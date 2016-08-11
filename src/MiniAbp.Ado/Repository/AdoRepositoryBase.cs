@@ -16,8 +16,8 @@ namespace MiniAbp.Ado.Repository
     {
         protected virtual  IDbContext Context => _dbContextProvider.DbContext;
         private readonly IDbContextProvider _dbContextProvider;
-        protected override IDbConnection Connection => Context.DbConnection;
-        protected override IDbTransaction Transaction => Context.DbTransaction;
+        protected override IDbConnection DbConnection => Context.DbConnection;
+        protected override IDbTransaction DbTransaction => Context.DbTransaction;
         public AdoRepositoryBase(IDbContextProvider dbContextProvider)
         {
             this._dbContextProvider = dbContextProvider;
@@ -25,22 +25,22 @@ namespace MiniAbp.Ado.Repository
 
         public override List<TModel> Query<TModel>(string sql, object param = null)
         {
-            return Connection.Query<TModel>(sql, param, Transaction).ToList();
+            return DbConnection.Query<TModel>(sql, param, DbTransaction).ToList();
         }
 
         public override PagedList<TModel> Query<TModel>(string sql, IPaging input, object param = null)
         {
-            return Connection.Query<TModel>(sql, input, param, Transaction);
+            return DbConnection.Query<TModel>(sql, input, param, DbTransaction);
         }
 
         public override TModel QueryFirst<TModel>(string sql, object param = null)
         {
-            return Connection.QueryFirst<TModel>(sql, param, Transaction);
+            return DbConnection.QueryFirst<TModel>(sql, param, DbTransaction);
         }
 
         public override void Execute(string sql, object param = null)
         {
-            Connection.Execute(sql, param, Transaction);
+            DbConnection.Execute(sql, param, DbTransaction);
         }
     }
 }

@@ -5,10 +5,13 @@ using System.Linq;
 using System.Net;
 using Dapper;
 using MiniAbp.Ado.Uow;
+using MiniAbp.Configuration;
 using MiniAbp.DataAccess;
 using MiniAbp.DataAccess.Dapper;
+using MiniAbp.Dependency;
 using MiniAbp.Domain;
 using MiniAbp.Domain.Entitys;
+using MiniAbp.Runtime;
 
 namespace MiniAbp.Ado.Repository
 {
@@ -17,8 +20,17 @@ namespace MiniAbp.Ado.Repository
         protected virtual  IDbContext Context => _dbContextProvider.DbContext;
         private readonly IDbContextProvider _dbContextProvider;
 
-        protected override IDbConnection Connection => Context.DbConnection;
-        protected override IDbTransaction Transaction => Context.DbTransaction;
+        protected override IDbConnection DbConnection {
+            get
+            {
+                if (Context.DbConnection.State == ConnectionState.Closed)
+                {
+                    Context.DbConnection.Open();
+                }
+                return Context.DbConnection;
+            }
+        }
+        protected override IDbTransaction DbTransaction => Context.DbTransaction;
         public AdoRepositoryBase(IDbContextProvider dbContextProvider)
         {
             this._dbContextProvider = dbContextProvider;
@@ -26,62 +38,62 @@ namespace MiniAbp.Ado.Repository
 
         public override PagedList<TEntity> GetPagedList(IPaging pageInput, string where = null)
         {
-            return Connection.GetListPaged<TEntity>(where, pageInput, Transaction);
+            return DbConnection.GetListPaged<TEntity>(where, pageInput, DbTransaction);
         }
 
         public override List<TEntity> GetAll(object where = null)
         {
-            return Connection.GetList<TEntity>(where, Transaction).ToList();
+            return DbConnection.GetList<TEntity>(where, DbTransaction).ToList();
         }
 
         public override TEntity First(object whereCondition = null)
         {
-            return Connection.FirstOrDefault<TEntity>(whereCondition, Transaction);
+            return DbConnection.FirstOrDefault<TEntity>(whereCondition, DbTransaction);
         }
 
         public override TEntity First(string where = null)
         {
-           return Connection.First<TEntity>(where, Transaction); 
+           return DbConnection.First<TEntity>(where, DbTransaction); 
         }
 
         public override bool Any(object whereCondition)
         {
-            return Connection.Count<TEntity>(whereCondition, Transaction) > 0;
+            return DbConnection.Count<TEntity>(whereCondition, DbTransaction) > 0;
         }
 
         public override bool Any(string where)
         {
-            return Connection.Count<TEntity>(where,  Transaction) > 0; ;
+            return DbConnection.Count<TEntity>(where,  DbTransaction) > 0; ;
         }
 
         public override int Count(string where)
         {
-            return Connection.Count<TEntity>(where,  Transaction);
+            return DbConnection.Count<TEntity>(where,  DbTransaction);
         }
 
         public override int Count(string sql, object param)
         {
-            return Connection.Count(sql, param, Transaction);
+            return DbConnection.Count(sql, param, DbTransaction);
         }
 
         public override TEntity Get(string id)
         {
-            return Connection.Get<TEntity>(id,  Transaction);
+            return DbConnection.Get<TEntity>(id,  DbTransaction);
         }
 
         public override int Delete(string id)
         {
-            return Connection.Delete<TEntity>(id,  Transaction);
+            return DbConnection.Delete<TEntity>(id,  DbTransaction);
         }
 
         public override int Delete(TEntity entity)
         {
-            return Connection.Delete(entity,  Transaction);
+            return DbConnection.Delete(entity,  DbTransaction);
         }
 
         public override void Insert(TEntity model)
         {
-            Connection.Insert<string>(model,  Transaction);
+            DbConnection.Insert<string>(model,  DbTransaction);
         }
 
         public override void AddOrUpdate(TEntity model, bool dbCheck = false)
@@ -137,27 +149,27 @@ namespace MiniAbp.Ado.Repository
 
         public override int Update(TEntity entity)
         {
-            return Connection.Update(entity, Transaction);
+            return DbConnection.Update(entity, DbTransaction);
         }
 
         public override List<TModel> Query<TModel>(string sql, object param = null)
         {
-            return Connection.Query<TModel>(sql, param, Transaction).ToList();
+            return DbConnection.Query<TModel>(sql, param, DbTransaction).ToList();
         }
 
         public override PagedList<TModel> Query<TModel>(string sql, IPaging input, object param = null)
         {
-            return Connection.Query<TModel>(sql, input, param, Transaction);
+            return DbConnection.Query<TModel>(sql, input, param, DbTransaction);
         }
 
         public override TModel QueryFirst<TModel>(string sql, object param = null)
         {
-            return Connection.QueryFirst<TModel>(sql, param, Transaction);
+            return DbConnection.QueryFirst<TModel>(sql, param, DbTransaction);
         }
 
         public override void Execute(string sql, object param = null)
         {
-            Connection.Execute(sql, param, Transaction);
+            DbConnection.Execute(sql, param, DbTransaction);
         }
     }
 }

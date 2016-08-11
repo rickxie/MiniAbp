@@ -9,42 +9,39 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class BaseRepository : IRepository 
+    public abstract class BaseRepository : ApplicationCommonBase, IRepository
     {
-        protected YSession Session = YSession.GetInstance();
-        protected virtual IDbConnection Connection { get; set; }
-        protected virtual IDbTransaction Transaction { get; set; }
 
         public virtual List<TModel> Query<TModel>(string sql, object param = null)
         {
-            return DbDapper.Query<TModel>(sql, param, Connection, Transaction);
+            return DbDapper.Query<TModel>(sql, param, DbConnection, DbTransaction);
         }
         public virtual void QueryMultiple( Action<SqlMapper.GridReader> func, string sql, object param = null)
         {
-            using (var multi = Connection.QueryMultiple(sql, param))
+            using (var multi = DbConnection.QueryMultiple(sql, param))
             {
                 func(multi);
             }
         }
         public virtual PagedList<TModel> Query<TModel>(string sql, IPaging input, object param = null)
         {
-            return DbDapper.Query<TModel>(sql,input, param, Connection, Transaction);
+            return DbDapper.Query<TModel>(sql,input, param, DbConnection, DbTransaction);
         }
         public virtual TModel QueryFirst<TModel>(string sql, object param = null)
         {
-            return DbDapper.Query<TModel>(sql, param, Connection, Transaction).FirstOrDefault();
+            return DbDapper.Query<TModel>(sql, param, DbConnection, DbTransaction).FirstOrDefault();
         }
         public virtual void Execute(string sql, object param = null)
         {
-            DbDapper.ExecuteNonQuery(sql, param, Connection, Transaction);
+            DbDapper.ExecuteNonQuery(sql, param, DbConnection, DbTransaction);
         }
         public virtual DataTable GetDataTable(string sql, object param = null)
         {
-            return DbDapper.RunDataTableSql(sql, param, Connection, Transaction);
+            return DbDapper.RunDataTableSql(sql, param, DbConnection, DbTransaction);
         }
         public virtual PagedDatatable GetDataTable(string sql, IPaging input, object param = null)
         {
-            return DbDapper.RunDataTableSql(sql, input, param, Connection, Transaction);
+            return DbDapper.RunDataTableSql(sql, input, param, DbConnection, DbTransaction);
         }
     }
 }

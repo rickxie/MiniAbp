@@ -120,6 +120,7 @@
     <Compile Include="Dependency\IocManager.cs" />
     <Compile Include="Dependency\IocRegistrarExtensions.cs" />
     <Compile Include="Dependency\IocResolverExtensions.cs" />
+    <Compile Include="Domain\ApplicationCommonBase.cs" />
     <Compile Include="Domain\ApplicationService.cs" />
     <Compile Include="Domain\BaseModuleRepository.cs" />
     <Compile Include="Domain\BaseRepository.cs" />

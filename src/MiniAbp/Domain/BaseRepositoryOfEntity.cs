@@ -18,60 +18,60 @@ namespace MiniAbp.Domain
     {
         public virtual PagedList<T> GetPagedList(IPaging pageInput, string where = null)
         {
-            return DbDapper.GetPagedList<T>(pageInput, where, Connection, Transaction);
+            return DbDapper.GetPagedList<T>(pageInput, where, DbConnection, DbTransaction);
         }
 
         public virtual List<T> GetAll(object where = null)
         {
-            return DbDapper.GetList<T>(where, Connection, Transaction);
+            return DbDapper.GetList<T>(where, DbConnection, DbTransaction);
         }
         public virtual T First(object where = null)
         {
-            return DbDapper.First<T>(where, Connection, Transaction);
+            return DbDapper.First<T>(where, DbConnection, DbTransaction);
         }
         
         public virtual T First(string where = null)
         {
-            return DbDapper.First<T>(where, Connection, Transaction);
+            return DbDapper.First<T>(where, DbConnection, DbTransaction);
         }
         
         public virtual bool Any(object whereCondition)
         {
-            return DbDapper.Any<T>(whereCondition, Connection, Transaction);
+            return DbDapper.Any<T>(whereCondition, DbConnection, DbTransaction);
         }
         public virtual bool Any(string where)
         {
-            return DbDapper.Any<T>(where, Connection, Transaction);
+            return DbDapper.Any<T>(where, DbConnection, DbTransaction);
         }
         public virtual int Count(string where)
         {
-            return DbDapper.Count<T>(where, Connection, Transaction);
+            return DbDapper.Count<T>(where, DbConnection, DbTransaction);
         }
         public virtual int Count(string sql, object param)
         {
-            return DbDapper.Count(sql, param, Connection, Transaction);
+            return DbDapper.Count(sql, param, DbConnection, DbTransaction);
         }
 
         public virtual T Get(string id)
         {
-            return DbDapper.Get<T>(id, Connection, Transaction);
+            return DbDapper.Get<T>(id, DbConnection, DbTransaction);
         }
 
 
         public virtual int Delete(string id)
         {
-            return DbDapper.Delete<T>(id, Connection, Transaction);
+            return DbDapper.Delete<T>(id, DbConnection, DbTransaction);
         }
 
         public virtual int Delete(T entity)
         {
-            return DbDapper.Delete<T>(entity, Connection, Transaction);
+            return DbDapper.Delete<T>(entity, DbConnection, DbTransaction);
         }
 
         public virtual int SoftDelete<TModel>(TModel entity) where TModel : CreationAndDeletionEntity
         {
             entity.MarkDeleted();
-            return DbDapper.Update(entity, Connection, Transaction);
+            return DbDapper.Update(entity, DbConnection, DbTransaction);
         }
 
 
@@ -79,7 +79,7 @@ namespace MiniAbp.Domain
         {
             var creationTime = model.GetType().GetProperty("CreationTime");
             creationTime?.SetValue(model, DateTime.Now);
-            DbDapper.Insert<T>(model, Connection, Transaction);
+            DbDapper.Insert<T>(model, DbConnection, DbTransaction);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace MiniAbp.Domain
 
         public virtual int Update(T cate)
         {
-            return DbDapper.Update(cate, Connection, Transaction);
+            return DbDapper.Update(cate, DbConnection, DbTransaction);
         }
     }
 }
