@@ -15,6 +15,9 @@ namespace MiniAbp.Reflection
 
         public IAssemblyFinder AssemblyFinder { get; set; }
 
+        private IEnumerable<Assembly> _allAssemblies;
+        public IEnumerable<Assembly> AllAssemblies => _allAssemblies ?? (_allAssemblies = AssemblyFinder.GetAllAssemblies().Distinct());
+
         public TypeFinder()
         {
             AssemblyFinder = CurrentDomainAssemblyFinder.Instance;
@@ -35,7 +38,9 @@ namespace MiniAbp.Reflection
         {
             var allTypes = new List<Type>();
 
-            foreach (var assembly in AssemblyFinder.GetAllAssemblies().Distinct())
+          
+
+            foreach (var assembly in AllAssemblies)
             {
                 try
                 {

@@ -39,18 +39,18 @@ namespace MiniAbp.Ado
 
         private void RegisterGenericRepositories()
         {
-            var dbContextTypes =
-                _typeFinder.Find(type =>
-                    type.IsPublic &&
-                    !type.IsAbstract &&
-                    type.IsClass &&
-                    typeof(AdoDbContext).IsAssignableFrom(type)
-                    );
+            //var dbContextTypes =
+            //    _typeFinder.Find(type =>
+            //        type.IsPublic &&
+            //        !type.IsAbstract &&
+            //        type.IsClass &&
+            //        typeof(AdoDbContext).IsAssignableFrom(type)
+            //        );
 
-            if (dbContextTypes.IsNullOrEmpty())
-            {
-                return;
-            }
+            //if (dbContextTypes.IsNullOrEmpty())
+            //{
+            //    return;
+            //}
 
 //            foreach (var dbContextType in dbContextTypes)
 //            {

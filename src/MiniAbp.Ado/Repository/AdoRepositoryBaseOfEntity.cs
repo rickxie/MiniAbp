@@ -61,12 +61,12 @@ namespace MiniAbp.Ado.Repository
             return DbConnection.Count<TEntity>(whereCondition, DbTransaction) > 0;
         }
 
-        public override bool Any(string where)
+        public override bool Any(string where = "")
         {
             return DbConnection.Count<TEntity>(where,  DbTransaction) > 0; ;
         }
 
-        public override int Count(string where)
+        public override int Count(string where = "")
         {
             return DbConnection.Count<TEntity>(where,  DbTransaction);
         }

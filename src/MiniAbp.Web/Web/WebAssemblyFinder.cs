@@ -31,8 +31,7 @@ namespace MiniAbp.Web
                 {
                     assembliesInBinFolder.Add(locatedAssembly);
                 }
-            }
-
+            } 
             return assembliesInBinFolder;
         }
     }

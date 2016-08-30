@@ -62,10 +62,13 @@ namespace MiniAbp.DataAccess
             var selectSql = string.Empty;
             SimpleDapper.SplitCte(sql, ref cte, ref selectSql);
             string orderBy = page.OrderByProperty + (!page.Ascending ? " desc " : " asc ");
-            string pagedSql = @"SELECT temp_paged.* FROM (SELECT TOP {0} * FROM 
-                    (SELECT ROW_NUMBER() OVER (ORDER BY " + orderBy + @") AS rownumber, * 
-                    FROM ({1}) temp_tb) A WHERE A.rownumber > {2}) temp_paged";
-            var query = cte + pagedSql.Fill(page.PageSize, selectSql, page.PageSize * (page.CurrentPage - 1));
+//            string pagedSql = @"SELECT temp_paged.* FROM (SELECT TOP {0} * FROM 
+//                    (SELECT ROW_NUMBER() OVER (ORDER BY {3}) AS rownumber, * 
+//                    FROM ({1}) temp_tb) A WHERE A.rownumber > {2}) temp_paged";
+            const string pagedSql = @"  SELECT * FROM ({1}) temp_page
+	                                ORDER BY {3} 
+	                                OFFSET {2} ROWS FETCH NEXT {0} ROW ONLY";
+            var query = cte + pagedSql.Fill(page.PageSize, selectSql, page.PageSize * (page.CurrentPage - 1), orderBy);
             var table = RunDataTableSql(query, param, dbConnection, tran);
             var totalCount = Count(sql, param, dbConnection, tran);
 

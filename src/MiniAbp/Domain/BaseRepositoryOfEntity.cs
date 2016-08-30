@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Castle.Core.Internal;
 using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Dapper;
+using Microsoft.SqlServer.Server;
 using MiniAbp.DataAccess;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Extension;
@@ -14,7 +15,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class BaseRepository<T, TPrimaryKey> : BaseRepository, IRepository where T : IEntity<TPrimaryKey> 
+    public abstract class BaseRepository<T, TPrimaryKey> : BaseRepository, IRepository where T : IEntity<TPrimaryKey>
     {
         public virtual PagedList<T> GetPagedList(IPaging pageInput, string where = null)
         {
@@ -39,11 +40,11 @@ namespace MiniAbp.Domain
         {
             return DbDapper.Any<T>(whereCondition, DbConnection, DbTransaction);
         }
-        public virtual bool Any(string where)
+        public virtual bool Any(string where = "")
         {
             return DbDapper.Any<T>(where, DbConnection, DbTransaction);
         }
-        public virtual int Count(string where)
+        public virtual int Count(string where = "")
         {
             return DbDapper.Count<T>(where, DbConnection, DbTransaction);
         }
