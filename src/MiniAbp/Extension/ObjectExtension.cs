@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.MicroKernel.Registration;
+using Newtonsoft.Json;
 
 namespace MiniAbp.Extension
 {
@@ -24,6 +25,9 @@ namespace MiniAbp.Extension
         /// <returns/>
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination) where TDestination : class, new()
         {
+
+//            var serializedSource = JsonConvert.SerializeObject(source);
+//            var deserializedSource = JsonConvert.DeserializeObject<TDestination>(serializedSource);
             var sourceType = source.GetType();
             var sourceProps = sourceType.GetProperties();
             var targetType = typeof(TDestination);

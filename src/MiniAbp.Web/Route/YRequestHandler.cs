@@ -13,9 +13,9 @@ namespace MiniAbp.Web.Route
 
         public static string ApiService(string service, string method, object param)
         {
-            AuditingManager auditing = new AuditingManager();
+            var auditing = new AuditingManager();
             AjaxResult result = null;
-                auditing.Start(service, method, param.ToString());
+            auditing.Start(service, method, param.ToString());
             try
             {
                 var dataResult = ServiceController.Instance.Execute(service, method, param, RequestType.ServiceFile);
