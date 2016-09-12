@@ -41,19 +41,8 @@ namespace MiniAbp.Web.Route
                 throw new UserFriendlyException("'{0}' Service 不存在".Fill(serviceName.ToLower()));
             }
             var interfaceType = YAssembly.ServiceDic[svType];
-            var methodForCheck = YAssembly.GetMethodByType(svType, methodName);
             var method = YAssembly.GetMethodByType(interfaceType, methodName);
             //权限安全检查
-            var authorizeAttrList = ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MabpAuthorizeAttribute>(methodForCheck
-                  );
-            if (authorizeAttrList.Count > 0)
-            { 
-                using (var authorizationAttributeHelper = IocManager.Instance.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-                {
-                    authorizationAttributeHelper.Object.Authorize(authorizeAttrList);
-                }
-            }
-
             object result = null; 
             var instance = IocManager.Instance.Resolve(interfaceType); 
             result = Invoke(method, instance, param);

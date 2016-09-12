@@ -76,6 +76,7 @@
     <Compile Include="YApplication.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Razor\Template\LocalizationTemplate.cshtml" />
     <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />

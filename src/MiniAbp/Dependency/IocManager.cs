@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Data.SQLite;
 using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;

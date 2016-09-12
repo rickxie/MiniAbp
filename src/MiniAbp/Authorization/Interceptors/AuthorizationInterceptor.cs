@@ -10,32 +10,21 @@ namespace MiniAbp.Authorization.Interceptors
     /// </summary>
     public class AuthorizationInterceptor : IInterceptor
     {
-        private readonly IocManager _iocResolver;
+        private readonly IAuthorizeHelper _authorizeHelper;
 
-        public AuthorizationInterceptor(IocManager iocResolver)
+        public AuthorizationInterceptor(IAuthorizeHelper authorizeHelper)
         {
-            _iocResolver = iocResolver;
+            _authorizeHelper = authorizeHelper;
         }
- 
+
+        /// <summary>
+        /// method authorization check
+        /// </summary>
+        /// <param name="invocation"></param>
         public void Intercept(IInvocation invocation)
         {
-            var authorizeAttrList =
-               ReflectionHelper.GetAttributesOfMemberAndDeclaringType<MabpAuthorizeAttribute>(
-                   invocation.MethodInvocationTarget
-                   );
-
-            if (authorizeAttrList.Count <= 0)
-            {
-                //No AbpAuthorizeAttribute to be checked
-                invocation.Proceed();
-                return;
-            }
-
-            using (var authorizationAttributeHelper = _iocResolver.ResolveAsDisposable<IAuthorizeAttributeHelper>())
-            {
-                authorizationAttributeHelper.Object.Authorize(authorizeAttrList);
-                invocation.Proceed();
-            }
+            _authorizeHelper.Authorize(invocation.MethodInvocationTarget);
+            invocation.Proceed();
         }
     }
 }

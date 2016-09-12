@@ -156,7 +156,6 @@ namespace MiniAbp.Identity.Application
         /// 被邀请的未注册用户首次登录需填写昵称，修改密码
         /// </summary>
         /// <param name="input"></param>
-        [MabpAuthorize]
         public void UpdateActiveUser(TUser input)
         {
             var exist = CheckIsExistUser(input.Id);

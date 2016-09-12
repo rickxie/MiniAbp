@@ -21,6 +21,7 @@ namespace MiniAbp.Web.Route
                 var dataResult = ServiceController.Instance.Execute(service, method, param, RequestType.ServiceFile);
                 result = new AjaxResult()
                 {
+                    IsAuthorized = true,
                     IsSuccess = true,
                     Result = dataResult
                 };
@@ -31,6 +32,7 @@ namespace MiniAbp.Web.Route
 
                 result = new AjaxResult()
                 {
+                    IsAuthorized = true,
                     IsSuccess = false,
                     Result = null,
                     Errors = new Errors()

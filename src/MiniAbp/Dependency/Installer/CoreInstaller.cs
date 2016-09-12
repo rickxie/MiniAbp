@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +27,7 @@ namespace MiniAbp.Dependency.Installer
                 Component.For<ModuleFinder>().ImplementedBy<ModuleFinder>().LifestyleTransient(),
                 Component.For<ModuleManager>().ImplementedBy<ModuleManager>().LifestyleSingleton(),
                 Component.For<IDbConnection>().ImplementedBy<SqlConnection>().Named(Dialect.SqlServer.ToString()).LifeStyle.Transient,
-                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(Dialect.SqLite.ToString()).LifeStyle.Transient,
+//                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(Dialect.SqLite.ToString()).LifeStyle.Transient,
                 Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient,
                 Component.For<IStartupConfiguration>().ImplementedBy<StartupConfiguration>().LifestyleSingleton(),
                 Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkOptions>().LifestyleSingleton(),
