@@ -8,19 +8,17 @@ using MiniAbp.Extension;
 
 namespace MiniAbp.Localization
 {
+    /// <summary>
+    /// 本地化源
+    /// </summary>
     public class LocalizationSource
     {
-        public string Path { get; set; }
         public string Source { get; set; }
-
-        public LocalizationSource(string source, string path)
+        public ILocalizationProvider Provider { get; set; }
+        public LocalizationSource(string source, ILocalizationProvider provider)
         {
-            if (source.IsEmpty() || path.IsEmpty())
-            {
-                throw new ArgumentException("source name or path can't be empty");
-            }
-            this.Path = path;
             this.Source = source;
+            Provider = provider;
         }
     }
 }

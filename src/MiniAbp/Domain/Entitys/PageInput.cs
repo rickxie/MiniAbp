@@ -16,11 +16,11 @@ namespace MiniAbp.Domain.Entitys
             get
             {
                 var item = Filters?.FirstOrDefault(r => r.Name == name);
-                if (string.IsNullOrWhiteSpace(item?.Value))
+                if (item?.Value == null)
                 {
-                    item = null;
+                    return null;
                 }
-                return item?.Value;
+                return item.Value.Replace("'", "''");
             }
         }
 

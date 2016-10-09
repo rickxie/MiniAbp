@@ -171,8 +171,10 @@
     <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Extension\StringHelper.cs" />
     <Compile Include="KernelModule.cs" />
+    <Compile Include="Localization\EmbeddedJsonFileProvider.cs" />
+    <Compile Include="Localization\ILocalizationProvider.cs" />
     <Compile Include="Localization\LanguageInfo.cs" />
-    <Compile Include="Localization\LocalizationProvider.cs" />
+    <Compile Include="Localization\LocalJsonProvider.cs" />
     <Compile Include="Localization\LocalizationManager.cs" />
     <Compile Include="Localization\LocalizedJson.cs" />
     <Compile Include="Localization\LocalizationSource.cs" />

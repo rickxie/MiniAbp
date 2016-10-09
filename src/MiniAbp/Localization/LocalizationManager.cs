@@ -38,10 +38,9 @@ namespace MiniAbp.Localization
         //加载至全局
         public void Initialize()
         {
-            var provider = new LocalizationProvider();
             Config.Sources.ForEach(r =>
             {
-                provider.Load(r, Config.Languages, Sources);
+                r.Provider.Load(r, Config.Languages, Sources);
             });
         }
     }

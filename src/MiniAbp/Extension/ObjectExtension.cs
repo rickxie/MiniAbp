@@ -26,7 +26,6 @@ namespace MiniAbp.Extension
             }
             return targetInstance;
         }
-
         /// <summary>
         /// Execute a mapping from the source object to the existing destination object
         /// There must be a mapping between objects before calling this method.
@@ -114,7 +113,14 @@ namespace MiniAbp.Extension
                     {
                         var targetPropType = targetValueType.PropertyType;
                         var targetPropInstance = targetPropType.Assembly.CreateInstance(targetPropType.FullName);
-                        MapToSimpleObject(value, targetPropInstance);
+                        if (IsEnumerableType(source.GetType()))
+                        {
+                            MapToGenericEnumerable(source, targetPropInstance);
+                        }
+                        else
+                        {
+                            MapToSimpleObject(source, targetPropInstance);
+                        }
                         preSetValue = targetPropInstance;
                     }
                     targetValueType.SetValue(destination, preSetValue);

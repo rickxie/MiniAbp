@@ -16,11 +16,12 @@ namespace MiniAbp.Localization
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    internal class LocalizationProvider
+    internal class LocalJsonProvider : ILocalizationProvider
     {
-        public LocalizationProvider()
+        private string Path { get; set; }
+        public LocalJsonProvider(string path)
         {
-           
+            Path = path;
         }
 
         public void Load(LocalizationSource source, List<LanguageInfo> language, Dictionary<string, Dictionary<string,string>>  sourceDict)
@@ -34,7 +35,7 @@ namespace MiniAbp.Localization
             foreach (var languageInfo in language)
             {
                 var langDic = new Dictionary<string, string>();
-                var filePath = "{0}\\{1}.{2}.json".Fill(source.Path, source.Source, languageInfo.Name);
+                var filePath = "{0}\\{1}_{2}.json".Fill(Path, source.Source, languageInfo.Name);
                 if (!File.Exists(filePath))
                 {
                     throw new Exception(filePath + " is not exists.");
