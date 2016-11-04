@@ -16,7 +16,7 @@ namespace MiniAbp.Localization
     /// <summary>
     /// Used for localization configurations.
     /// </summary>
-    internal class LocalJsonProvider : ILocalizationProvider
+    public class LocalJsonProvider : ILocalizationProvider
     {
         private string Path { get; set; }
         public LocalJsonProvider(string path)

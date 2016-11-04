@@ -131,6 +131,7 @@
     <Compile Include="Domain\CreationAndDeletionEntity.cs" />
     <Compile Include="Domain\CreationEntity.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\Entitys\FileStreamResult.cs" />
     <Compile Include="Domain\Entitys\FileModel.cs" />
     <Compile Include="Domain\Entitys\IFileUpload.cs" />
     <Compile Include="Domain\Entitys\FileInput.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Extension\DataTableExtension.cs" />
     <Compile Include="Extension\DictionaryExtension.cs" />
     <Compile Include="Extension\EventHandlerExtension.cs" />
+    <Compile Include="Extension\FileExtension.cs" />
     <Compile Include="Extension\ListExtensions.cs" />
     <Compile Include="Extension\ObjectExtension.cs" />
     <Compile Include="Extension\StringExtension.cs" />

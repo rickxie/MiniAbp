@@ -42,13 +42,7 @@ namespace MiniAbp.Web
             {
                  PrincipalHelper.SetPrincipal(null);
             }
-            UrlRouting.Instance.HandleApiService(((System.Web.HttpApplication)sender),
-               (response, outputJson) =>
-               {
-                   response.ContentType = "application/json; charset=utf-8";
-                   response.Write(outputJson);
-                   response.End();
-               });
+            UrlRouting.Instance.HandleApiService((System.Web.HttpApplication)sender);
         }
 
         protected virtual void Application_Error(object sender, EventArgs e)

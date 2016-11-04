@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
 using MiniAbp.DataAccess;
+using MiniAbp.Domain;
+using MiniAbp.Domain.Entitys;
 using Newtonsoft.Json;
 
 namespace MiniAbp.Extension
@@ -126,6 +129,32 @@ namespace MiniAbp.Extension
                     targetValueType.SetValue(destination, preSetValue);
                 }
             }
+        }
+
+        /// <summary>
+        /// 输出文件
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="strem"></param>
+        /// <param name="downloadName"></param>
+        /// <param name="contentType"></param>
+        /// <returns></returns>
+        public static FileStreamOutput File(this ApplicationService service, Stream strem, string downloadName, string contentType)
+        {
+            return new FileStreamOutput(strem, downloadName, contentType);
+        }
+
+        /// <summary>
+        /// 输出文件
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="filePath"></param>
+        /// <param name="downloadName"></param>
+        /// <param name="contentType"></param>
+        /// <returns></returns>
+        public static FilePathOutput File(this ApplicationService service, string filePath, string downloadName, string contentType)
+        {
+            return new FilePathOutput(filePath, downloadName, contentType);
         }
     }
 }

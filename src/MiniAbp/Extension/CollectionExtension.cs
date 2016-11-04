@@ -38,6 +38,7 @@ namespace MiniAbp.Extension
             return true;
         }
 
+
         /// <summary>
         /// 
         /// </summary>

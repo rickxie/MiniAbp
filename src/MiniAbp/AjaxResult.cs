@@ -6,6 +6,7 @@
         public bool IsAuthorized { get; set; }
         public Errors Errors { get; set; }
         public object Result { get; set; }
+        public string Exception { get; set; }
     }
 
     public class Errors

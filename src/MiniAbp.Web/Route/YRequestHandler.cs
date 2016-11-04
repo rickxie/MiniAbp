@@ -11,11 +11,9 @@ namespace MiniAbp.Web.Route
     {
         private static readonly ILogger Logger = IocManager.Instance.Resolve<ILogger>();
 
-        public static string ApiService(string service, string method, object param)
+        public static AjaxResult ApiService(string service, string method, object param)
         {
-            var auditing = new AuditingManager();
             AjaxResult result = null;
-            auditing.Start(service, method, param.ToString());
             try
             {
                 var dataResult = ServiceController.Instance.Execute(service, method, param, RequestType.ServiceFile);
@@ -39,7 +37,8 @@ namespace MiniAbp.Web.Route
                     {
                         Message = except.Message,
                         //CallStack = except.StackTrace
-                    }
+                    },
+                    
                 };
 
 
@@ -56,36 +55,32 @@ namespace MiniAbp.Web.Route
                 {
                     var exc = except as UserFriendlyException;
                     var newExc = exc?.InnerException ?? exc;
-                    auditing.Exception(newExc?.Message + newExc?.StackTrace);
+                    //result.e
+                    result.Exception = newExc?.Message + newExc?.StackTrace;
                     try
                     {
                         Logger.Error(newExc?.Message, newExc);
                     }
                     catch (Exception)
                     {
-                        auditing._auditInfo.Exception += "Logs文件夹没有权限。";
+                        result.Exception += "Logs文件夹没有权限。";
                     }
                 }
                 else
                 {
-                    auditing.Exception(ex.Message + ex.StackTrace);
+                    result.Exception = ex.Message + ex.StackTrace;
                     try
                     {
                         Logger.Error(ex.Message, ex);
                     }
                     catch (Exception)
                     {
-                        auditing._auditInfo.Exception += "Logs文件夹没有权限。";
+                        result.Exception += "Logs文件夹没有权限。";
                     }
                 }
                
             }
-            var responseStr = JsonConvert.SerializeObject(result, new JsonSerializerSettings()
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-            auditing.Stop(responseStr);
-            return responseStr;
+            return result;
         }
 
     }

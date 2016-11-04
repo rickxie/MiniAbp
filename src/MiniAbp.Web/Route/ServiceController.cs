@@ -81,32 +81,14 @@ namespace MiniAbp.Web.Route
                 }
                 return paraObject;
             }
-            else if (param is List<HttpPostedFile>)
+            else if (param is FileInput)
             {
                 return GetFileObject(info, param);
             }           
             throw new UserFriendlyException("请求的参数类型错误， 目前只支持文件和数据类型");
         }
 
-        private FileInput GetFileInput(object files)
-        {
-            var f = files as List<HttpPostedFile>;
-            var fileInput = new FileInput {Files = new List<FileInfo>()};
-            if (f != null)
-                foreach (var httpPostedFile in f)
-                {
-                    var file = new FileInfo();
-                    file.ContentLength = httpPostedFile.ContentLength;
-                    file.ContentType = httpPostedFile.ContentType;
-                    file.FileName = httpPostedFile.FileName;
-                    file.ExtensionName = Path.GetExtension(file.FileName);
-                    var bytes = new byte[file.ContentLength];
-                    httpPostedFile.InputStream.Read(bytes, 0, file.ContentLength);
-                    file.FileBytes = bytes;
-                    fileInput.Files.Add(file);
-                }
-            return fileInput;
-        }
+
         private object GetStringObject(MethodInfo info, string param)
         {
             var arg = info.GetParameters();
@@ -142,8 +124,7 @@ namespace MiniAbp.Web.Route
             var instance = YAssemblyCollection.CreateInstance(type.FullName);
             if (instance is FileInput)
             {
-                var fileInput = GetFileInput(param);
-                return fileInput;
+                return param;
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,24 @@ namespace MiniAbp.Extension
         public static bool HasValue(this string str)
         {
             return !IsEmpty(str);
+        }
+
+        /// <summary>
+        /// 转换为内存流
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="encoding">Default encoding is unicode</param>
+        /// <returns></returns>
+        public static MemoryStream ToStream(this string s, Encoding encoding = null)
+        {
+            if (encoding == null)
+            {
+                encoding = Encoding.Unicode;
+            }
+            // convert string to stream            
+            byte[] byteArray = encoding.GetBytes(s);
+            MemoryStream stream = new MemoryStream(byteArray);
+            return stream;
         }
 
         public static string ToCamelCase(this string str)
