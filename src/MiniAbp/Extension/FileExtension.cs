@@ -21,8 +21,6 @@ namespace MiniAbp.Extension
             List<string> visitedPath = new List<string>();
             Action<string> recursingFolder = (rd) =>
             {
-                try
-                {
                     if (!Directory.Exists(rd))
                     {
                         return;
@@ -39,12 +37,6 @@ namespace MiniAbp.Extension
                     {
                         FolderPath_Recurse(s, directoryAndFiles);
                     }
-                }
-                catch (Exception)
-                {
-
-                    return;
-                }
             };
             recursingFolder(rootDictory);
         }
