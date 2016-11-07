@@ -16,7 +16,7 @@ namespace MiniAbp.Extension
         /// </summary>
         /// <param name="rootDictory">入口路径</param>
         /// <param name="directoryAndFiles">文件夹和文件的路径</param>
-        public static void FolderPath_Recurse(this string rootDictory, Action<string, string[]> directoryAndFiles)
+        public static void DirPath_Recurse(this string rootDictory, Action<string, string[]> directoryAndFiles)
         {
             List<string> visitedPath = new List<string>();
             Action<string> recursingFolder = (rd) =>
@@ -35,10 +35,31 @@ namespace MiniAbp.Extension
                     visitedPath.Add(rd);
                     foreach (var s in Directory.GetDirectories(rd))
                     {
-                        FolderPath_Recurse(s, directoryAndFiles);
+                        DirPath_Recurse(s, directoryAndFiles);
                     }
             };
             recursingFolder(rootDictory);
+        }
+        /// <summary>
+        /// 获取路径名称
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <returns></returns>
+        public static string DirPath_GetName(this string fullPath)
+        {
+            string str;
+            if (fullPath.Length > 3)
+            {
+                string path = fullPath;
+                int length = fullPath.Length;
+                var isWithSeparatorChar =  length != 0 && (int)fullPath[length - 1] == (int)Path.DirectorySeparatorChar;
+                if (isWithSeparatorChar)
+                    path = fullPath.Substring(0, fullPath.Length - 1);
+                str = Path.GetFileName(path);
+            }
+            else
+                str = fullPath;
+            return str;
         }
 
         /// <summary>
