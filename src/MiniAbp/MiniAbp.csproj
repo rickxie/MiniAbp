@@ -103,6 +103,9 @@
     <Compile Include="Authorization\PermissionChecker.cs" />
     <Compile Include="Authorization\PrincipalHelper.cs" />
     <Compile Include="Authorization\MabpAuthorizeAttribute.cs" />
+    <Compile Include="Compile\RemoteLoaderFactory.cs" />
+    <Compile Include="Compile\RuntimeBase.cs" />
+    <Compile Include="Compile\RuntimeDll.cs" />
     <Compile Include="Configuration\AuditConfiguration.cs" />
     <Compile Include="Configuration\CustomerConfiguration.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
