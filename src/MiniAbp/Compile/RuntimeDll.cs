@@ -100,6 +100,9 @@ namespace MiniAbp.Compile
             return objRemote.Invoke(method, param);
         }
 
+        /// <summary>
+        /// Release memory
+        /// </summary>
         public void Dispose()
         {
             AppDomain.Unload(_objAppDomain);
