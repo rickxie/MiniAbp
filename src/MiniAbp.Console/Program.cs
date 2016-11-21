@@ -11,19 +11,21 @@ namespace MiniAbp.Console
     {
         private static void Main(string[] args)
         {
-            var listNV = new Genric<NameVal>();
-            var nameVal = new NameVal();
-            nameVal.Name = "xiaoming";
-            nameVal.Value = "happy";
-            listNV.Model = nameVal;
-            var listNV2 = new Genric<NameVal>();
-            var nameVal2 = new NameVal();
-            nameVal2.Name = "333";
-            nameVal2.Value = "333";
-            listNV2.Model = nameVal;
 
-            var newN = listNV.MapTo(listNV2);
-            newN.Model.Name = "444";
+            var className = "public class A<A,BC>:".FileString_GetCsharpClassName();
+//            var listNV = new Genric<NameVal>();
+//            var nameVal = new NameVal();
+//            nameVal.Name = "xiaoming";
+//            nameVal.Value = "happy";
+//            listNV.Model = nameVal;
+//            var listNV2 = new Genric<NameVal>();
+//            var nameVal2 = new NameVal();
+//            nameVal2.Name = "333";
+//            nameVal2.Value = "333";
+//            listNV2.Model = nameVal;
+//
+//            var newN = listNV.MapTo(listNV2);
+//            newN.Model.Name = "444";
         }
 
         private void AopTest()

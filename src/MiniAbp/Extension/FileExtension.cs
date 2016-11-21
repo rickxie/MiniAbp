@@ -122,7 +122,7 @@ namespace MiniAbp.Extension
         /// <returns></returns>
         public static string FileString_GetCsharpClassName(this string fileString)
         {
-            var spaceRegex = new Regex(@"public\s+class\s+([a-zA-Z0-9\-]+)\s+(:|\{)");
+            var spaceRegex = new Regex(@"public\s+class\s+([a-zA-Z0-9\-,<>]+)\s*(:|\{)");
             var matched = spaceRegex.Match(fileString);
             if (matched.Groups.Count < 2)
                 return null;

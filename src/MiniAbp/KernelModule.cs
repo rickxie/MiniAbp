@@ -42,12 +42,12 @@ namespace MiniAbp
 
         public override void PostInitialize()
         {
-            base.PostInitialize();
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
-              new ConventionalRegistrationConfig
-              {
-                  InstallInstallers = false
-              });
+//            base.PostInitialize();
+//            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+//              new ConventionalRegistrationConfig
+//              {
+//                  InstallInstallers = false
+//              });
             IocManager.Resolve<LocalizationManager>().Initialize();
         }
 

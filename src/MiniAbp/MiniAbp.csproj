@@ -168,6 +168,7 @@
     <Compile Include="Domain\Uow\UnitOfWorkRegistrar.cs" />
     <Compile Include="Exception\AuthorizationException.cs" />
     <Compile Include="Extension\DataTableExtension.cs" />
+    <Compile Include="Extension\DateTimeExtension.cs" />
     <Compile Include="Extension\DictionaryExtension.cs" />
     <Compile Include="Extension\EventHandlerExtension.cs" />
     <Compile Include="Extension\FileExtension.cs" />
