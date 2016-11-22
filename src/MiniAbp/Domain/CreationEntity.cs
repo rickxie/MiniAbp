@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MiniAbp.Dependency;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
@@ -15,7 +16,8 @@ namespace MiniAbp.Domain
         {
             this.IsDeleted = true;
             this.DeletionTime = DateTime.Now;
-            this.DeleterUserId = YSession.GetInstance().UserId;
+            var session = IocManager.Instance.Resolve<ISession>();
+            this.DeleterUserId = session.UserId;
         }
     }
 }

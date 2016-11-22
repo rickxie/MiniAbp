@@ -11,7 +11,7 @@ namespace MiniAbp.Web.Auditing
 {
     public class AuditingManager: ISingletonDependency
     {
-        private readonly YSession _session;
+        public ISession Session { get; set; }
         public AuditInfo _auditInfo;
         private WebAuditInfoProvider provider;
         private Stopwatch sp;
@@ -20,7 +20,6 @@ namespace MiniAbp.Web.Auditing
         {
             sp = Stopwatch.StartNew();
             auditSetting = IocManager.Instance.Resolve<AuditConfiguration>();
-            _session = YSession.GetInstance();
             provider = new WebAuditInfoProvider();
         }
         /// <summary>
@@ -40,7 +39,7 @@ namespace MiniAbp.Web.Auditing
             sp.Start();
             _auditInfo = new AuditInfo
             { 
-                UserId = _session.UserId,
+                UserId = Session.UserId,
                 ServiceName = service,
                 MethodName = method,
                 RequestJson =  param,

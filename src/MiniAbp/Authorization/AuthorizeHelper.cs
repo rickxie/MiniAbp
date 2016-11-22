@@ -14,13 +14,13 @@ namespace MiniAbp.Authorization
 {
     internal class AuthorizeHelper : IAuthorizeHelper, ITransientDependency
     {
-        public YSession Session => YSession.GetInstance();
+        public ISession Session { get; set; }
 
         //public IPermissionChecker PermissionChecker { get; set; }
 
         public AuthorizeHelper()
         {
-//            AbpSession = NullAbpSession.Instance;
+            Session = NullSession.GetInstance();
 //            PermissionChecker = NullPermissionChecker.Instance;
         }
 

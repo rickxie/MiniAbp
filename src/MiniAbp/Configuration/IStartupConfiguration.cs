@@ -18,6 +18,10 @@ namespace MiniAbp.Configuration
         LocalizationConfiguration Localization { get;}
         CustomConfiguration Custom { get;}
         void Initialize();
-
+        /// <summary>
+        /// 使用Sql server 作为存储
+        /// </summary>
+        /// <param name="connectStringOrName"></param>
+        void UseSqlServerStorage(string connectStringOrName);
     }
 }

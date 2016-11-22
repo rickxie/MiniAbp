@@ -12,11 +12,11 @@ namespace MiniAbp.Domain
 {
     public abstract class ApplicationCommonBase
     {
-        protected YSession Session => YSession.GetInstance();
+        public ISession Session { get; set; }
         protected virtual IDbConnection DbConnection { get; set; }
         protected virtual IDbTransaction DbTransaction { get; set; }
         public LocalizationManager Localization { get; set; }
-
+        
         /// <summary>
         /// Get local string from localiztion resource
         /// </summary>

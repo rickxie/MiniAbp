@@ -60,6 +60,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MiniAbp.Ado\MiniAbp.Ado.csproj">
+      <Project>{491c7a84-9eaf-4077-9c49-b55209e5c60d}</Project>
+      <Name>MiniAbp.Ado</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
       <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
       <Name>MiniAbp</Name>

@@ -11,6 +11,7 @@ using MiniAbp.Domain;
 using MiniAbp.Domain.Uow;
 using MiniAbp.Localization;
 using MiniAbp.Reflection;
+using MiniAbp.Runtime;
 
 namespace MiniAbp
 {
@@ -42,12 +43,14 @@ namespace MiniAbp
 
         public override void PostInitialize()
         {
-//            base.PostInitialize();
-//            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
-//              new ConventionalRegistrationConfig
-//              {
-//                  InstallInstallers = false
-//              });
+            //            base.PostInitialize();
+            //            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly(),
+            //              new ConventionalRegistrationConfig
+            //              {
+            //                  InstallInstallers = false
+            //              });
+            IocManager.RegisterIfNot<ISession, ClaimsSession>(DependencyLifeStyle.Singleton);
+
             IocManager.Resolve<LocalizationManager>().Initialize();
         }
 

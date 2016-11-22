@@ -11,9 +11,10 @@ namespace MiniAbp.Domain
 {
     public abstract class BaseModuleRepository : IRepository 
     {
-        protected YSession Session = YSession.GetInstance();
+        protected ISession Session = NullSession.GetInstance();
         protected virtual IDbConnection Connection { get; set; }
         protected virtual IDbTransaction Transaction { get; set; }
+
         /// <summary>
         /// 跑一个SQL  返回一个Datatable
         /// </summary>

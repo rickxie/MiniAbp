@@ -10,7 +10,6 @@ using Castle.MicroKernel.Registration;
 using MiniAbp.DataAccess;
 using MiniAbp.Domain;
 using MiniAbp.Domain.Entitys;
-using Newtonsoft.Json;
 
 namespace MiniAbp.Extension
 {

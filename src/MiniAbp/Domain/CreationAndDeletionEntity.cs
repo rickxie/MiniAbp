@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using MiniAbp.Dependency;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
@@ -14,7 +15,8 @@ namespace MiniAbp.Domain
         {
             this.Id = Guid.NewGuid().ToString();
             this.CreationTime = DateTime.Now;
-            this.CreatorUserId = YSession.GetInstance().UserId;
+            var session = IocManager.Instance.Resolve<ISession>();
+            this.CreatorUserId = session.UserId;
         }
     }
 }
