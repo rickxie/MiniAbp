@@ -4,6 +4,7 @@
   &lt;Assembly Path="D:\Git-MC\miniabp\src\packages\Dapper.1.42\lib\net45\Dapper.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Program Files (x86)\Microsoft ASP.NET\ASP.NET MVC 4\Assemblies\System.Web.Mvc.dll" /&gt;&#xD;
   &lt;Assembly Path="D:\Git-MC\miniabp\src\packages\MiniAbp.1.1.3.0\lib\net46\MiniAbp.dll" /&gt;&#xD;
+  &lt;Assembly Path="D:\Git-MC\miniabp\src\packages\Newtonsoft.Json.6.0.1\lib\net45\Newtonsoft.Json.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=1208A8F6CB104A56BFAC339B73155D67/@KeyIndexDefined">True</s:Boolean>
 	<s:Int64 x:Key="/Default/Housekeeping/UnitTestingMru/UnitTestSessionPersistentData/=1208A8F6CB104A56BFAC339B73155D67/GroupingIndex/@EntryValue">4</s:Int64>

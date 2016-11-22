@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Sl.Bpm\Sl.Bpm\packages\MiniAbp\</OutputPath>
+    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Sl.Bpm\Common\Dll\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -45,10 +45,6 @@
     </Reference>
     <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MiniAbp, Version=0.1.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MiniAbp.1.1.3.0\lib\net46\MiniAbp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -100,6 +96,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
+      <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
+      <Name>MiniAbp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
