@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
+using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Web.Auditing;
 using MiniAbp.Web.Mvc;
@@ -16,7 +17,12 @@ namespace MiniAbp.Web.Route
     public class UrlRouting
     {
         public static UrlRouting Instance = new UrlRouting();
+        public static AuditingManager Auditing { get; set; }
 
+        static UrlRouting()
+        {
+            Auditing = IocManager.Instance.Resolve<AuditingManager>();
+        }
         /// <summary>
         /// 处理请求
         /// </summary>
@@ -59,9 +65,8 @@ namespace MiniAbp.Web.Route
         /// <param name="response"></param>
         private static void HandleJsonRequest(string service, string method, object param, HttpResponse response)
         {
-            var auditing = new AuditingManager();
             var resonseString = string.Empty;
-            auditing.Start(service, method, param.ToString());
+            Auditing.Start(service, method, param.ToString());
             var outputObj = YRequestHandler.ApiService(service, method, param);
             if (outputObj.Result is FileOutput)
             {
@@ -71,8 +76,8 @@ namespace MiniAbp.Web.Route
             {
                ResponseJson(response, outputObj);
             }
-            auditing.Exception(outputObj.Exception);
-            auditing.Stop(resonseString);
+            Auditing.Exception(outputObj.Exception);
+            Auditing.Stop(resonseString);
         }
 
         /// <summary>

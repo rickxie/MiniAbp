@@ -19,6 +19,7 @@ namespace MiniAbp.Web.Auditing
         public AuditingManager()
         {
             sp = Stopwatch.StartNew();
+            Session = NullSession.GetInstance();
             auditSetting = IocManager.Instance.Resolve<AuditConfiguration>();
             provider = new WebAuditInfoProvider();
         }

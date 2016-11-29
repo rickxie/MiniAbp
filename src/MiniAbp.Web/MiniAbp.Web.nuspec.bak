@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>1.1.4.0</version>
+    <title>MiniAbp.Ado</title>
+    <authors>MC</authors>
+    <owners>MC</owners>
+    <licenseUrl>https://github.com/rickxie/MiniAbp</licenseUrl>
+    <projectUrl>https://github.com/rickxie/MiniAbp</projectUrl>
+    <iconUrl>http://github.com</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Web project for MiniAbp, designed from Abp.</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>C# Mabp MiniAbp</tags>
+  </metadata>
+</package>
