@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using Dapper;
 using Microsoft.CSharp.RuntimeBinder;
 using MiniAbp.Configuration;
+using MiniAbp.Contract.Permission;
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Extension;

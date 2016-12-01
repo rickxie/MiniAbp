@@ -68,7 +68,7 @@ namespace MiniAbp.Web.Route
                 }
                 else
                 {
-                    result.Exception = ex.Message + ex.StackTrace;
+                    result.Exception = ex.Message + ex.StackTrace + ex.InnerException?.Message;
                     try
                     {
                         Logger.Error(ex.Message, ex);

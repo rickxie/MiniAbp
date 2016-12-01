@@ -95,6 +95,9 @@
     <Compile Include="Compile\RemoteLoaderFactory.cs" />
     <Compile Include="Compile\RuntimeBase.cs" />
     <Compile Include="Compile\RuntimeDll.cs" />
+    <Compile Include="Contract\Permission\IPermissionKeyEntity.cs" />
+    <Compile Include="Contract\Permission\IPermissionEntityOfKey.cs" />
+    <Compile Include="Contract\Permission\IPermissionEntity.cs" />
     <Compile Include="Configuration\AuditConfiguration.cs" />
     <Compile Include="Configuration\CustomerConfiguration.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
@@ -103,6 +106,8 @@
     <Compile Include="Configuration\LocalizationConfiguration.cs" />
     <Compile Include="Configuration\StartupConfiguration.cs" />
     <Compile Include="Configuration\IStartupConfiguration.cs" />
+    <Compile Include="Contract\Permission\IPermissionGroupControlEntityOfKey.cs" />
+    <Compile Include="Contract\Permission\IPermissionGroupControlEntity.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
@@ -213,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Contract\Permission\IPermissionKeyEntityOfKey.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
