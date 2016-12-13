@@ -19,7 +19,8 @@
         string ControlGroupId { get; set; }
         /// <summary>
         /// if =1 then it's permission allowed otherwise no.
+        /// 0 Deny 1 Yes 2 NotSet
         /// </summary>
-        bool IsGranted { get; set; }
+        int PermissionValue { get; set; }
     }
 }

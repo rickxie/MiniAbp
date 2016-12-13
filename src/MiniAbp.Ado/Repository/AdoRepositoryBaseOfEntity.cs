@@ -91,12 +91,13 @@ namespace MiniAbp.Ado.Repository
             return DbConnection.Delete(entity,  DbTransaction);
         }
 
-        public override void Insert(TEntity model)
+        public override TEntity Insert(TEntity model)
         {
             DbConnection.Insert<string>(model,  DbTransaction);
+            return model;
         }
 
-        public override void AddOrUpdate(TEntity model, bool dbCheck = false)
+        public override TEntity AddOrUpdate(TEntity model, bool dbCheck = false)
         {
             var isExists = false;
             //check isExist and refresh Id 
@@ -145,11 +146,13 @@ namespace MiniAbp.Ado.Repository
             {
                 Insert(model);
             }
+            return model;
         }
 
-        public override int Update(TEntity entity)
+        public override TEntity Update(TEntity entity)
         {
-            return DbConnection.Update(entity, DbTransaction);
+            DbConnection.Update(entity, DbTransaction);
+            return entity;
         }
 
         public override List<TModel> Query<TModel>(string sql, object param = null)

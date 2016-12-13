@@ -68,6 +68,9 @@ namespace MiniAbp.Web.Route
             var resonseString = string.Empty;
             Auditing.Start(service, method, param.ToString());
             var outputObj = YRequestHandler.ApiService(service, method, param);
+            Auditing.Exception(outputObj.Exception);
+            Auditing.Stop(resonseString);
+
             if (outputObj.Result is FileOutput)
             {
                ResponseFile(response, outputObj.Result);
@@ -76,8 +79,6 @@ namespace MiniAbp.Web.Route
             {
                ResponseJson(response, outputObj);
             }
-            Auditing.Exception(outputObj.Exception);
-            Auditing.Stop(resonseString);
         }
 
         /// <summary>

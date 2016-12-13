@@ -76,11 +76,12 @@ namespace MiniAbp.Domain
         }
 
 
-        public virtual void Insert(T model)
+        public virtual T Insert(T model)
         {
             var creationTime = model.GetType().GetProperty("CreationTime");
             creationTime?.SetValue(model, DateTime.Now);
             DbDapper.Insert<T>(model, DbConnection, DbTransaction);
+            return model;
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace MiniAbp.Domain
         /// <typeparam name="T"></typeparam>
         /// <param name="model"></param>
         /// <param name="dbCheck">If has Id, do the Db check for existence</param>
-        public virtual void AddOrUpdate(T model, bool dbCheck = false)
+        public virtual T AddOrUpdate(T model, bool dbCheck = false)
         {
             var isExists = false;
             //check isExist and refresh Id 
@@ -137,11 +138,13 @@ namespace MiniAbp.Domain
             {
                 Insert(model);
             }
+            return model;
         }
 
-        public virtual int Update(T cate)
+        public virtual T Update(T cate)
         {
-            return DbDapper.Update(cate, DbConnection, DbTransaction);
+            DbDapper.Update(cate, DbConnection, DbTransaction);
+            return cate;
         }
     }
 }

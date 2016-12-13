@@ -7,17 +7,15 @@ using System.Threading.Tasks;
 namespace MiniAbp.Contract.Permission
 {
     /// <summary>
-    /// Permission Controled by Group, Group consists by other..
+    /// permission control group is a group permission checking minimal unit.
     /// </summary>
-    /// <typeparam name="TEntKey"></typeparam>
-    /// <typeparam name="TGroupKey"></typeparam>
-    public interface IPermissionGroupControlEntity<TEntKey, TGroupKey>  
+    public interface IPermissionControlGroupItemEntity
     {
-        TEntKey Id { get; set; }
+        string Id { get; set; }
         /// <summary>
         /// Control group for permission check
         /// </summary>
-        TGroupKey ControlGroupId { get; set; }
+        string ControlGroupId { get; set; }
 
         /// <summary>
         /// user, job, role, group and so on...
