@@ -2,11 +2,14 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Security.Principal;
+using System.Threading;
 using Castle.MicroKernel.Registration;
 using MiniAbp.Configuration;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
 using MiniAbp.Domain;
+using MiniAbp.Runtime;
 
 namespace MiniAbp.Compile
 {
@@ -34,6 +37,15 @@ namespace MiniAbp.Compile
                         Component.For<IDbConnection>()
                             .ImplementedBy<SqlConnection>()
                             .Named(Dialect.SqlServer.ToString())
+                            .LifeStyle.Transient
+                        );
+                }
+                if (!IocManager.Instance.IsRegistered(typeof (ISession)))
+                {
+                    //只支持Sql server
+                    IocManager.Instance.IocContainer.Register(
+                        Component.For<ISession>()
+                            .ImplementedBy<ClaimsSession>()
                             .LifeStyle.Transient
                         );
                 }

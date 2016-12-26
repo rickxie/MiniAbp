@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web;
 
@@ -7,6 +8,7 @@ namespace MiniAbp.Domain.Entitys
     /// <summary>
     /// 文件流对象
     /// </summary>
+    [Serializable]
     public class FileStreamOutput : FileOutput
     {
         public Stream Stream { get; set; }
@@ -22,6 +24,7 @@ namespace MiniAbp.Domain.Entitys
     /// <summary>
     /// 文件路径对象
     /// </summary>
+    [Serializable]
     public class FilePathOutput : FileOutput
     {
         public string Path { get; set; }
@@ -34,6 +37,7 @@ namespace MiniAbp.Domain.Entitys
         }
     }
 
+    [Serializable]
     public abstract class FileOutput
     {
         public string DownloadName { get; set; }
