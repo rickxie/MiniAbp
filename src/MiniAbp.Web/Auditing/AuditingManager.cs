@@ -9,7 +9,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Web.Auditing
 {
-    public class AuditingManager: ISingletonDependency
+    public class AuditingManager: ITransientDependency
     {
         public ISession Session { get; set; }
         public AuditInfo _auditInfo;

@@ -37,8 +37,7 @@ namespace MiniAbp.Web.Route
                     {
                         Message = except.Message,
                         //CallStack = except.StackTrace
-                    },
-                    
+                    }
                 };
 
 

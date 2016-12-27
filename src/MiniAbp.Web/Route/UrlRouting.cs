@@ -16,12 +16,10 @@ namespace MiniAbp.Web.Route
 {
     public class UrlRouting
     {
-        public static UrlRouting Instance = new UrlRouting();
-        public static AuditingManager Auditing { get; set; }
+        public static UrlRouting Instance = new UrlRouting(); 
 
         static UrlRouting()
         {
-            Auditing = IocManager.Instance.Resolve<AuditingManager>();
         }
         /// <summary>
         /// 处理请求
@@ -39,7 +37,7 @@ namespace MiniAbp.Web.Route
                 return;
             }
 
-            var routeRx = "([^/]+)/([^/]+)";
+            const string routeRx = "([^/]+)/([^/]+)";
             //获取匹配路由
             Regex rx = new Regex(routeRx);
             var result = rx.Match(rawUrl);
@@ -65,11 +63,16 @@ namespace MiniAbp.Web.Route
         /// <param name="response"></param>
         private static void HandleJsonRequest(string service, string method, object param, HttpResponse response)
         {
-            var resonseString = string.Empty;
-            Auditing.Start(service, method, param.ToString());
+            var auditing = IocManager.Instance.Resolve<AuditingManager>();
+            auditing.Start(service, method, param.ToString());
             var outputObj = YRequestHandler.ApiService(service, method, param);
-            Auditing.Exception(outputObj.Exception);
-            Auditing.Stop(resonseString);
+            var resonseString = JsonConvert.SerializeObject(outputObj, new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+            auditing._auditInfo.ResponseJson = resonseString;
+            auditing.Exception(outputObj.Exception);
+            auditing.Stop(resonseString);
 
             if (outputObj.Result is FileOutput)
             {
@@ -77,7 +80,7 @@ namespace MiniAbp.Web.Route
             }
             else
             {
-               ResponseJson(response, outputObj);
+               ResponseJson(response, resonseString);
             }
         }
 
@@ -121,15 +124,11 @@ namespace MiniAbp.Web.Route
         /// 返回Json数据
         /// </summary>
         /// <param name="response"></param>
-        /// <param name="jsonObject"></param>
-        private static void ResponseJson(HttpResponse response, object jsonObject)
+        /// <param name="jsonString"></param> 
+        private static void ResponseJson(HttpResponse response, string jsonString)
         {
-            var resonseString = JsonConvert.SerializeObject(jsonObject, new JsonSerializerSettings()
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
             response.ContentType = "application/json; charset=utf-8";
-            response.Write(resonseString);
+            response.Write(jsonString);
             response.End();
         }
 
