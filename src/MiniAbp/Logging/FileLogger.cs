@@ -15,7 +15,7 @@ namespace MiniAbp.Logging
         public bool IsFatalEnabled => true;
         public bool IsInfoEnabled => true;
         public bool IsWarnEnabled => true;
-
+        public object objLock = new object();
 
         public ILogger CreateChildLogger(string loggerName)
         {
@@ -156,15 +156,20 @@ namespace MiniAbp.Logging
         {
             var logDir = AppPath.GetRelativeDir("Logs/");
             var filePath = logDir + "logs.txt";
-//            using (var fs = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-//            {
-                using (var sr = new StreamWriter(filePath,true, Encoding.Default))
+            try
+            {
+                lock (objLock)
                 {
-                    sr.WriteLine(content);
-                    sr.Close();
+                    using (var sr = new StreamWriter(filePath, true, Encoding.Default))
+                    {
+                        sr.WriteLine(content);
+                        sr.Close();
+                    }
                 }
-//                fs.Close();
-//            }
+            }
+            catch (Exception)
+            {
+            }
 
             var info = new FileInfo(filePath);
             var mbSize = info.Length/(1024*1024);
@@ -190,7 +195,7 @@ namespace MiniAbp.Logging
             }
 
         }
-         
+
 
         private void BuildLogAndSave(LoggerLevel level, Exception ex = null, string message = null)
         {

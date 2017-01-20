@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using MiniAbp.Dependency;
@@ -66,11 +67,17 @@ namespace MiniAbp.Web.Route
             var auditing = IocManager.Instance.Resolve<AuditingManager>();
             auditing.Start(service, method, param.ToString());
             var outputObj = YRequestHandler.ApiService(service, method, param);
-            var resonseString = JsonConvert.SerializeObject(outputObj, new JsonSerializerSettings()
+            var resonseString = string.Empty;
+            if (outputObj.Result is FileOutput)
+            {}
+            else
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-            auditing._auditInfo.ResponseJson = resonseString;
+                resonseString = JsonConvert.SerializeObject(outputObj, new JsonSerializerSettings()
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
+                auditing._auditInfo.ResponseJson = resonseString;
+            }
             auditing.Exception(outputObj.Exception);
             auditing.Stop(resonseString);
 
@@ -110,10 +117,15 @@ namespace MiniAbp.Web.Route
             else if (fileObject is FileStreamOutput)
             {
                 var fileResult = fileObject as FileStreamOutput;
+                response.Clear();
+                response.ClearContent();
+                response.ClearHeaders();
                 response.ContentType = fileResult.ContentType;
                 //通知浏览器下载文件而不是打开
                 response.AddHeader("Content-Disposition",
                     "attachment; filename=" + HttpUtility.UrlEncode(fileResult.DownloadName, System.Text.Encoding.UTF8));
+                response.ContentEncoding = Encoding.UTF8;
+                response.Charset = "UTF-8";
                 response.WriteFile(fileResult);
                 response.Flush();
                 response.End();

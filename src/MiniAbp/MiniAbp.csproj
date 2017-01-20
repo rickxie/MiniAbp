@@ -213,6 +213,8 @@
     <Compile Include="Runtime\AppPath.cs" />
     <Compile Include="Runtime\NullSession.cs" />
     <Compile Include="Threading\AsyncHelper.cs" />
+    <Compile Include="Threading\ExecuteDelay.cs" />
+    <Compile Include="Threading\UsingLock.cs" />
     <Compile Include="Utility\Encryptor.cs" />
     <Compile Include="YBootstrapper.cs" />
     <Compile Include="Domain\BaseRepositoryOfEntity.cs" />

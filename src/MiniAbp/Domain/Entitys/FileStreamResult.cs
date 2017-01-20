@@ -9,7 +9,7 @@ namespace MiniAbp.Domain.Entitys
     /// 文件流对象
     /// </summary>
     [Serializable]
-    public class FileStreamOutput : FileOutput
+    public class FileStreamOutput : FileOutput, IDisposable
     {
         public Stream Stream { get; set; }
         public string ContentType { get; set; }
@@ -20,6 +20,11 @@ namespace MiniAbp.Domain.Entitys
             ContentType = contentType;
             DownloadName = downloadName;
         }
+
+        public void Dispose()
+        {
+            Stream?.Dispose();
+        }
     }
     /// <summary>
     /// 文件路径对象
@@ -29,9 +34,9 @@ namespace MiniAbp.Domain.Entitys
     {
         public string Path { get; set; }
         public string ContentType { get; set; }
-        public FilePathOutput(string stream, string contentType, string downloadName)
+        public FilePathOutput(string path, string contentType, string downloadName)
         {
-            this.Path = stream;
+            this.Path = path;
             ContentType = contentType;
             DownloadName = downloadName;
         }
