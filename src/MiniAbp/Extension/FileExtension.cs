@@ -11,6 +11,25 @@ namespace MiniAbp.Extension
 {
     public static class FileExtension
     {
+        private static void RecursingFolder(List<string> visitedPath,string rd, Action<string, string[]> directoryAndFiles)
+        {
+            if (!Directory.Exists(rd))
+            {
+                return;
+            }
+            if (visitedPath.Any(r => r == rd))
+            {
+                return;
+            }
+            var files = Directory.GetFiles(rd);
+            //当前文件夹内容及所有文件内容
+            directoryAndFiles(rd, files);
+            visitedPath.Add(rd);
+            foreach (var s in Directory.GetDirectories(rd))
+            {
+                DirPath_Recurse(s, directoryAndFiles);
+            }
+        }
         /// <summary>
         /// 对文件夹入口文件夹 进行递归遍历所有文件
         /// </summary>
@@ -19,26 +38,7 @@ namespace MiniAbp.Extension
         public static void DirPath_Recurse(this string rootDictory, Action<string, string[]> directoryAndFiles)
         {
             List<string> visitedPath = new List<string>();
-            Action<string> recursingFolder = (rd) =>
-            {
-                    if (!Directory.Exists(rd))
-                    {
-                        return;
-                    }
-                    if (visitedPath.Any(r => r == rd))
-                    {
-                        return;
-                    }
-                    var files = Directory.GetFiles(rd);
-                    //当前文件夹内容及所有文件内容
-                    directoryAndFiles(rd, files);
-                    visitedPath.Add(rd);
-                    foreach (var s in Directory.GetDirectories(rd))
-                    {
-                        DirPath_Recurse(s, directoryAndFiles);
-                    }
-            };
-            recursingFolder(rootDictory);
+            RecursingFolder(visitedPath, rootDictory, directoryAndFiles);
         }
         /// <summary>
         /// 获取路径名称

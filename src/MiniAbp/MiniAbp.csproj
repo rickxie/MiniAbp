@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Sl.Bpm\Common\Dll\</OutputPath>
+    <OutputPath>..\..\..\..\ShaluProduct\Sl.Bpm\Common\dll\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -118,6 +118,7 @@
     <Compile Include="Contract\UserGroup\IRoleEntity.cs" />
     <Compile Include="Contract\UserGroup\IRoleJobEntity.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
+    <Compile Include="DataAccess\SqlParser\SqlScriptManager.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />
     <Compile Include="Dependency\DisposableDependencyObjectWrapperOfT.cs" />

@@ -52,6 +52,7 @@ namespace MiniAbp.Web.Route
             object param = requestType == RequestType.ServiceFile
                 ? GetFileParam(request)
                 : GetStringParam(request);
+            
             HandleJsonRequest(service, method, param, application.Response);
         }
 
@@ -91,9 +92,12 @@ namespace MiniAbp.Web.Route
             }
         }
 
+ 
+
         /// <summary>
         /// 返回文件类型
         /// </summary>
+        /// <param name="userAgent"></param>
         /// <param name="response"></param>
         /// <param name="fileObject"></param>
         private static void ResponseFile(HttpResponse response, object fileObject)
@@ -105,7 +109,8 @@ namespace MiniAbp.Web.Route
                 response.Clear();
                response.ClearContent();
                response.ClearHeaders();
-               response.AddHeader("Content-Disposition", "attachment;filename=" + fileResult.DownloadName);
+                response.AddHeader("Content-Disposition",
+                    "attachment;filename=" + HttpUtility.UrlPathEncode(fileResult.DownloadName));
                response.AddHeader("Content-Length", fileInfo.Length.ToString());
                response.AddHeader("Content-Transfer-Encoding", "binary");
                response.ContentType = fileResult.ContentType;
@@ -121,9 +126,10 @@ namespace MiniAbp.Web.Route
                 response.ClearContent();
                 response.ClearHeaders();
                 response.ContentType = fileResult.ContentType;
+                
                 //通知浏览器下载文件而不是打开
                 response.AddHeader("Content-Disposition",
-                    "attachment; filename=" + HttpUtility.UrlEncode(fileResult.DownloadName, System.Text.Encoding.UTF8));
+                    "attachment;filename=" + HttpUtility.UrlPathEncode(fileResult.DownloadName));
                 response.ContentEncoding = Encoding.UTF8;
                 response.Charset = "UTF-8";
                 response.WriteFile(fileResult);

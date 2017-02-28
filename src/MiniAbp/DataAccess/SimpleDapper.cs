@@ -10,6 +10,7 @@ using Dapper;
 using Microsoft.CSharp.RuntimeBinder;
 using MiniAbp.Configuration;
 using MiniAbp.Contract.Permission;
+using MiniAbp.DataAccess.SqlParser;
 using MiniAbp.Dependency;
 using MiniAbp.Domain.Entitys;
 using MiniAbp.Extension;
@@ -369,13 +370,9 @@ namespace MiniAbp.DataAccess
             /// <returns></returns>
             public static PagedList<T> Query<T>(this IDbConnection connection, string sql, IPaging page, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
-                var cte = string.Empty;
-                var selectSql = string.Empty;
-                SplitCte(sql, ref cte, ref selectSql);
-
-                var sqlWithPaged = BuilderPageSql(selectSql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
+                var convertedSql = BuilderPageSql(sql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
                 var currenttype = typeof(T);
-                var result = connection.Query<T>(cte + sqlWithPaged, whereCondition, transaction, true, commandTimeout);
+                var result = connection.Query<T>(convertedSql, whereCondition, transaction, true, commandTimeout);
                 var count = connection.Count(sql, whereCondition, transaction, commandTimeout);
                 var rtnObj = new PagedList<T>
                 {
@@ -383,33 +380,10 @@ namespace MiniAbp.DataAccess
                     TotalCount = count
                 };
                 if (Debugger.IsAttached)
-                    Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, sqlWithPaged));
+                    Trace.WriteLine(String.Format("PagedList Query<{0}>: {1}", currenttype, convertedSql));
                 return rtnObj;
             }
-            /// <summary>
-            /// CTE拆分
-            /// </summary>
-            /// <param name="sql"></param>
-            /// <param name="cte"></param>
-            /// <param name="selectSql"></param>
-            public static void SplitCte(string sql, ref string cte, ref string selectSql)
-            {
-                cte = cte ?? string.Empty;
-                selectSql = selectSql ?? string.Empty;
-                var rx = new Regex("\\)[\\s\\r\\n]*select", RegexOptions.IgnoreCase);
-                var matchs = rx.Matches(sql);
-                if (matchs.Count == 1)
-                {
-                    var indexOfSql = sql.IndexOf(matchs[0].Value, StringComparison.Ordinal);
-                    cte = sql.Substring(0, indexOfSql + 1);
-                    selectSql = sql.Substring(indexOfSql + 1, sql.Length - indexOfSql - 1);
-                }
-                else
-                {
-                    selectSql = sql;
-                    cte = string.Empty;
-                }
-            }
+
             public static T QueryFirst<T>(this IDbConnection connection, string sql, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
                 var sqlS = "SELECT TOP 1 * FROM ( {0}) T".Fill(sql);
@@ -748,11 +722,9 @@ namespace MiniAbp.DataAccess
             /// <returns></returns>
             public static int Count(this IDbConnection connection,string sql, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
             {
-                var cte = string.Empty;
-                var selectSql = string.Empty;
-                SplitCte(sql, ref cte, ref selectSql);
-                var sqlStr = cte + "SELECT COUNT(1) FROM ( {0} ) temp_count".Fill(selectSql);
-                return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
+                var sqlMng = new SqlScriptManager(sql);
+                var sqlStr = sqlMng.GetPageCountSql();
+                 return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
             }
             public static int Count<T>(this IDbConnection connection, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
             {
@@ -1099,66 +1071,13 @@ namespace MiniAbp.DataAccess
             /// </summary>
             private const string AccessPageTemplate = "select * from (select top ##limit## * from (select top ##offset## {0} order by id desc) order by id) order by {1}";
 
-            private static string BuilderPageSql(string strSql, string order, bool desc, int currentPage, int pageSize)
+            public static string BuilderPageSql(string strSql, string order, bool desc, int currentPage, int pageSize)
             {
-                var pageStart = (currentPage - 1) * pageSize + 1;
-                var pageEnd = pageStart + pageSize - 1;
-                var limit = pageSize;
-                var offset = pageStart;
-
-                string orderBy = order + (desc ? " desc " : " asc ");
-                string pageBody = FetchPageBody(strSql);
-                if (_dialect == Dialect.SqlServer && strSql.IndexOf("row_number()", StringComparison.Ordinal) == -1)
-                {
-                    if (string.IsNullOrEmpty(order))
-                    {
-                        throw new Exception(
-                            " SqlException: order field is null, you must support the order field for sqlserver page. ");
-                    }
-
-                    strSql = string.Format(MssqlPageTemplate, orderBy, strSql);
-                    strSql = strSql.Replace("##startIndex##", pageStart.ToString());
-                    strSql = strSql.Replace("##endIndex##", pageEnd.ToString());
-                }
-                else
-                {
-
-                    if (_dialect == Dialect.Access && strSql.IndexOf("top", StringComparison.Ordinal) == -1)
-                    {
-                        if (string.IsNullOrEmpty(order))
-                        {
-                            throw new Exception(
-                                " SqlException: order field is null, you must support the order field for sqlserver page. ");
-                        }
-                        strSql = string.Format(AccessPageTemplate, pageBody, orderBy);
-                    }
-                    else if (_dialect == Dialect.MySql)
-                    {
-                        if (!string.IsNullOrEmpty(order))
-                        {
-                            strSql = string.Format(MysqlOrderPageTemplate, strSql, orderBy);
-                        }
-                        else
-                        {
-                            strSql = string.Format(MysqlPageTemplate, strSql);
-                        }
-                    }
-                    else if (_dialect == Dialect.SqLite)
-                    {
-                        if (!string.IsNullOrEmpty(order))
-                        {
-                            strSql = string.Format(SqliteOrderPageTemplate, strSql, orderBy);
-                        }
-                        else
-                        {
-                            strSql = string.Format(SqlitePageTemplate, strSql);
-                        }
-                    }
-                    strSql = strSql.Replace("##limit##", limit.ToString());
-                    strSql = strSql.Replace("##offset##", offset.ToString());
-                }
-
-                return strSql;
+                var startCount = (currentPage - 1) * pageSize + 1;
+                var endCount = startCount + pageSize - 1;
+                string orderBy = "ORDER BY " + order + (desc ? " desc " : " asc ");
+                var sqMange = new SqlScriptManager(strSql);
+                return sqMange.GetPageSql(startCount, endCount, orderBy);
             }
 
             private static string FetchPageBody(string sqlStr)

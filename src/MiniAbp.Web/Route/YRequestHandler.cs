@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Runtime.Serialization;
 using MiniAbp.Dependency;
 using MiniAbp.Logging;
 using MiniAbp.Web.Auditing;
@@ -26,7 +28,7 @@ namespace MiniAbp.Web.Route
             }
             catch (Exception ex)
             {
-                var except = ex.InnerException ?? ex;
+                var except = GetInnerException(ex);
 
                 result = new AjaxResult()
                 {
@@ -77,10 +79,26 @@ namespace MiniAbp.Web.Route
                         result.Exception += "Logs文件夹没有权限。";
                     }
                 }
-               
             }
             return result;
         }
 
+
+
+        /// <summary>
+        /// 获取内部异常信息
+        /// </summary>
+        /// <returns></returns>
+        private static Exception GetInnerException(Exception ex)
+        {
+            Exception exce = null;
+            if (ex.InnerException != null)
+                exce = GetInnerException(ex.InnerException);
+            else
+            {
+                exce = ex;
+            }
+            return exce;
+        }
     }
 }

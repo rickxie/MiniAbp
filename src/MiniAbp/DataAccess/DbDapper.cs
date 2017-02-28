@@ -58,20 +58,7 @@ namespace MiniAbp.DataAccess
         public static PagedDatatable RunDataTableSql(string sql, IPaging page, object param = null,  IDbConnection dbConnection = null, IDbTransaction tran = null)
         {
 
-            var cte = string.Empty;
-            var selectSql = string.Empty;
-            SimpleDapper.SplitCte(sql, ref cte, ref selectSql);
-            string orderBy = page.OrderByProperty + (!page.Ascending ? " desc " : " asc ");
-            //SQL Server 2012的分页方式
-            //const string pagedSql = @"  SELECT * FROM ({1}) temp_page
-            //                     ORDER BY {3} 
-            //                     OFFSET {2} ROWS FETCH NEXT {0} ROW ONLY";
-            //var query = cte + pagedSql.Fill(page.PageSize, selectSql, page.PageSize * (page.CurrentPage - 1), orderBy);
-            string pagedSql = @"SELECT temp_paged.* FROM (SELECT TOP {0} * FROM 
-                    (SELECT ROW_NUMBER() OVER (ORDER BY " + orderBy + @") AS rownumber, * 
-                    FROM ({1}) temp_tb) A WHERE A.rownumber > {2}) temp_paged";
-            var query = cte + pagedSql.Fill(page.PageSize, selectSql, page.PageSize * (page.CurrentPage - 1));
-
+            var query = SimpleDapper.BuilderPageSql(sql, page.OrderByProperty, !page.Ascending, page.CurrentPage, page.PageSize);
             var table = RunDataTableSql(query, param, dbConnection, tran);
             var totalCount = Count(sql, param, dbConnection, tran);
 
@@ -326,7 +313,8 @@ namespace MiniAbp.DataAccess
                 }
             }
             return result.ToList();
-        } 
+        }
+         
         public static PagedList<T> Query<T>(string sql, IPaging input, object param = null, IDbConnection dbConnection = null, IDbTransaction tran = null)
         {
             PagedList<T> result;

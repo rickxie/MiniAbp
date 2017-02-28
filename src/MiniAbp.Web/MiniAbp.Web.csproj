@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>C:\Users\MC\Documents\Visual Studio 2015\Projects\Sl.Bpm\Common\Dll\</OutputPath>
+    <OutputPath>..\..\..\..\ShaluProduct\Sl.Bpm\Common\dll\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
