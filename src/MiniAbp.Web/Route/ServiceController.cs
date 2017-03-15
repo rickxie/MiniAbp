@@ -31,7 +31,7 @@ namespace MiniAbp.Web.Route
         }
         public static ServiceController Instance => new ServiceController();
 
-        public object Execute(string serviceName, string methodName, object param, RequestType requestType)
+        public object Execute(string serviceName, string methodName, object param)
         {
             serviceName = serviceName.ToUpper();
             methodName = methodName.ToUpper();

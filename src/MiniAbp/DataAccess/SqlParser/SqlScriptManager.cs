@@ -7,344 +7,6 @@ using System.Windows.Forms;
 
 namespace MiniAbp.DataAccess.SqlParser
 {
-    public class SqlParser
-    {
-        public string QueryPart { get; set; } = string.Empty;
-        public int FromIndex { get; set; }
-        public int WhereIndex { get; set; }
-        public int OrderIndex { get; set; }
-        public int GroupIndex { get; set; }
-        public string QuerySelectPart { get; set; } = "";
-        public string QueryFromPart { get; set; } = "";
-        public string QueryWherePart { get; set; } = "";
-        public string QueryGroupByPart { get; set; } = "";
-        public string QueryOrderByPart { get; set; } = "";
-        //WHERE 中的每个项目
-        private List<string> SelectQuery { get; set; } = new List<string>();
-        public List<string> SelectItems { get; set; } = new List<string>();
-        public SqlParser(string sql)
-        {
-            QueryPart = sql;
-            SplitSql(QueryPart);
-            GetSelectQuery(QuerySelectPart);
-            GetSelectItems();
-        }
-
-        private void GetSelectItems()
-        {
-            foreach (var colQuery in SelectQuery)
-            {
-                var colName = GetColumnName(colQuery);
-                if (!string.IsNullOrWhiteSpace(colName))
-                {
-                    SelectItems.Add(colName);
-                }
-            }
-
-        }
-        /// <summary>
-        /// 根据子语句获得列名
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <returns></returns>
-        private string GetColumnName(string sql)
-        {
-            if (!string.IsNullOrWhiteSpace(sql))
-            {
-                sql = sql.Trim();
-                //单纯的 xxxx.xxxx 没有 As 没有 =
-                return GetMatchedColumn(sql);
-            }
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// 获得初步比较粗的字段语句
-        /// </summary>
-        /// <param name="select"></param>
-        private void GetSelectQuery(string select)
-        {
-            var allPoint = GetAllMatchPoint(select, "^,");
-            if (allPoint.Count > 0)
-            {
-                for (int i = 0; i < allPoint.Count; i++)
-                {
-                    if (i == 0)
-                    {
-                        var first = select.Substring(0, allPoint[i].Point);
-                        if (string.IsNullOrWhiteSpace(first))
-                        {
-                            continue;
-                        }
-                        //移除SELECT相关数据
-                        var findSelect = GetAllMatchPoint(first, @"(^\(?\s*SELECT\s+DISTINCT)|(^\(?\s*SELECT\s+TOP\s+[0-9]+)|(^\(?\s*SELECT)").First();
-                        var startPoint = findSelect.Point + findSelect.ActualContent.Length;
-                        first = select.Substring(startPoint, first.Length - startPoint);
-                        SelectQuery.Add(first);
-                    }
-
-                    if (i > 0 && i < allPoint.Count)
-                    {
-                        var newStartPoint = allPoint[i - 1].Point + allPoint[i - 1].ActualContent.Length;
-                        SelectQuery.Add(select.Substring(newStartPoint, allPoint[i].Point - newStartPoint));
-                    }
-                    if (i == allPoint.Count - 1)
-                    {
-                        var newStartPoint = allPoint[i].Point + allPoint[i].ActualContent.Length;
-                        SelectQuery.Add(select.Substring(newStartPoint, select.Length - newStartPoint));
-                    }
-                }
-            }
-            else  //仅仅一个select
-            {
-                var findSelect = GetAllMatchPoint(select, "^\\(?\\s*SELECT").First();
-                var startPoint = findSelect.Point + findSelect.ActualContent.Length;
-                var first = select.Substring(startPoint, select.Length - startPoint);
-                SelectQuery.Add(first);
-            }
-
-        }
-
-        /// <summary>
-        /// 将SQL 语句拆分为三部分
-        /// </summary>
-        /// <param name="sql"></param>
-        private void SplitSql(string sql)
-        {
-            if (!string.IsNullOrWhiteSpace(sql))
-            {
-                sql = sql.Trim();
-                string meeted = string.Empty;
-                if (StartWith(sql, "^\\(?\\s*SELECT", out meeted))
-                {
-                    FromIndex = FindFrom(sql, "^FROM(\\s+|\\()");
-                    WhereIndex = FindFrom(sql, "^WHERE\\s+");
-                    GroupIndex = FindFrom(sql, "^GROUP\\s+BY\\s*");
-                    OrderIndex = FindFrom(sql, "^ORDER\\s+BY\\s*");
-
-                    var endIndex = 0;
-                    //获取SELECT 子句
-                    if (FromIndex != -1)
-                    {
-                        endIndex = FromIndex;
-                    }
-                    else if (WhereIndex != -1)
-                    {
-                        endIndex = WhereIndex;
-                    }
-                    else if (GroupIndex != -1)
-                    {
-                        endIndex = GroupIndex;
-                    }
-                    else if (OrderIndex != -1)
-                    {
-                        endIndex = OrderIndex;
-                    }
-                    else
-                    {
-                        endIndex = sql.Length;
-                    }
-                    QuerySelectPart = sql.Substring(0, endIndex);
-
-                    endIndex = 0;
-                    if (FromIndex != -1)
-                    {
-
-                        //获取FROM 子句 一定会有
-                        if (WhereIndex != -1)
-                        {
-                            endIndex = WhereIndex;
-                        }
-                        else if (GroupIndex != -1)
-                        {
-                            endIndex = GroupIndex;
-                        }
-                        else if (OrderIndex != -1)
-                        {
-                            endIndex = OrderIndex;
-                        }
-                        else
-                        {
-                            endIndex = sql.Length;
-                        }
-                        QueryFromPart = sql.Substring(FromIndex, endIndex - FromIndex);
-                    }
-                    //获取WHERE 子句
-                    if (WhereIndex != -1)
-                    {
-                        endIndex = 0;
-                        if (GroupIndex != -1)
-                        {
-                            endIndex = GroupIndex;
-                        }
-                        else if (OrderIndex != -1)
-                        {
-                            endIndex = OrderIndex;
-                        }
-                        else
-                        {
-                            endIndex = sql.Length;
-                        }
-                        QueryWherePart = sql.Substring(WhereIndex, endIndex - WhereIndex);
-                    }
-                    //Group By 子句
-                    if (GroupIndex != -1)
-                    {
-                        endIndex = 0;
-                        if (OrderIndex != -1)
-                        {
-                            endIndex = OrderIndex;
-                        }
-                        else
-                        {
-                            endIndex = sql.Length;
-                        }
-                        QueryGroupByPart = sql.Substring(GroupIndex, endIndex - GroupIndex);
-                    }
-                    //获取ORDER By 子句
-                    if (OrderIndex != -1)
-                    {
-                        QueryOrderByPart = sql.Substring(OrderIndex);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取所有匹配的点
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="mainWord"></param>
-        /// <returns></returns>
-        private List<StrPoint> GetAllMatchPoint(string sql, string mainWord)
-        {
-            List<StrPoint> findStack = new List<StrPoint>();
-            var patterns = new string[] { mainWord, "^\\(", "^\\)", "^'" };
-            var curPoint = 0;
-            var subSql = sql;
-            do
-            {
-                foreach (var keyWord in patterns)
-                {
-                    string meetContent;
-                    if (StartWith(subSql, keyWord, out meetContent))
-                    {
-                        findStack.Add(new StrPoint() { Pattern = keyWord, ActualContent = meetContent, Point = curPoint });
-                    }
-                }
-                var len = findStack.Count;
-                //开心消消乐 '(' ')'消去 
-                if (len >= 2 && findStack[len - 1].Pattern == patterns[2] && findStack[len - 2].Pattern == patterns[1])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                }
-                len = findStack.Count;
-                //开心消消乐 ''' '''消去 
-                if (len >= 2 && findStack[len - 1].Pattern == patterns[3] && findStack[len - 2].Pattern == patterns[3])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                }
-                len = findStack.Count;
-                //开心消消乐 '(' 'mainWord' ')'消去 
-                if (len >= 3 && findStack[len - 1].Pattern == patterns[2] && findStack[len - 2].Pattern == mainWord &&
-                    findStack[len - 3].Pattern == patterns[1])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                    findStack.Remove(findStack[len - 3]);
-                }
-                len = findStack.Count;
-                //开心消消乐 ''' 'mainWord' '''消去 
-                if (len >= 3 && findStack[len - 1].Pattern == patterns[3] && findStack[len - 2].Pattern == mainWord &&
-                    findStack[len - 3].Pattern == patterns[3])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                    findStack.Remove(findStack[len - 3]);
-                }
-                ++curPoint;
-                subSql = subSql.Substring(1, subSql.Length - 1);
-            } while (!string.IsNullOrWhiteSpace(subSql));
-            return findStack;
-        }
-
-        private int FindFrom(string sql, string mainWord)
-        {
-            var findStack = GetAllMatchPoint(sql, mainWord);
-            if (findStack.Count == 1)
-            {
-                return findStack[0].Point;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-
-        private bool StartWith(string str, string pattern, out string meetContent)
-        {
-            Regex reg = new Regex(pattern, RegexOptions.IgnoreCase);
-            var ches = reg.Matches(str);
-            if (ches.Count > 0)
-            {
-                meetContent = ches[0].Value;
-                return true;
-            }
-            meetContent = null;
-            return false;
-        }
-        public string GetMatchedColumn(string str)
-        {
-            var aliasCol = "\\[?\\'?([\\w_#@\\$]+)\\'?\\]?";
-            var col = "\\[?[\\w_#@\\$]+\\]?";
-            var aliasTable = "\\[?[\\w_#@\\$]+\\]?";
-            //"UserNickName"
-            var match1 = "^(" + col + ")$";
-            //"us.UserNickName"
-            var match2 = "^" + aliasTable + "\\.(" + col + ")$";
-            //"us.UserNickName UserName"
-            var match3 = "^" + col + "\\s+" + aliasCol + "$";
-            //"UserNickName UserName"
-            var match4 = "^" + aliasTable + "\\." + col + "\\s+" + aliasCol + "$";
-            //"UserNickName as UserName"
-            var match5 = "^" + col + "\\s+AS\\s+" + aliasCol + "$";
-            //"us.UserNickName as UserName"
-            var match6 = "^" + aliasTable + "\\." + col + "\\s+AS\\s+" + aliasCol + "$";
-            //"UserName = us.UserNickName"
-            var match8 = "^" + aliasCol + "\\s*=\\s*" + col + "$";
-            //"UserName = us.UserNickName"
-            var match7 = "^" + aliasCol + "\\s*=\\s*" + aliasTable + "\\." + col + "$";
-            var match9 = "[\\w\\W]+" + "\\s+AS\\s+" + aliasCol + "$";
-            var match10 = "^" + aliasCol + "\\s*=\\s*[\\w\\W]+";
-            var match11 = "[\\w\\W]+" + "\\s+" + aliasCol + "$";
-            var match12 = "^(\\*)$";
-            Func<string, string, string> getName = (s, p) =>
-            {
-                Regex rg = new Regex(p, RegexOptions.IgnoreCase);
-                if (rg.IsMatch(s))
-                {
-                    var matched = rg.Matches(s);
-                    return matched[0].Groups[1].Value;
-                }
-                return string.Empty;
-            };
-            var matches = new string[] { match1, match2, match3, match4, match7, match5, match6, match8, match9, match10, match11, match12 };
-            var colName = string.Empty;
-            var i = 0;
-            while (string.IsNullOrWhiteSpace(colName) && i < matches.Length)
-            {
-                colName = getName(str, matches[i]);
-                i++;
-            }
-            return colName;
-        }
-
-
-
-    }
-
     public class SqlScriptManager
     {
         public string CtePart { get; set; } = "";
@@ -453,24 +115,14 @@ namespace MiniAbp.DataAccess.SqlParser
                         break;
                     }
                 }
-                var len = findStack.Count;
                 //开心消消乐 '(' ')'消去 
-                if (len >= 2 && findStack[len - 1].Pattern == patterns[2] && findStack[len - 2].Pattern == patterns[1])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                }
-                len = findStack.Count;
+                SqlMacher.ClearCombo(findStack, patterns[1], patterns[2]);
                 //开心消消乐 ''' '''消去 
-                if (len >= 2 && findStack[len - 1].Pattern == patterns[3] && findStack[len - 2].Pattern == patterns[3])
-                {
-                    findStack.Remove(findStack[len - 1]);
-                    findStack.Remove(findStack[len - 2]);
-                }
+                SqlMacher.ClearCombo(findStack, patterns[3], patterns[3]);
                 //开心消消乐 '(' 'mainWord' ')'消去 
-                ClearCombo(findStack, patterns[1], patterns[2], patterns[0], patterns[4]);
+                SqlMacher.ClearCombo(findStack, patterns[1], patterns[2], patterns[0], patterns[4]);
                 //开心消消乐 ''' 'mainWord' '''消去 
-                ClearCombo(findStack, patterns[3], patterns[3], patterns[0], patterns[4]);
+                SqlMacher.ClearCombo(findStack, patterns[3], patterns[3], patterns[0], patterns[4]);
 
                 ++curPoint;
                 subSql = subSql.Substring(1, subSql.Length - 1);
@@ -478,46 +130,7 @@ namespace MiniAbp.DataAccess.SqlParser
             return findStack;
         }
 
-        private void ClearCombo(List<StrPoint> findStack, string head, string end, params string[] middle)
-        {
-            var len = findStack.Count;
-            //开心消消乐 '(' 'mainWord' ')'消去 
-            if (len >= 3 && findStack[len - 1].Pattern == end) //')'
-            {
-                var toPosition = len - 2;
-                var needClear = false;
-                var hasCondtion = false;
-                //找到最前一个Union
-                for (int j = toPosition; j >= 0; j--)
-                {
-                    if (middle.Contains(findStack[j].Pattern))
-                    {
-                        hasCondtion = true;
-                        continue;
-                    }
-                    else
-                    {
-                        toPosition = j;
-                        break;
-                    }
-                }
-                //判断它的前一个是否为 '('
-                if (hasCondtion && toPosition >= 0 && findStack[toPosition].Pattern == head)
-                {
-                    needClear = true;
-                }
-                if (needClear && toPosition >= 0)
-                {
-                    var k = len - 1;
-                    do
-                    {
-                        findStack.Remove(findStack[k]);
-                        k--;
-                    } while (k >= 0);
-                }
-            }
-        }
-        private bool StartWith(string str, string pattern, out string matchedContent)
+         private bool StartWith(string str, string pattern, out string matchedContent)
         {
             Regex reg = new Regex(pattern, RegexOptions.IgnoreCase);
             var ches = reg.Matches(str);
@@ -534,7 +147,7 @@ namespace MiniAbp.DataAccess.SqlParser
         /// 获取非CTE字段的信息 包含了OrderBy处理
         /// </summary>
         /// <param name="orderBy"></param>
-        /// <param name="needOrderBy"></param>
+        /// <param name="needOrderBy">非求分页后的Count</param>
         /// <returns></returns>
         public string GetPackagedSql(string orderBy = "", bool needOrderBy = true)
         {
@@ -543,22 +156,17 @@ namespace MiniAbp.DataAccess.SqlParser
                 string wholeOrderBy = string.Empty;
                 if (needOrderBy)
                 {
-                    //并且最后一个SQL 含Order By 则这个OrderBy是整个查询联合后的查询
-                    if (Querys[Querys.Count - 1].OrderIndex > -1)
-                    {
-                        wholeOrderBy = Querys.Last().QueryOrderByPart;
-                    }
-                    wholeOrderBy = GetOrderByTemp(wholeOrderBy, orderBy);
+                    wholeOrderBy = GetOrderByTemp(orderBy);
                 }
 
                 StringBuilder entireQuery = new StringBuilder();
                 int i = 0;
                 Querys.ForEach(r =>
                 {
-                    entireQuery.Append(r.QuerySelectPart);
-                    entireQuery.Append(" " + r.QueryFromPart);
-                    entireQuery.Append(" " + r.QueryWherePart);
-                    entireQuery.Append(" " + r.QueryGroupByPart);
+                    entireQuery.Append(r.Select);
+                    entireQuery.Append(" " + r.From);
+                    entireQuery.Append(" " + r.Where);
+                    entireQuery.Append(" " + r.GroupBy);
                     if (i < UnionOrAll.Count)
                     {
                         entireQuery.Append(" " + UnionOrAll[i++] + " ");
@@ -571,61 +179,31 @@ namespace MiniAbp.DataAccess.SqlParser
             }
             else //没有Union的情况
             {
-                bool useSelfOrderBy = false;
                 string wholeOrderBy = string.Empty;
                 StringBuilder entireQuery = new StringBuilder();
-                int i = 0;
                 var r = Querys[0];
-                entireQuery.Append(r.QuerySelectPart);
-                if (needOrderBy)
-                {
-                    useSelfOrderBy = !string.IsNullOrWhiteSpace(r.QueryOrderByPart) &&
-                                     string.IsNullOrWhiteSpace(orderBy);
-                    //使用自身提供的默认的Orderby
-                    if (useSelfOrderBy)
-                    {
-                        wholeOrderBy = r.QueryOrderByPart;
-                        wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + wholeOrderBy + ")";
-                    }
-                    entireQuery.Append(" " + wholeOrderBy);
-                }
-                entireQuery.Append(" " + r.QueryFromPart);
-                entireQuery.Append(" " + r.QueryWherePart);
-                entireQuery.Append(" " + r.QueryGroupByPart);
+                entireQuery.Append(r.Select);
+                entireQuery.Append(" " + r.From);
+                entireQuery.Append(" " + r.Where);
+                entireQuery.Append(" " + r.GroupBy);
 
                 var sql = entireQuery.ToString();
-                string queryPackage;
                 //使用外部提供的或者是默认的
-                if (needOrderBy && !useSelfOrderBy)
+                if(needOrderBy)
                 {
-                    if (!string.IsNullOrWhiteSpace(orderBy))
-                    {
-                        wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + orderBy + ")";
-                    }
-                    else
-                    {
-                        var columnName =
-                            r.SelectItems.FirstOrDefault(w => w.Equals("Id", StringComparison.OrdinalIgnoreCase));
-                        if (string.IsNullOrWhiteSpace(columnName))
-                        {
-                            columnName = r.SelectItems.FirstOrDefault(w => !w.Equals("*"));
-                            if (string.IsNullOrWhiteSpace(columnName))
-                            {
-                                columnName = "Id";
-                            }
-                        }
-                        wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( ORDER BY " + columnName + ")";
-                    }
-                    queryPackage = "SELECT * " + wholeOrderBy + "　FROM ( " + sql + ") " + WrapAlias + " ";
+                    wholeOrderBy = GetOrderByTemp(orderBy);
                 }
-                else
-                {
-                    queryPackage = "SELECT * FROM ( " + sql + ") " + WrapAlias + " ";
-                }
+                var queryPackage = "SELECT * " + wholeOrderBy + "　FROM ( " + sql + ") " + WrapAlias + " ";
                 return queryPackage;
             }
         }
-
+        /// <summary>
+        /// 获取分页Sql
+        /// </summary>
+        /// <param name="startCount"></param>
+        /// <param name="endCount"></param>
+        /// <param name="orderBy"></param>
+        /// <returns></returns>
         public string GetPageSql(int startCount, int endCount, string orderBy = "")
         {
             SqlScriptManager sqlMng = this;
@@ -635,6 +213,14 @@ namespace MiniAbp.DataAccess.SqlParser
 
             return sqlMng.CtePart + string.Format(pagePackage, queryPackage);
         }
+
+        /// <summary>
+        /// 被打包后的Sql 求分页数据
+        /// </summary>
+        /// <param name="startCount"></param>
+        /// <param name="endCount"></param>
+        /// <param name="packagedsql"></param>
+        /// <returns></returns>
         public string GetPageSqlWithPackageSql(int startCount, int endCount, string packagedsql)
         {
             SqlScriptManager sqlMng = this;
@@ -643,10 +229,15 @@ namespace MiniAbp.DataAccess.SqlParser
 
             return sqlMng.CtePart + string.Format(pageWrapFormat, packagedsql);
         }
+
+        /// <summary>
+        /// 被打包后的sql求数量
+        /// </summary>
+        /// <param name="packagedsql"></param>
+        /// <returns></returns>
         public string GetPageCountSqlWithPackageSql(string packagedsql)
         {
             string countPackage = @"SELECT COUNT(1) FROM ( {0} ) " + WrapAlias + " ";
-            var s = GetPackagedSql(string.Empty, false);
             return CtePart + string.Format(countPackage, packagedsql);
         }
 
@@ -665,27 +256,65 @@ namespace MiniAbp.DataAccess.SqlParser
         /// <summary>
         /// 如果有提供Orderby 则移除原有OrderBy， 如果没提供orderBy 则使用默认OrderBy
         /// </summary>
-        /// <param name="wholeOrderBy"></param>
-        /// <param name="orderBy"></param>
+        /// <param name="passedOrderBy">传入的Order by</param>
         /// <returns></returns>
-        private string GetOrderByTemp(string wholeOrderBy, string orderBy)
+        private string GetOrderByTemp(string passedOrderBy)
         {
-            if (!string.IsNullOrWhiteSpace(orderBy))
+            var query = Querys[0];
+            if (query == null)
             {
-                wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + orderBy + ")";
+                throw new ArgumentException("子Query不能不存在");
             }
+            string wholeOrderBy = string.Empty;
+            //拼接最后一个SQL 含Order By 则这个OrderBy是整个查询联合后的查询
+            if (HasUnion)
+            {
+                if (Querys[Querys.Count - 1].HasOrderBy)
+                {
+                    wholeOrderBy = Querys.Last().OrderBy;
+                }
+            }
+            else
+            {
+                if (query.HasOrderBy)
+                {
+                    var unionedOrderby = string.Join(",", query.OrderbyItems);
+                    wholeOrderBy = "ORDER BY " + unionedOrderby;
+                }
+             
+            }
+            
+            //有先使用传入进来的Orderby
+            if (!string.IsNullOrWhiteSpace(passedOrderBy))
+            {
+                wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + passedOrderBy + ")";
+            }
+            //使用SQL自带的OrderBy
             else if (!string.IsNullOrWhiteSpace(wholeOrderBy))
             {
                 wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + wholeOrderBy + ")";
             }
+            //使用默认的OrderBy
             else
             {
-                wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( ORDER BY Id)";
+                var hasId = query.SelectItems.Any(r => r.Equals("ID", StringComparison.OrdinalIgnoreCase));
+                if (hasId || (query.SelectItems.Count == 1 && query.SelectItems[0].Equals("*")))
+                {
+                    wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( ORDER BY [Id])";
+                }
+                else if (query.SelectItems.Count > 1)
+                {
+                    var first = query.SelectItems.FirstOrDefault(r => r != "*");
+                    wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( ORDER BY ["+ first + "])";
+                }
+                else
+                {
+                    wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( ORDER BY [Id])";
+                }
+
             }
             return wholeOrderBy;
-
         }
-
     }
 
     public struct StrPoint

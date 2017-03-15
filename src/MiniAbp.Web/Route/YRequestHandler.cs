@@ -18,7 +18,7 @@ namespace MiniAbp.Web.Route
             AjaxResult result = null;
             try
             {
-                var dataResult = ServiceController.Instance.Execute(service, method, param, RequestType.ServiceFile);
+                var dataResult = ServiceController.Instance.Execute(service, method, param);
                 result = new AjaxResult()
                 {
                     IsAuthorized = true,

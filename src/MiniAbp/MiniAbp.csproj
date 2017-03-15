@@ -118,6 +118,8 @@
     <Compile Include="Contract\UserGroup\IRoleEntity.cs" />
     <Compile Include="Contract\UserGroup\IRoleJobEntity.cs" />
     <Compile Include="DataAccess\Dialect.cs" />
+    <Compile Include="DataAccess\SqlParser\SqlMacher.cs" />
+    <Compile Include="DataAccess\SqlParser\SqlParser.cs" />
     <Compile Include="DataAccess\SqlParser\SqlScriptManager.cs" />
     <Compile Include="Dependency\ConventionalRegistrationConfig.cs" />
     <Compile Include="Dependency\ConventionalRegistrationContext.cs" />

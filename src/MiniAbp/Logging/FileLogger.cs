@@ -213,8 +213,7 @@ namespace MiniAbp.Logging
             }
             if (ex != null)
             {
-                sb.AppendLine(ex.Message);
-                sb.AppendLine(ex.StackTrace);
+                sb.AppendLine(ex.ToString());
             }
             sb.Append(Environment.NewLine);
             SaveLog(sb.ToString());
