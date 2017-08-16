@@ -15,7 +15,7 @@ namespace MiniAbp.Compile
     public class RuntimeDll : IDisposable
     {
         readonly AppDomainSetup _domainSetup = new AppDomainSetup();
-        private AppDomain _objAppDomain;
+        protected AppDomain ObjAppDomain;
         private readonly string _dllName;
         private readonly string _targetPath;
         private bool IsIntialized { get; set; }
@@ -33,7 +33,7 @@ namespace MiniAbp.Compile
             CsharpCode = souceCode;
             //1 Create Application Domain 
             _domainSetup.ApplicationBase = _targetPath;
-            _objAppDomain = AppDomain.CreateDomain(Guid.NewGuid().ToString("N"), null, _domainSetup);
+            ObjAppDomain = AppDomain.CreateDomain(Guid.NewGuid().ToString("N"), null, _domainSetup);
             return Compile(out errorStr, referenceDllList);
         }
 
@@ -70,7 +70,7 @@ namespace MiniAbp.Compile
             return true;
         }
 
-        
+        private static object _initObjLock = new object();
         /// <summary>
         /// Call Method in the class
         /// </summary>
@@ -82,7 +82,7 @@ namespace MiniAbp.Compile
         {
             RemoteLoaderFactory factory =
                 (RemoteLoaderFactory)
-                    _objAppDomain.CreateInstance("MiniAbp", "MiniAbp.Compile.RemoteLoaderFactory")
+                    ObjAppDomain.CreateInstance("MiniAbp", "MiniAbp.Compile.RemoteLoaderFactory")
                         .Unwrap();
             object objObject = factory.Create(_dllName, classNameSpace, null);
            
@@ -94,9 +94,15 @@ namespace MiniAbp.Compile
             //Initialize db configuration
             if (!IsIntialized)
             {
-                IsIntialized = true;
-                var dbSetting = IocManager.Instance.Resolve<DatabaseConfiguration>();
-                objRemote.Initialize(dbSetting.ConnectionString, dbSetting.Dialect);
+                lock (_initObjLock)
+                {
+                    if (!IsIntialized)
+                    {
+                        var dbSetting = IocManager.Instance.Resolve<DatabaseConfiguration>();
+                        objRemote.Initialize(dbSetting.ConnectionString, dbSetting.Dialect);
+                        IsIntialized = true;
+                    }
+                }
             }
             return objRemote.Invoke(method, param);
         }
@@ -106,7 +112,10 @@ namespace MiniAbp.Compile
         /// </summary>
         public void Dispose()
         {
-            AppDomain.Unload(_objAppDomain);
+            if (ObjAppDomain != null && !ObjAppDomain.IsFinalizingForUnload())
+            {
+                AppDomain.Unload(ObjAppDomain);
+            }
             if (File.Exists(DllPath))
                 File.Delete(DllPath);
         }

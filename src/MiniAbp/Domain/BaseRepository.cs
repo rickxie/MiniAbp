@@ -43,5 +43,9 @@ namespace MiniAbp.Domain
         {
             return DbDapper.RunDataTableSql(sql, input, param, DbConnection, DbTransaction);
         }
+        public virtual PagedDatatable GetDataTableNoOrder(string sql, IPaging input, object param = null)
+        {
+            return DbDapper.RunDataTableSqlNoOrder(sql, input, param, DbConnection, DbTransaction);
+        }
     }
 }

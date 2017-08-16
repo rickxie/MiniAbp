@@ -295,13 +295,13 @@ namespace MiniAbp.DataAccess.SqlParser
             List<StrPoint> findStack = new List<StrPoint>();
             var patterns = new string[] { mainWord, "^\\(", "^\\)", "^'" };
             var curPoint = 0;
-            var subSql = sql;
+            var sb = new StringBuilder(sql);
             do
             {
                 foreach (var keyWord in patterns)
                 {
                     string meetContent;
-                    if (StartWith(subSql, keyWord, out meetContent))
+                    if (StartWith(sb.ToString(), keyWord, out meetContent))
                     {
                         findStack.Add(new StrPoint() { Pattern = keyWord, ActualContent = meetContent, Point = curPoint });
                     }
@@ -315,8 +315,9 @@ namespace MiniAbp.DataAccess.SqlParser
                 //开心消消乐 ''' 'mainWord' '''消去 
                 SqlMacher.ClearCombo(findStack, patterns[3], patterns[3], mainWord); 
                 ++curPoint;
-                subSql = subSql.Substring(1, subSql.Length - 1);
-            } while (!string.IsNullOrWhiteSpace(subSql));
+                if(sb.Length > 0)
+                    sb.Remove(0, 1);
+            } while (sb.Length > 0);
             return findStack;
         }
 

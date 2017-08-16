@@ -35,6 +35,7 @@ namespace MiniAbp.Ado.Uow
 
         protected override void OnFailed(Exception exception)
         {
+            if(dbTransaction.Connection != null)
             dbTransaction?.Rollback();
         }
 

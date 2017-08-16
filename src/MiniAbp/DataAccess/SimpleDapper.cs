@@ -384,6 +384,31 @@ namespace MiniAbp.DataAccess
                 return rtnObj;
             }
 
+            /// <summary>
+            /// CTE拆分
+            /// </summary>
+            /// <param name="sql"></param>
+            /// <param name="cte"></param>
+            /// <param name="selectSql"></param>
+            public static void SplitCte(string sql, ref string cte, ref string selectSql)
+            {
+                cte = cte ?? string.Empty;
+                selectSql = selectSql ?? string.Empty;
+                var rx = new Regex("\\)[\\s\\r\\n]*select", RegexOptions.IgnoreCase);
+                var matchs = rx.Matches(sql);
+                if (matchs.Count == 1)
+                {
+                    var indexOfSql = sql.IndexOf(matchs[0].Value, StringComparison.Ordinal);
+                    cte = sql.Substring(0, indexOfSql + 1);
+                    selectSql = sql.Substring(indexOfSql + 1, sql.Length - indexOfSql - 1);
+                }
+                else
+                {
+                    selectSql = sql;
+                    cte = string.Empty;
+                }
+            }
+
             public static T QueryFirst<T>(this IDbConnection connection, string sql, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
             {
                 var sqlS = "SELECT TOP 1 * FROM ( {0}) T".Fill(sql);
@@ -725,6 +750,14 @@ namespace MiniAbp.DataAccess
                 var sqlMng = new SqlScriptManager(sql);
                 var sqlStr = sqlMng.GetPageCountSql();
                  return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
+            }
+            public static int CountNoOrder(this IDbConnection connection, string sql, object whereCondition, IDbTransaction transaction = null, int? commandTimeout = null)
+            {
+                var cte = string.Empty;
+                var selectSql = string.Empty;
+                SplitCte(sql, ref cte, ref selectSql);
+                var sqlStr = cte + "SELECT COUNT(1) FROM ( {0} ) temp_count".Fill(selectSql);
+                return connection.Query<int>(sqlStr, whereCondition, transaction, true, commandTimeout).Single();
             }
             public static int Count<T>(this IDbConnection connection, object whereCondition , IDbTransaction transaction = null, int? commandTimeout = null)
             {
@@ -1075,7 +1108,12 @@ namespace MiniAbp.DataAccess
             {
                 var startCount = (currentPage - 1) * pageSize + 1;
                 var endCount = startCount + pageSize - 1;
-                string orderBy = "ORDER BY " + order + (desc ? " desc " : " asc ");
+
+                string orderBy = string.Empty;
+                if (!string.IsNullOrWhiteSpace(order))
+                {
+                    orderBy = order + (desc ? " desc " : " asc ");
+                }
                 var sqMange = new SqlScriptManager(strSql);
                 return sqMange.GetPageSql(startCount, endCount, orderBy);
             }

@@ -10,6 +10,7 @@ using Castle.MicroKernel.Registration;
 using MiniAbp.DataAccess;
 using MiniAbp.Domain;
 using MiniAbp.Domain.Entitys;
+using Newtonsoft.Json;
 
 namespace MiniAbp.Extension
 {
@@ -154,6 +155,31 @@ namespace MiniAbp.Extension
         public static FilePathOutput File(this ApplicationService service, string filePath, string downloadName, string contentType)
         {
             return new FilePathOutput(filePath, downloadName, contentType);
+        }
+
+        /// <summary>
+        /// 序列化为Json串
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string SerializeToJson(this object obj)
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            else
+            {
+                try
+                {
+                    var str = JsonConvert.SerializeObject(obj);
+                    return str;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
         }
     }
 }

@@ -9,9 +9,11 @@ using Newtonsoft.Json.Serialization;
 
 namespace MiniAbp.Web.Route
 {
-    public class YRequestHandler 
+    public class YRequestHandler
     {
         private static readonly ILogger Logger = IocManager.Instance.Resolve<ILogger>();
+        [ThreadStatic]
+        public static RequestContext Context;
 
         public static AjaxResult ApiService(string service, string method, object param)
         {
@@ -43,16 +45,16 @@ namespace MiniAbp.Web.Route
                 };
 
 
-                if (except.GetType() == typeof (UserFriendlyException))
+                if (except.GetType() == typeof(UserFriendlyException))
                 {
                     result.Errors.IsFriendlyError = true;
                 }
-                else if (except.GetType() == typeof (AuthorizationException))
+                else if (except.GetType() == typeof(AuthorizationException))
                 {
                     result.Errors.IsFriendlyError = false;
                     result.IsAuthorized = false;
                 }
-                if (except.GetType() == typeof (UserFriendlyException))
+                if (except.GetType() == typeof(UserFriendlyException))
                 {
                     var exc = except as UserFriendlyException;
                     var newExc = exc?.InnerException ?? exc;
@@ -100,5 +102,12 @@ namespace MiniAbp.Web.Route
             }
             return exce;
         }
+    }
+    /// <summary>
+    /// 请求上下文
+    /// </summary>
+    public class RequestContext
+    {
+        
     }
 }

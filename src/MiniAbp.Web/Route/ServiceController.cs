@@ -42,6 +42,7 @@ namespace MiniAbp.Web.Route
             }
             var interfaceType = YAssembly.ServiceDic[svType];
             var method = YAssembly.GetMethodByType(interfaceType, methodName);
+            
             object result = null; 
             var instance = IocManager.Instance.Resolve(interfaceType); 
             result = Invoke(method, instance, param);

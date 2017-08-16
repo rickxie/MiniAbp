@@ -287,7 +287,7 @@ namespace MiniAbp.DataAccess.SqlParser
             //有先使用传入进来的Orderby
             if (!string.IsNullOrWhiteSpace(passedOrderBy))
             {
-                wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER (" + passedOrderBy + ")";
+                wholeOrderBy = @", _$tmpRowNum = ROW_NUMBER() OVER ( Order By " + passedOrderBy + ")";
             }
             //使用SQL自带的OrderBy
             else if (!string.IsNullOrWhiteSpace(wholeOrderBy))

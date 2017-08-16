@@ -165,35 +165,34 @@ namespace MiniAbp.Logging
                         sr.WriteLine(content);
                         sr.Close();
                     }
+                    
+                    var info = new FileInfo(filePath);
+                    var mbSize = info.Length/(1024*1024);
+                    if (mbSize >= 2)
+                    {
+                        var files = Directory.GetFiles(logDir);
+                        var rex = new Regex("logs([0-9]+).txt");
+                        var maxCount = 0;
+                        foreach (var file in files)
+                        {
+                            var numGroup = rex.Match(file);
+                            if (numGroup.Groups.Count == 2)
+                            {
+                                var count = Convert.ToInt32(numGroup.Groups[1].Value);
+                                if (count > maxCount)
+                                {
+                                    maxCount = count;
+                                }
+                            }
+                        }
+                        var newPath = logDir + string.Format("logs{0}.txt", ++maxCount);
+                        info.MoveTo(newPath);
+                    }
                 }
             }
             catch (Exception)
             {
             }
-
-            var info = new FileInfo(filePath);
-            var mbSize = info.Length/(1024*1024);
-            if (mbSize >= 2)
-            {
-                var files = Directory.GetFiles(logDir);
-                var rex = new Regex("logs([0-9]+).txt");
-                var maxCount = 0;
-                foreach (var file in files)
-                {
-                    var numGroup = rex.Match(file);
-                    if (numGroup.Groups.Count == 2)
-                    {
-                        var count = Convert.ToInt32(numGroup.Groups[1].Value);
-                        if (count > maxCount)
-                        {
-                            maxCount = count;
-                        }
-                    }
-                }
-                var newPath = logDir + string.Format("logs{0}.txt", ++maxCount);
-                info.MoveTo(newPath);
-            }
-
         }
 
 

@@ -3,3 +3,5 @@ bin
 obj
 
 
+/src/MiniAbp.Test
+/src/MiniAbp.WebTest

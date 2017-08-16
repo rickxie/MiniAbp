@@ -47,11 +47,11 @@ namespace MiniAbp.Configuration
                 throw new Exception("Connection string or Default Name is wrong, reference: " + connectStringOrName);
             }
             //Connection String Regex
-            var reg = new Regex(@"Data Source\s*=[\s\.a-zA-Z0-9]*;Initial Catalog\s*=[\s\.a-zA-Z0-9]*;");
+            var reg = new Regex(@"\W");
             var result = reg.Match(connectStringOrName);
             string connStr;
             //is conn str
-            if (result.Groups.Count < 2)
+            if (result.Captures.Count < 1)
                 connStr = ConfigurationManager.ConnectionStrings[connectStringOrName]?.ConnectionString;
             else
             {
@@ -60,5 +60,7 @@ namespace MiniAbp.Configuration
             Database.ConnectionString = connStr;
             Database.Dialect = Dialect.SqlServer;
         }
+
+
     }
 }

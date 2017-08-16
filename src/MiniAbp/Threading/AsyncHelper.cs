@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Nito.AsyncEx;
 
 namespace MiniAbp.Threading
 {
@@ -30,7 +29,8 @@ namespace MiniAbp.Threading
         /// <returns>Result of the async operation</returns>
         public static TResult RunSync<TResult>(Func<Task<TResult>> func)
         {
-            return AsyncContext.Run(func);
+            var tsk = Task.Factory.StartNew(func);
+            return tsk.Result.Result;
         }
 
         /// <summary>
@@ -39,7 +39,8 @@ namespace MiniAbp.Threading
         /// <param name="action">An async action</param>
         public static void RunSync(Func<Task> action)
         {
-            AsyncContext.Run(action);
+            var tsk = Task.Factory.StartNew(action);
+            tsk.Wait();
         }
     }
 }
