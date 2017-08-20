@@ -4,12 +4,12 @@ using System.Data;
 using System.Linq;
 using Dapper;
 using MiniAbp.DataAccess;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class BaseRepository : ApplicationCommonBase, IRepository
+    public abstract class BaseRepository : ContextBase, IRepository
     {
 
         public virtual List<TModel> Query<TModel>(string sql, object param = null)

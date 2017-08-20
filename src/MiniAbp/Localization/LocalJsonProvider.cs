@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Extension;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Schema;

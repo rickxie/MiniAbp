@@ -8,7 +8,7 @@ using Dapper;
 using MiniAbp.Configuration;
 using MiniAbp.DataAccess.Dapper; 
 using MiniAbp.Dependency;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Extension;
 using MiniAbp.Runtime;
 

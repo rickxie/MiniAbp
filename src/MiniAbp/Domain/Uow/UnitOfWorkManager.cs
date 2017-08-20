@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MiniAbp.Dependency;
+using System.Transactions;
 
 namespace MiniAbp.Domain.Uow
 {
@@ -20,8 +21,14 @@ namespace MiniAbp.Domain.Uow
 
         public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options)
         {
-            var uow = _iocResolver.Resolve<IUnitOfWork>();
+            options.FillDefaultsForNonProvidedOptions(_defaultOptions);
+            var outerUow = _currentUnitOfWorkProvider.Current;
 
+            if (options.Scope == TransactionScopeOption.Required && outerUow != null)
+            {
+                return new InnerUnitOfWorkCompleteHandle();
+            }
+            var uow = _iocResolver.Resolve<IUnitOfWork>();
             uow.Completed += (sender, args) =>
             {
                 _currentUnitOfWorkProvider.Current = null;
@@ -43,7 +50,10 @@ namespace MiniAbp.Domain.Uow
 
             return uow;
         }
-
+        public IUnitOfWorkCompleteHandle Begin(TransactionScopeOption scope)
+        {
+            return Begin(new UnitOfWorkOptions { Scope = scope });
+        }
         public UnitOfWorkManager(IocManager iocResolver, ICurrentUnitOfWorkProvider currentUnitOfWorkProvider,
             IUnitOfWorkDefaultOptions defaultOptions)
         {

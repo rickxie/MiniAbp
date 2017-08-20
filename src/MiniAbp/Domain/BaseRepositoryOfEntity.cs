@@ -9,7 +9,7 @@ using Castle.MicroKernel.ModelBuilder.Descriptors;
 using Dapper;
 using Microsoft.SqlServer.Server;
 using MiniAbp.DataAccess;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Extension;
 using MiniAbp.Runtime;
 

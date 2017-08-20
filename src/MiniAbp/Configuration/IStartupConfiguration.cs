@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MiniAbp.Dependency;
+using MiniAbp.Domain.Uow;
 
 namespace MiniAbp.Configuration
 {
@@ -23,5 +24,9 @@ namespace MiniAbp.Configuration
         /// </summary>
         /// <param name="connectStringOrName"></param>
         void UseSqlServerStorage(string connectStringOrName);
+        /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        IUnitOfWorkDefaultOptions UnitOfWork { get; }
     }
 }

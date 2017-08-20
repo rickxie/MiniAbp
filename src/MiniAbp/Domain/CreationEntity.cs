@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using MiniAbp.Dependency;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class CreationAndDeletionEntity : CreationEntity
+    public abstract class CreationAndDeletionEntity : CreationEntity, ISoftDelete
     {
         public virtual DateTime? DeletionTime { get; set; }
         [StringLength(50)]

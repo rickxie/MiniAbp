@@ -15,7 +15,10 @@ namespace MiniAbp.Ado.Uow
         private IDbContext _dbContext => GetOrCreateDbContext();
         private IDbConnection dbConnection => _dbContext.DbConnection;
         private IDbTransaction dbTransaction;
-        public AdoUnitOfWork(IocManager iocManager)
+
+        public AdoUnitOfWork(IocManager iocManager,
+            IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkDefaultOptions defaultOptions) : base(connectionStringResolver, defaultOptions)
         {
             _iocResolver = iocManager;
             _activeDbContexts = new Dictionary<Type, IDbContext>();
@@ -55,6 +58,14 @@ namespace MiniAbp.Ado.Uow
             }
 
             return (IDbContext)dbContext;
+        }
+        protected override Task CompleteUowAsync()
+        {
+            throw new NotImplementedException();
+        }
+        public override Task SaveChangesAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
-using MiniAbp.Ado.Repository;
+using MiniAbp.Ado.Repositories;
 using MiniAbp.Ado.Uow;
 using MiniAbp.Domain;
 using MiniAbp.Extension;
 using MiniAbp.Identity.Model;
 using MiniAbp.Identity.Model.Table;
+using MiniAbp.Domain.Uow;
 
 namespace MiniAbp.Identity.Application
 {

@@ -12,7 +12,7 @@ using MiniAbp.Configuration;
 using MiniAbp.Contract.Permission;
 using MiniAbp.DataAccess.SqlParser;
 using MiniAbp.Dependency;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Extension;
 
 namespace MiniAbp.DataAccess

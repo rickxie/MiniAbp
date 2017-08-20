@@ -30,7 +30,7 @@ namespace MiniAbp.Dependency.Installer
 //                Component.For<IDbConnection>().ImplementedBy<SQLiteConnection>().Named(Dialect.SqLite.ToString()).LifeStyle.Transient,
                 Component.For<ILogger>().ImplementedBy<FileLogger>().LifeStyle.Transient,
                 Component.For<IStartupConfiguration>().ImplementedBy<StartupConfiguration>().LifestyleSingleton(),
-                Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkOptions>().LifestyleSingleton(),
+                Component.For<IUnitOfWorkDefaultOptions>().ImplementedBy<UnitOfWorkDefaultOptions>().LifestyleSingleton(),
                 Component.For<LocalizationManager>().ImplementedBy<LocalizationManager>().LifestyleSingleton(),
                 Component.For<DatabaseConfiguration>().ImplementedBy<DatabaseConfiguration>().LifestyleSingleton(),
                 Component.For<AuditConfiguration>().ImplementedBy<AuditConfiguration>().LifestyleSingleton(),

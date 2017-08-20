@@ -18,10 +18,10 @@ namespace MiniAbp
         public static IStartupConfiguration Configuration => IocManager.Instance.Resolve<IStartupConfiguration>();
 
         private static readonly YBootstrapper Boot = new YBootstrapper();
-        public static void StartWithSqlServer(string connectionStringOrname)
+        public static void StartWithSqlServer(string connectionStringOrName)
         {
             Boot.Initialize();
-            Configuration.UseSqlServerStorage(connectionStringOrname);
+            Configuration.UseSqlServerStorage(connectionStringOrName);
             AppDomain.CurrentDomain.UnhandledException +=
                 (sender, eventArgs) =>
                 {

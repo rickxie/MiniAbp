@@ -8,12 +8,12 @@ using System.Web;
 using MiniAbp.Authorization;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Extension;
 using MiniAbp.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using FileInfo = MiniAbp.Domain.Entitys.FileInfo;
+using FileInfo = MiniAbp.Domain.Entities.FileInfo;
 
 namespace MiniAbp.Web.Route
 {

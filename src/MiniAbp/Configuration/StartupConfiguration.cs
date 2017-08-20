@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MiniAbp.DataAccess;
 using MiniAbp.Dependency;
 using MiniAbp.Extension;
+using MiniAbp.Domain.Uow;
 
 namespace MiniAbp.Configuration
 {
@@ -18,6 +19,7 @@ namespace MiniAbp.Configuration
         public AuditConfiguration Auditing { get; set; }
         public LocalizationConfiguration Localization { get; set; }
         public CustomConfiguration Custom { get; set; }
+        public IUnitOfWorkDefaultOptions UnitOfWork { get; set; }
 
         public StartupConfiguration(IocManager iocManager)
         {
@@ -30,6 +32,7 @@ namespace MiniAbp.Configuration
             Localization = IocManager.Resolve<LocalizationConfiguration>();
             Auditing = IocManager.Resolve<AuditConfiguration>();
             Custom = IocManager.Resolve<CustomConfiguration>();
+            UnitOfWork = IocManager.Resolve<IUnitOfWorkDefaultOptions>();
         }
 
         /// <summary>

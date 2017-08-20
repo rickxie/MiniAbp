@@ -45,5 +45,7 @@ namespace MiniAbp.Extension
             TValue obj;
             return dictionary.TryGetValue(key, out obj) ? obj : default(TValue);
         }
+
+    
     }
 }

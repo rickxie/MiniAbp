@@ -5,12 +5,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using MiniAbp.Dependency;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 using MiniAbp.Web.Auditing;
 using MiniAbp.Web.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using FileInfo = MiniAbp.Domain.Entitys.FileInfo;
+using FileInfo = MiniAbp.Domain.Entities.FileInfo;
 using FilePathResult = System.Web.Mvc.FilePathResult;
 
 namespace MiniAbp.Web.Route

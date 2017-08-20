@@ -8,10 +8,12 @@ using Castle.Core.Internal;
 using Castle.MicroKernel.Registration;
 using MiniAbp.Ado.Dependency;
 using MiniAbp.Ado.Uow;
+using MiniAbp.Domain.Uow;
 using MiniAbp.Reflection;
 
 namespace MiniAbp.Ado
 {
+    [DependsOn(typeof(KernelModule))]
     public class AdoModule : MabpModule
     {
         private readonly TypeFinder _typeFinder;

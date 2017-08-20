@@ -9,6 +9,30 @@ namespace MiniAbp.Domain.Uow
 {
     public abstract class UnitOfWorkBase : IUnitOfWork
     {
+
+        public string Id { get; }
+        /// <summary>
+        /// Gets the connection string resolver.
+        /// </summary>
+        protected IConnectionStringResolver ConnectionStringResolver { get; }
+
+        /// <summary>
+        /// Gets default UOW options.
+        /// </summary>
+        protected IUnitOfWorkDefaultOptions DefaultOptions { get; }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        protected UnitOfWorkBase(
+            IConnectionStringResolver connectionStringResolver,
+            IUnitOfWorkDefaultOptions defaultOptions)
+        {
+            DefaultOptions = defaultOptions;
+            ConnectionStringResolver = connectionStringResolver;
+
+            Id = Guid.NewGuid().ToString("N");
+        }
+
         public event EventHandler Completed;
         public event EventHandler Disposed;
         public event EventHandler<UnitOfWorkFailedEventArgs> Failed;
@@ -16,6 +40,7 @@ namespace MiniAbp.Domain.Uow
         private bool _isCompleteCalledBefore;
         private bool _succeed;
         private Exception _exception;
+        public UnitOfWorkOptions Options { get; private set; }
 
         /// <summary>
         /// Should be implemented by derived classes to start UOW.
@@ -37,7 +62,7 @@ namespace MiniAbp.Domain.Uow
         /// </summary>
         protected abstract void DisposeUow();
         public bool IsDisposed { get; private set; }
-        public void SaveChanges()
+        public virtual void SaveChanges()
         {
         }
 
@@ -58,7 +83,9 @@ namespace MiniAbp.Domain.Uow
         }
         public void Begin(UnitOfWorkOptions options)
         {
+            Check.NotNull(options, nameof(options));
             PreventMultipleBegin();
+            Options = options; 
             BeginUow();
         }
         public void Dispose()
@@ -118,5 +145,29 @@ namespace MiniAbp.Domain.Uow
 
             _isCompleteCalledBefore = true;
         }
+        protected virtual string ResolveConnectionString(ConnectionStringResolveArgs args)
+        {
+            return ConnectionStringResolver.GetNameOrConnectionString(args);
+        }
+
+        public async Task CompleteAsync()
+        {
+            PreventMultipleComplete();
+            try
+            {
+                await CompleteUowAsync();
+                _succeed = true;
+                OnCompleted();
+            }
+            catch (Exception ex)
+            {
+                _exception = ex;
+                throw;
+            }
+        }
+        protected abstract Task CompleteUowAsync();
+
+        public abstract Task SaveChangesAsync();
+
     }
 }

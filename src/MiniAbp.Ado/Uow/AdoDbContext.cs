@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MiniAbp.DataAccess;
 using MiniAbp.Domain;
+using MiniAbp.Domain.Uow;
 
 namespace MiniAbp.Ado.Uow
 {

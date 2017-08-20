@@ -7,7 +7,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Domain
 {
-    public abstract class BaseService : ApplicationCommonBase
+    public abstract class BaseService : ContextBase
     {
         public BaseService()
         {

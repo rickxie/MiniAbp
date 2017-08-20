@@ -73,12 +73,10 @@
     <Compile Include="AdoModule.cs" />
     <Compile Include="Dependency\AdoConventionalRegisterer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository\AdoRepositoryBaseOfEntity.cs" />
-    <Compile Include="Repository\AdoRepositoryBase.cs" />
+    <Compile Include="Repositories\AdoRepositoryBaseOfEntity.cs" />
+    <Compile Include="Repositories\AdoRepositoryBase.cs" />
     <Compile Include="Uow\AdoUnitOfWork.cs" />
     <Compile Include="Uow\AdoDbContext.cs" />
-    <Compile Include="Uow\IDbContext.cs" />
-    <Compile Include="Uow\IDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkDbContextProvider.cs" />
     <Compile Include="Uow\UnitOfWorkExtension.cs" />
   </ItemGroup>

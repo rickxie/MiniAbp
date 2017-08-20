@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations; 
 
 namespace MiniAbp.Domain
@@ -13,5 +14,20 @@ namespace MiniAbp.Domain
         {
             this.Id = Guid.NewGuid().ToString();
         }
+
+        /// <summary>
+        /// Checks if this entity is transient (it has not an Id).
+        /// </summary>
+        /// <returns>True, if this entity is transient</returns>
+        public virtual bool IsTransient()
+        {
+            if (EqualityComparer<string>.Default.Equals(Id, default(string)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }

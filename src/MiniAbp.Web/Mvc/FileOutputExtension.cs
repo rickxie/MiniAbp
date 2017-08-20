@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using MiniAbp.Domain.Entitys;
+using MiniAbp.Domain.Entities;
 
 namespace MiniAbp.Web.Mvc
 {

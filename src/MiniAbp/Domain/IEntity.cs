@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace MiniAbp.Domain
 {
-    public interface IEntity<T>
+    public interface IEntity<TPrimaryKey>
     {
-        T Id { get; set; }
+        TPrimaryKey Id { get; set; }
+        bool IsTransient();
     }
 }
