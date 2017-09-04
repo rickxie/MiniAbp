@@ -11,9 +11,14 @@ namespace MiniAbp.Configuration
     {
         public Action<AuditInfo> Save = info => { };
         public AuditBehaviours Behaviours { get; set; }
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        public List<Type> IgnoredTypes { get; }
 
         public AuditConfiguration()
         {
+            IgnoredTypes = new List<Type>();
             Behaviours = AuditBehaviours.None;
         }
     }

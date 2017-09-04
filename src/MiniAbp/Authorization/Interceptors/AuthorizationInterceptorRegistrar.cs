@@ -10,7 +10,7 @@ namespace MiniAbp.Authorization.Interceptors
     /// </summary>
     internal static class AuthorizationInterceptorRegistrar
     {
-        public static void Initialize(IocManager iocManager)
+        public static void Initialize(IIocManager iocManager)
         {
             iocManager.IocContainer.Kernel.ComponentRegistered += Kernel_ComponentRegistered;            
         }

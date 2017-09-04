@@ -80,6 +80,15 @@ namespace MiniAbp.Dependency
             return new DisposableDependencyObjectWrapper(iocResolver, iocResolver.Resolve(type, argumentsAsAnonymousType));
         }
 
+        /// <summary>
+        /// Gets a <see cref="ScopedIocResolver"/> object that starts a scope to resolved objects to be Disposable.
+        /// </summary>
+        /// <param name="iocResolver"></param>
+        /// <returns>The instance object wrapped by <see cref="ScopedIocResolver"/></returns>
+        public static IScopedIocResolver CreateScope(this IIocResolver iocResolver)
+        {
+            return new ScopedIocResolver(iocResolver);
+        }
         #endregion
 
         #region Using

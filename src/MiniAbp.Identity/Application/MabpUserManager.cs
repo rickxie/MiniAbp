@@ -12,7 +12,7 @@ using MiniAbp.Runtime;
 
 namespace MiniAbp.Identity.Application
 {
-    public abstract class MabpUserManager<TUser> : ISingletonDependency where TUser: User
+    public abstract class MabpUserManager<TUser> : ISingletonDependency where TUser : User
     {
         private readonly MabpUserManagerRp<TUser> _userManagerRp;
 
@@ -57,12 +57,29 @@ namespace MiniAbp.Identity.Application
         {
             var result = new LoginViewModel();
             var usn = loginModel.UsernameOrEmailAddress;
+            if (string.IsNullOrWhiteSpace(loginModel.Password))
+            {
+                loginModel.Error = "Password can't be empty";
+            }
             var pwd = Encryptor.PasswordEncrypt(loginModel.Password);
 
-            var user = _userManagerRp.GetUserByUsnAndPwd(usn, pwd);
-            if (user == null || !user.IsActive)
+            var user = _userManagerRp.GetUser(usn);
+            userModel = null;
+            if (user == null)
             {
-                userModel = null;
+                loginModel.Error = "User not exists";
+                return null;
+            }
+            else if (user.Password != pwd)
+            {
+                loginModel.Error = "Password is not correct, origin:" + loginModel.Password + " Encrypted:" + pwd;
+                return null;
+
+            }
+            else if (!user.IsActive)
+            {
+
+                loginModel.Error = "User is not active";
                 return null;
             }
 
@@ -94,7 +111,7 @@ namespace MiniAbp.Identity.Application
             if (isValid)
             {
                 var result = new LoginViewModel();
-                var d = new UserIdentity {UserId = user.Id, LanguageCulture = user.Language};
+                var d = new UserIdentity { UserId = user.Id, LanguageCulture = user.Language };
                 var identity = GetClaimsPrincipal(d);
                 result.Identity = identity;
                 userModel = user;
@@ -150,7 +167,7 @@ namespace MiniAbp.Identity.Application
             var identity = new ClaimsIdentity(claims, "ApplicationCookie");
             return identity;
         }
-        
+
 
         /// <summary>
         /// 被邀请的未注册用户首次登录需填写昵称，修改密码
@@ -159,7 +176,7 @@ namespace MiniAbp.Identity.Application
         public void UpdateActiveUser(TUser input)
         {
             var exist = CheckIsExistUser(input.Id);
-           
+
             exist.Password = Encryptor.PasswordEncrypt(input.Password);
             exist.IsAlreadyActivated = true;
             exist.LangName = input.LangName;
@@ -177,7 +194,7 @@ namespace MiniAbp.Identity.Application
         /// <param name="existUser"></param>
         public TUser CheckUserAndSetConfirmationCode(TUser input, out TUser existUser)
         {
-            existUser = _userManagerRp.GetUser(string.IsNullOrEmpty(input.CellPhone)? input.EmailAddress:input.CellPhone);
+            existUser = _userManagerRp.GetUser(string.IsNullOrEmpty(input.CellPhone) ? input.EmailAddress : input.CellPhone);
 
             if (existUser != null && existUser.IsActive)
                 throw new UserFriendlyException("该账号已注册，请登录");
@@ -204,7 +221,7 @@ namespace MiniAbp.Identity.Application
         /// <param name="newUser"></param>
         public void AddOrUpdateUser(TUser existUser, TUser newUser)
         {
-            
+
             if (existUser == null)
             {
                 _userManagerRp.InsertUser(newUser);
@@ -224,7 +241,7 @@ namespace MiniAbp.Identity.Application
                 _userManagerRp.UpdateUser(existUser);
             }
 
-            
+
         }
 
         /// <summary>
@@ -384,7 +401,7 @@ namespace MiniAbp.Identity.Application
         {
             //校验用户是否存在
             var existUser = CheckIsExistUser(userId);
-            
+
             if (!string.IsNullOrEmpty(phone) && type == 1)
             {
                 if (existUser.PhoneConfirmationCode != code || code == null)
@@ -522,7 +539,7 @@ namespace MiniAbp.Identity.Application
 
         #endregion
 
-        
+
 
     }
 

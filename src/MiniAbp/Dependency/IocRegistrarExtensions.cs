@@ -19,7 +19,7 @@ namespace MiniAbp.Dependency
         /// <typeparam name="T">Type of the class</typeparam>
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
-        public static void RegisterIfNot<T>(this IocManager iocRegistrar,
+        public static void RegisterIfNot<T>(this IIocRegistrar iocRegistrar,
             DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
             where T : class
         {
@@ -37,7 +37,7 @@ namespace MiniAbp.Dependency
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="type">Type of the class</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
-        public static void RegisterIfNot(this IocManager iocRegistrar, Type type,
+        public static void RegisterIfNot(this IIocRegistrar iocRegistrar, Type type,
             DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
             if (iocRegistrar.IsRegistered(type))
@@ -55,7 +55,7 @@ namespace MiniAbp.Dependency
         /// <typeparam name="TImpl">The type that implements <see cref="TType"/></typeparam>
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
-        public static void RegisterIfNot<TType, TImpl>(this IocManager iocRegistrar,
+        public static void RegisterIfNot<TType, TImpl>(this IIocRegistrar iocRegistrar,
             DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
             where TType : class
             where TImpl : class, TType
@@ -76,7 +76,7 @@ namespace MiniAbp.Dependency
         /// <param name="type">Type of the class</param>
         /// <param name="impl">The type that implements <paramref name="type"/></param>
         /// <param name="lifeStyle">Lifestyle of the objects of this type</param>
-        public static void RegisterIfNot(this IocManager iocRegistrar, Type type, Type impl,
+        public static void RegisterIfNot(this IIocRegistrar iocRegistrar, Type type, Type impl,
             DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
             if (iocRegistrar.IsRegistered(type))

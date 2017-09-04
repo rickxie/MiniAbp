@@ -20,6 +20,7 @@ namespace MiniAbp.Web
         {
             Bootstrapper.IocManager.RegisterIfNot<IAssemblyFinder, WebAssemblyFinder>();
             Bootstrapper.Initialize();
+            Bootstrapper.PostInitialize();
         }
 
         protected virtual void Session_Start(object sender, EventArgs e)

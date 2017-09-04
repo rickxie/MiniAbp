@@ -9,9 +9,9 @@ namespace MiniAbp.Modules
 {
     internal class ModuleFinder
     {
-        private readonly TypeFinder _typeFinder;
+        private readonly ITypeFinder _typeFinder;
 
-        public ModuleFinder(TypeFinder typeFinder)
+        public ModuleFinder(ITypeFinder typeFinder)
         {
             _typeFinder = typeFinder;
         }

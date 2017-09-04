@@ -23,7 +23,7 @@ namespace MiniAbp.Dependency.Installer
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
-                Component.For<TypeFinder>().ImplementedBy<TypeFinder>().LifestyleSingleton(),
+                Component.For<ITypeFinder, TypeFinder>().ImplementedBy<TypeFinder>().LifestyleSingleton(),
                 Component.For<ModuleFinder>().ImplementedBy<ModuleFinder>().LifestyleTransient(),
                 Component.For<ModuleManager>().ImplementedBy<ModuleManager>().LifestyleSingleton(),
                 Component.For<IDbConnection>().ImplementedBy<SqlConnection>().Named(Dialect.SqlServer.ToString()).LifeStyle.Transient,

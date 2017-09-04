@@ -4,19 +4,47 @@ using System.Reflection;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using System.Linq;
 
 namespace MiniAbp.Dependency
 {
-    public class IocManager 
+    public class IocManager : IIocManager
     {
+        /// <summary>
+        /// The Singleton instance.
+        /// </summary>
         public static IocManager Instance { get; private set; }
-        public WindsorContainer IocContainer { get; set; }
-        private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
 
+        /// <summary>
+        /// Reference to the Castle Windsor Container.
+        /// </summary>
+        public IWindsorContainer IocContainer { get; private set; }
+
+        /// <summary>
+        /// List of all registered conventional registrars.
+        /// </summary>
+        private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
         static IocManager()
         {
             Instance = new IocManager();
         }
+
+        /// <summary>
+        /// Creates a new <see cref="IocManager"/> object.
+        /// Normally, you don't directly instantiate an <see cref="IocManager"/>.
+        /// This may be useful for test purposes.
+        /// </summary>
+        public IocManager()
+        {
+            IocContainer = new WindsorContainer();
+            _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
+
+            //Register self!
+            IocContainer.Register(
+                Component.For<IocManager, IIocManager, IIocRegistrar, IIocResolver>().UsingFactoryMethod(() => this)
+                );
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -33,6 +61,7 @@ namespace MiniAbp.Dependency
         {
             return IocContainer.Resolve<T>();
         }
+
 
         /// <summary>
         /// Gets an object from IOC container.
@@ -127,12 +156,7 @@ namespace MiniAbp.Dependency
         {
             return IocContainer.Kernel.HasComponent(typeof(TType));
         }
-        public IocManager()
-        {
-            IocContainer = new WindsorContainer();
-            _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
-            IocContainer.Register(Component.For<IocManager>().UsingFactoryMethod(()=>this));
-        }
+       
 
         /// <summary>
         /// Adds a dependency registrar for conventional registration.
@@ -193,6 +217,43 @@ namespace MiniAbp.Dependency
                 default:
                     return registration;
             }
+        }
+
+        /// <summary>
+        /// Gets an object from IOC container.
+        /// Returning object must be Released (see <see cref="Release"/>) after usage.
+        /// </summary> 
+        /// <typeparam name="T">Type of the object to cast</typeparam>
+        /// <param name="type">Type of the object to resolve</param>
+        /// <returns>The object instance</returns>
+        public T Resolve<T>(Type type)
+        {
+            return (T)IocContainer.Resolve(type);
+        }
+
+        public T[] ResolveAll<T>()
+        {
+            return IocContainer.ResolveAll<T>();
+        }
+
+        public T[] ResolveAll<T>(object argumentsAsAnonymousType)
+        {
+            return IocContainer.ResolveAll<T>(argumentsAsAnonymousType);
+        }
+
+        public object[] ResolveAll(Type type)
+        {
+            return IocContainer.ResolveAll(type).Cast<object>().ToArray();
+        }
+
+        public object[] ResolveAll(Type type, object argumentsAsAnonymousType)
+        {
+            return IocContainer.ResolveAll(type, argumentsAsAnonymousType).Cast<object>().ToArray();
+        }
+
+        public void Dispose()
+        {
+            IocContainer.Dispose();
         }
     }
 

@@ -9,7 +9,7 @@ using Castle.Core.Logging;
 
 namespace MiniAbp.Reflection
 {
-    public class TypeFinder
+    public class TypeFinder: ITypeFinder
     {
         public ILogger Logger { get; set; }
 

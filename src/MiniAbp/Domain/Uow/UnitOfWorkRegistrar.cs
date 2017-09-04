@@ -33,7 +33,7 @@ namespace MiniAbp.Domain.Uow
         /// Initializes the registerer.
         /// </summary>
         /// <param name="iocManager">IOC manager</param>
-        public static void Initialize(IocManager iocManager)
+        public static void Initialize(IIocManager iocManager)
         {
             iocManager.IocContainer.Kernel.ComponentRegistered += (key, handler) =>
             {
@@ -52,7 +52,7 @@ namespace MiniAbp.Domain.Uow
             }
         }
 
-        private static void HandleConventionalUnitOfWorkTypes(IocManager iocManager, TypeInfo implementationType, IHandler handler)
+        private static void HandleConventionalUnitOfWorkTypes(IIocManager iocManager, TypeInfo implementationType, IHandler handler)
         {
             if (!iocManager.IsRegistered<IUnitOfWorkDefaultOptions>())
             {

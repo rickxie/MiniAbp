@@ -15,7 +15,7 @@ namespace MiniAbp.Logging
         public bool IsFatalEnabled => true;
         public bool IsInfoEnabled => true;
         public bool IsWarnEnabled => true;
-        public object objLock = new object();
+        public static object objLock = new object();
 
         public ILogger CreateChildLogger(string loggerName)
         {
@@ -156,42 +156,52 @@ namespace MiniAbp.Logging
         {
             var logDir = AppPath.GetRelativeDir("Logs/");
             var filePath = logDir + "logs.txt";
+            FileStream fs = null;
             try
             {
                 lock (objLock)
                 {
-                    using (var sr = new StreamWriter(filePath, true, Encoding.Default))
+                    using (fs = new FileStream(filePath, FileMode.OpenOrCreate))
                     {
-                        sr.WriteLine(content);
-                        sr.Close();
-                    }
-                    
-                    var info = new FileInfo(filePath);
-                    var mbSize = info.Length/(1024*1024);
-                    if (mbSize >= 2)
-                    {
-                        var files = Directory.GetFiles(logDir);
-                        var rex = new Regex("logs([0-9]+).txt");
-                        var maxCount = 0;
-                        foreach (var file in files)
+
+                        using (var sr = new StreamWriter(fs, Encoding.Default))
                         {
-                            var numGroup = rex.Match(file);
-                            if (numGroup.Groups.Count == 2)
+                            sr.WriteLine(content);
+                            sr.Close();
+                        }
+
+                        var info = new FileInfo(filePath);
+                        var mbSize = info.Length / (1024 * 1024);
+                        if (mbSize >= 2)
+                        {
+                            var files = Directory.GetFiles(logDir);
+                            var rex = new Regex("logs([0-9]+).txt");
+                            var maxCount = 0;
+                            foreach (var file in files)
                             {
-                                var count = Convert.ToInt32(numGroup.Groups[1].Value);
-                                if (count > maxCount)
+                                var numGroup = rex.Match(file);
+                                if (numGroup.Groups.Count == 2)
                                 {
-                                    maxCount = count;
+                                    var count = Convert.ToInt32(numGroup.Groups[1].Value);
+                                    if (count > maxCount)
+                                    {
+                                        maxCount = count;
+                                    }
                                 }
                             }
+                            var newPath = logDir + string.Format("logs{0}.txt", ++maxCount);
+                            info.MoveTo(newPath);
                         }
-                        var newPath = logDir + string.Format("logs{0}.txt", ++maxCount);
-                        info.MoveTo(newPath);
+                        fs.Close();
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+            }
+            finally
+            {
+                fs?.Close();
             }
         }
 

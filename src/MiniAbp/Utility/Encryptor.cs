@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MiniAbp.Dependency;
+using MiniAbp.Logging;
+using System;
 using System.Collections;
 using System.IO;
 using System.Security.Cryptography;
@@ -12,6 +14,7 @@ namespace MiniAbp
     /// </summary>
     public class Encryptor
     {
+        private static ILogger logger = IocManager.Instance.Resolve<ILogger>();
         /// <summary>
         /// 初始化安全类
         /// </summary>
@@ -294,10 +297,10 @@ namespace MiniAbp
                 //返回MD5值的字符串表示
                 return Convert.ToBase64String(result);
             }
-            catch
+            catch (Exception ex)
             {
 
-                //LogHelper.WriteTraceLog(TraceLogLevel.Error, ex.Message);
+                logger.Error(ex.ToString());
                 return "";
             }
         }

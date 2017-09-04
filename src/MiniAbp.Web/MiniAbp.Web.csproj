@@ -75,6 +75,7 @@
     <Compile Include="Mvc\ControllerExtension.cs" />
     <Compile Include="Mvc\FileOutputExtension.cs" />
     <Compile Include="Mvc\JsonpResult.cs" />
+    <Compile Include="Net\WebRequestHelper.cs" />
     <Compile Include="Razor\ServiceWithMethod.cs" />
     <Compile Include="Razor\TemplateManager.cs" />
     <Compile Include="WebModule.cs" />

@@ -6,7 +6,7 @@ using MiniAbp.Dependency.Installer;
 using MiniAbp.Localization;
 using MiniAbp.Logging;
 using MiniAbp.Modules;
-using MiniAbp.Reflection; 
+using MiniAbp.Reflection;
 
 namespace MiniAbp
 {
@@ -28,16 +28,14 @@ namespace MiniAbp
         {
             IocManager.IocContainer.Install(new CoreInstaller());
             IocManager.Resolve<IStartupConfiguration>().Initialize();
-            _moduleManager = IocManager.Resolve<ModuleManager>();
-            _moduleManager.InitializeModules();
-            PostInitialize();
         }
 
         public void PostInitialize()
         {
-          
+            _moduleManager = IocManager.Resolve<ModuleManager>();
+            _moduleManager.InitializeModules();
         }
-        
+
         public void HandleException(Exception ex)
         {
             var logger = IocManager.Resolve<ILogger>();

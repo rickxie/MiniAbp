@@ -23,6 +23,11 @@ namespace MiniAbp.Domain.Uow
         /// </summary>
 
         List<Func<Type, bool>> ConventionalUowSelectors { get; }
+        /// <summary>
+        /// A boolean value indicates that System.Transactions.TransactionScope is available for current application.
+        /// Default: true.
+        /// </summary>
+        bool IsTransactionScopeAvailable { get; set; }
 
     }
 }

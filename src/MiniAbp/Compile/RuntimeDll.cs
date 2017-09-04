@@ -6,6 +6,7 @@ using System.Threading;
 using Microsoft.CSharp;
 using MiniAbp.Configuration;
 using MiniAbp.Dependency;
+using System.Reflection;
 
 namespace MiniAbp.Compile
 {
@@ -15,12 +16,16 @@ namespace MiniAbp.Compile
     public class RuntimeDll : IDisposable
     {
         readonly AppDomainSetup _domainSetup = new AppDomainSetup();
+
+        /// <summary>
+        /// 受编译代码的AppDomain
+        /// </summary>
         protected AppDomain ObjAppDomain;
         private readonly string _dllName;
         private readonly string _targetPath;
         private bool IsIntialized { get; set; }
         public string CsharpCode { get; set; }
-        public string DllPath => _targetPath +"\\" + _dllName;
+        public string DllPath => _targetPath + _dllName;
         public RuntimeDll(string dllName, string targetPath)
         {
             this._dllName = dllName;
@@ -44,7 +49,11 @@ namespace MiniAbp.Compile
             //3 Sets the runtime compiling parameters by creating a new compilerParameters instance
             CompilerParameters parameters = new CompilerParameters();
             referenceDllList?.ToList().ForEach(r=> parameters.ReferencedAssemblies.Add(r));
-            
+
+            // Set compiler argument to optimize output.
+            parameters.CompilerOptions = "/optimize";
+            //If the value of this property is false, a DLL will be generated. By default, the value of this property is false.
+            //parameters.GenerateExecutable = true;
             //Load the remote loader interface
             //parameters.ReferencedAssemblies.Add("MiniAbp.DynamicCompile.dll");
             //Load the resulting assembly into memory

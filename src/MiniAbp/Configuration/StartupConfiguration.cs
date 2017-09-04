@@ -20,6 +20,10 @@ namespace MiniAbp.Configuration
         public LocalizationConfiguration Localization { get; set; }
         public CustomConfiguration Custom { get; set; }
         public IUnitOfWorkDefaultOptions UnitOfWork { get; set; }
+        /// <summary>
+        /// Ignored types for serialization on audit logging.
+        /// </summary>
+        public List<Type> IgnoredTypes { get; }
 
         public StartupConfiguration(IocManager iocManager)
         {
