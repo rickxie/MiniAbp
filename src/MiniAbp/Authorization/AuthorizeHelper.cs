@@ -25,7 +25,7 @@ namespace MiniAbp.Authorization
         }
 
 
-        public async Task AuthorizeAsync(MethodInfo methodInfo)
+        public void Authorize(MethodInfo methodInfo)
         {
             if (AllowAnonymous(methodInfo))
             {
@@ -33,24 +33,7 @@ namespace MiniAbp.Authorization
             }
 
             ////Authorize
-           await CheckPermissions(methodInfo);
-        }
-
-        public async Task AuthorizeAsync(IEnumerable<IMabpAuthorizeAttribute> authorizeAttributes)
-        {
-            if (Session.UserId.IsNullOrEmpty())
-            {
-                throw new AuthorizationException("No user logged in!", true);
-            }
-            //await Test();
-        }
-
-        public async Task AuthorizeAsync(IMabpAuthorizeAttribute authorizeAttribute)
-        {
-            if (Session.UserId.IsNullOrEmpty())
-            {
-                throw new AuthorizationException("No user logged in!", true);
-            }
+           CheckPermissions(methodInfo);
         }
 
         private static bool AllowAnonymous(MethodInfo methodInfo)
@@ -59,7 +42,7 @@ namespace MiniAbp.Authorization
                 .OfType<MabpAllowAnonymousAttribute>().Any();
         }
          
-        private async Task CheckPermissions(MethodInfo methodInfo)
+        private void CheckPermissions(MethodInfo methodInfo)
         {
             var authorizeAttributes = ReflectionHelper.GetAttributesOfMemberAndDeclaringType(
                     methodInfo
@@ -69,8 +52,10 @@ namespace MiniAbp.Authorization
             {
                 return;
             }
-
-            await AuthorizeAsync(authorizeAttributes);
+            if (Session.UserId.IsNullOrEmpty())
+            {
+                throw new AuthorizationException("No user logged in!", true);
+            }
         }
 
     }

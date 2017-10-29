@@ -64,7 +64,7 @@ namespace MiniAbp.Runtime
         /// </summary>
         /// <param name="relevantDir"></param>
         /// <returns></returns>
-        public static string GetRelativeDir(string relevantDir)
+        public static string GetFullDirByRelativeDir(string relevantDir)
         {
             var dir = RootPath + relevantDir;
             if (!Directory.Exists(dir))
@@ -76,11 +76,31 @@ namespace MiniAbp.Runtime
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string GetOrCreateFilePath(string path)
+        public static string GetOrCreateFile(string path)
         {
             if (!File.Exists(path))
                 File.Create(path);
             return path;
+        }
+        /// <summary>
+        /// Get relevant directory, if not exist then create.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetOrCreateFileDiretory(string path)
+        {
+            FileInfo info = new FileInfo(path);
+            return GetOrCreateDirectory(info.Directory.FullName);
+        }
+        /// <summary>
+        /// Get relevant directory, if not exist then create.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static bool IsPathDirectoryExists(string path)
+        {
+            FileInfo info = new FileInfo(path);
+            return Directory.Exists(info.Directory.FullName);
         }
     }
 }

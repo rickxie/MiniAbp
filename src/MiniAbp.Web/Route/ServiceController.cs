@@ -14,6 +14,9 @@ using MiniAbp.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using FileInfo = MiniAbp.Domain.Entities.FileInfo;
+using MiniAbp.Configuration;
+using MiniAbp.Web.Configuration;
+using MiniAbp.Runtime;
 
 namespace MiniAbp.Web.Route
 {
@@ -36,10 +39,6 @@ namespace MiniAbp.Web.Route
             serviceName = serviceName.ToUpper();
             methodName = methodName.ToUpper();
             var svType = YAssembly.FindServiceType(serviceName);
-            if (svType == null)
-            {
-                throw new UserFriendlyException("'{0}' Service 不存在".Fill(serviceName.ToLower()));
-            }
             var interfaceType = YAssembly.ServiceDic[svType];
             var method = YAssembly.GetMethodByType(interfaceType, methodName);
             
@@ -103,10 +102,18 @@ namespace MiniAbp.Web.Route
             }
             var type = arg[0].ParameterType.Assembly.GetType(arg[0].ParameterType.FullName);
 
-            var paraObj = JsonConvert.DeserializeObject(param, type, new JsonSerializerSettings()
+            //读取设置Js输出配置
+            var config = IocManager.Instance.Resolve<WebConfiguration>();
+            JsonSerializerSettings jsSetting = config.IsProxyJsCamelCase ? new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() }
+            : new JsonSerializerSettings();
+
+            var paraObj = JsonConvert.DeserializeObject(param, type, jsSetting);
+            // InputBase
+            if (type.IsAssignableFrom(typeof(InputBase)))
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+                var baseObj = paraObj as InputBase;
+                baseObj._UserId = IocManager.Instance.Resolve<ISession>().UserId;
+            }
             return paraObj;
         }
         private object GetFileObject(MethodInfo info, object param)

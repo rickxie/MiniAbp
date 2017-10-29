@@ -15,7 +15,7 @@ namespace MiniAbp.Dependency
         /// <typeparam name="T">Type of the object to get</typeparam>
         /// <param name="iocResolver">IIocResolver object</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocResolver)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocManager iocResolver)
         {
             return new DisposableDependencyObjectWrapper<T>(iocResolver, iocResolver.Resolve<T>());
         }
@@ -27,7 +27,7 @@ namespace MiniAbp.Dependency
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocResolver, Type type)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocManager iocResolver, Type type)
         {
             return new DisposableDependencyObjectWrapper<T>(iocResolver, (T)iocResolver.Resolve(type));
         }
@@ -38,7 +38,7 @@ namespace MiniAbp.Dependency
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IocManager iocResolver, Type type)
+        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IIocManager iocResolver, Type type)
         {
             return new DisposableDependencyObjectWrapper(iocResolver, iocResolver.Resolve(type));
         }
@@ -50,7 +50,7 @@ namespace MiniAbp.Dependency
         /// <param name="iocResolver">IIocResolver object</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocResolver, object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocManager iocResolver, object argumentsAsAnonymousType)
         {
             return new DisposableDependencyObjectWrapper<T>(iocResolver, iocResolver.Resolve<T>(argumentsAsAnonymousType));
         }
@@ -63,7 +63,7 @@ namespace MiniAbp.Dependency
         /// <param name="type">Type of the object to resolve. This type must be convertible <see cref="T"/>.</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IocManager iocResolver, Type type, object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper<T> ResolveAsDisposable<T>(this IIocManager iocResolver, Type type, object argumentsAsAnonymousType)
         {
             return new DisposableDependencyObjectWrapper<T>(iocResolver, (T)iocResolver.Resolve(type, argumentsAsAnonymousType));
         }
@@ -75,7 +75,7 @@ namespace MiniAbp.Dependency
         /// <param name="type">Type of the object to resolve. This type must be convertible to <see cref="IDisposable"/>.</param>
         /// <param name="argumentsAsAnonymousType">Constructor arguments</param>
         /// <returns>The instance object wrapped by <see cref="DisposableDependencyObjectWrapper{T}"/></returns>
-        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IocManager iocResolver, Type type, object argumentsAsAnonymousType)
+        public static IDisposableDependencyObjectWrapper ResolveAsDisposable(this IIocManager iocResolver, Type type, object argumentsAsAnonymousType)
         {
             return new DisposableDependencyObjectWrapper(iocResolver, iocResolver.Resolve(type, argumentsAsAnonymousType));
         }

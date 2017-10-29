@@ -12,15 +12,19 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using FileInfo = MiniAbp.Domain.Entities.FileInfo;
 using FilePathResult = System.Web.Mvc.FilePathResult;
+using MiniAbp.Configuration;
+using MiniAbp.Web.Configuration;
 
 namespace MiniAbp.Web.Route
 {
     public class UrlRouting
     {
-        public static UrlRouting Instance = new UrlRouting(); 
-
+        public static UrlRouting Instance = new UrlRouting();
         static UrlRouting()
         {
+        }
+
+        public UrlRouting() {
         }
         /// <summary>
         /// 处理请求
@@ -73,10 +77,11 @@ namespace MiniAbp.Web.Route
             {}
             else
             {
-                resonseString = JsonConvert.SerializeObject(outputObj, new JsonSerializerSettings()
-                {
-                    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                });
+                //读取设置Js输出配置
+                var config = IocManager.Instance.Resolve<WebConfiguration>();
+                JsonSerializerSettings jsSetting = config.IsProxyJsCamelCase ? new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() }
+                : new JsonSerializerSettings();
+                resonseString = JsonConvert.SerializeObject(outputObj, jsSetting);
                 auditing._auditInfo.ResponseJson = resonseString;
             }
             auditing.Exception(outputObj.Exception);
@@ -167,19 +172,19 @@ namespace MiniAbp.Web.Route
         private static object GetFileParam(HttpRequest request)
         {
             List<HttpPostedFile> files = new List<HttpPostedFile>();
-            if (request.Files.Count == 0)
-            {
-                return GetStringParam(request);
-            }
+            //if (request.Files.Count == 0)
+            //{
+            //    return GetStringParam(request);
+            //}
             for (int i = 0; i < request.Files.Count; i++)
             {
                 files.Add(request.Files[i]);
             }
-            var fileInput = GetFileInput(files);
+            var fileInput = GetFileInput(request, files);
             fileInput.Form = request.Form;
             return fileInput;
         }
-        private static FileInput GetFileInput(List<HttpPostedFile> f)
+        private static FileInput GetFileInput(HttpRequest request, List<HttpPostedFile> f)
         {
             var fileInput = new FileInput { Files = new List<FileInfo>() };
             if (f != null)
@@ -193,6 +198,7 @@ namespace MiniAbp.Web.Route
                     var bytes = new byte[file.ContentLength];
                     httpPostedFile.InputStream.Read(bytes, 0, file.ContentLength);
                     file.FileBytes = bytes;
+                    fileInput.Form = request.Form;
                     fileInput.Files.Add(file);
                 }
             return fileInput;

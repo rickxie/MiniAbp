@@ -35,14 +35,14 @@ namespace MiniAbp.Web
 
         protected virtual void Application_AuthenticateRequest(object sender, EventArgs e)
         {
-            if (Request.IsAuthenticated)
-            {
-                 PrincipalHelper.SetPrincipal(Context.User);
-            }
-            else
-            {
-                 PrincipalHelper.SetPrincipal(null);
-            }
+            //if (Request.IsAuthenticated)
+            //{
+            PrincipalHelper.SetPrincipal(Context.User);
+            //}
+            //else
+            //{
+            //     PrincipalHelper.SetPrincipal(null);
+            //}
             UrlRouting.Instance.HandleApiService((System.Web.HttpApplication)sender);
         }
 

@@ -71,13 +71,18 @@
   <ItemGroup>
     <Compile Include="Auditing\AuditingManager.cs" />
     <Compile Include="Auditing\WebAuditInfoProvider.cs" />
+    <Compile Include="Configuration\WebConfiguration.cs" />
     <Compile Include="Mvc\BaseWebPage.cs" />
     <Compile Include="Mvc\ControllerExtension.cs" />
     <Compile Include="Mvc\FileOutputExtension.cs" />
     <Compile Include="Mvc\JsonpResult.cs" />
     <Compile Include="Net\WebRequestHelper.cs" />
+    <Compile Include="Razor\AngularJsProxyCreator.cs" />
+    <Compile Include="Razor\AngularProxyCreator.cs" />
+    <Compile Include="Razor\IProxyCreator.cs" />
     <Compile Include="Razor\ServiceWithMethod.cs" />
-    <Compile Include="Razor\TemplateManager.cs" />
+    <Compile Include="Razor\CreatorBase.cs" />
+    <Compile Include="Razor\UiProxyManager.cs" />
     <Compile Include="WebModule.cs" />
     <Compile Include="Mvc\ControllerConventionalRegistrar.cs" />
     <Compile Include="Mvc\WindsorControllerFactory.cs" />
@@ -93,14 +98,11 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Razor\Template\LocalizationTemplate.cshtml" />
-    <EmbeddedResource Include="Razor\Template\ServicesTemplate.cshtml" />
+    <EmbeddedResource Include="Razor\Template\Localization_Proxy_tmp.cshtml" />
+    <EmbeddedResource Include="Razor\Template\AngularJs_Proxy_tmp.cshtml" />
+    <EmbeddedResource Include="Razor\Template\Angular_Proxy_tmp.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MiniAbp.Ado\MiniAbp.Ado.csproj">
-      <Project>{491c7a84-9eaf-4077-9c49-b55209e5c60d}</Project>
-      <Name>MiniAbp.Ado</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MiniAbp\MiniAbp.csproj">
       <Project>{0be993c4-2e68-404d-8ecd-d25ba1e87bcc}</Project>
       <Name>MiniAbp</Name>

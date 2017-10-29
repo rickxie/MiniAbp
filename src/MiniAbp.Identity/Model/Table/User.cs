@@ -18,8 +18,6 @@ namespace MiniAbp.Identity.Model.Table
         [StringLength(128)]
         public string Password { get; set; }
         [StringLength(50)]
-        public string LangName { get; set; }
-        [StringLength(50)]
         public string Language { get; set; }
         [StringLength(50)]
         public string EmailAddress { get; set; }
@@ -29,9 +27,12 @@ namespace MiniAbp.Identity.Model.Table
         //public bool IsOut { get; set; }
         [StringLength(50)]
         public string InitialPassword { get; set; }
+
         public bool IsAlreadyActivated { get; set; }
+
         [StringLength(50)]
         public string AccessId { get; set; }
+
         /// <summary>
         /// 登录连续错误次数（5次）
         /// </summary>

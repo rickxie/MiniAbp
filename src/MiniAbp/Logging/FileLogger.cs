@@ -154,7 +154,7 @@ namespace MiniAbp.Logging
         /// <param name="content"></param>
         private void SaveLog(string content)
         {
-            var logDir = AppPath.GetRelativeDir("Logs/");
+            var logDir = AppPath.GetFullDirByRelativeDir("Logs/");
             var filePath = logDir + "logs.txt";
             FileStream fs = null;
             try

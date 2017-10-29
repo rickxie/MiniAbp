@@ -79,8 +79,12 @@ namespace MiniAbp.Reflection
 
         public static Type FindServiceType(string typeName)
         {
-            
-            return ServiceTypes.FirstOrDefault(r => (r.Name).ToUpper() == typeName + "SV" || (r.Name ).ToUpper() == typeName + "SERVICE");
+            var svType = ServiceTypes.FirstOrDefault(r => (r.Name).ToUpper() == typeName + "SV" || (r.Name).ToUpper() == typeName + "SERVICE"); 
+            if (svType == null)
+            {
+                throw new UserFriendlyException("'{0}' Service 不存在".Fill(typeName.ToLower()));
+            }
+            return svType;
         }
         public static Type FindRepositoryType(string typeName)
         {
@@ -89,7 +93,12 @@ namespace MiniAbp.Reflection
         public static MethodInfo GetMethodByType(Type type, string methodName)
         {
             var methods = type.GetMethods();
-            return methods.FirstOrDefault(r => r.Name.ToUpper().Equals(methodName));
+            var methodInfo = methods.FirstOrDefault(r => r.Name.ToUpper().Equals(methodName));
+            if (methodInfo == null)
+            {
+                throw new UserFriendlyException("'{0}' Service 不存在".Fill(methodName.ToLower()));
+            }
+            return methodInfo;
         }
     }
 }

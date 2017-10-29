@@ -87,7 +87,7 @@
     <Compile Include="Contract\Permission\IPermissionKeyEntity.cs" />
     <Compile Include="Contract\Permission\IPermissionEntity.cs" />
     <Compile Include="Configuration\AuditConfiguration.cs" />
-    <Compile Include="Configuration\CustomerConfiguration.cs" />
+    <Compile Include="Configuration\CustomConfiguration.cs" />
     <Compile Include="Configuration\DatabaseConfiguration.cs" />
     <Compile Include="Configuration\DictionaryBasedConfig.cs" />
     <Compile Include="Configuration\IDictionaryBasedConfig.cs" />
@@ -126,6 +126,8 @@
     <Compile Include="Domain\ContextBase.cs" />
     <Compile Include="Domain\Entities\EntityHelper.cs" />
     <Compile Include="Domain\Entities\EntityTypeInfo.cs" />
+    <Compile Include="Domain\Entities\InputBase.cs" />
+    <Compile Include="Domain\Entities\IPagedList.cs" />
     <Compile Include="Domain\Repositories\AutoRepositoryTypesAttribute.cs" />
     <Compile Include="Domain\Repositories\EfRepositoryBase.cs" />
     <Compile Include="Domain\Repositories\IRepositoryOfTEntity.cs" />
@@ -212,6 +214,7 @@
     <Compile Include="Modules\ModuleFinder.cs" />
     <Compile Include="Modules\ModuleInfo.cs" />
     <Compile Include="Modules\ModuleManager.cs" />
+    <Compile Include="Net\EmailClient.cs" />
     <Compile Include="Net\HttpWebHelper.cs" />
     <Compile Include="Net\WebRequestHelper.cs" />
     <Compile Include="Orm\ISecondaryOrmRegistrar.cs" />

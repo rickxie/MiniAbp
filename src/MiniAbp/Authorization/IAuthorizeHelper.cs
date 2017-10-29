@@ -9,8 +9,8 @@ namespace MiniAbp.Authorization
 { 
         public interface IAuthorizeHelper
         {
-            Task AuthorizeAsync(IEnumerable<IMabpAuthorizeAttribute> authorizeAttributes);
-            Task AuthorizeAsync(IMabpAuthorizeAttribute authorizeAttribute);
-            Task AuthorizeAsync(MethodInfo methodInfo);
+            //Task AuthorizeAsync(IEnumerable<IMabpAuthorizeAttribute> authorizeAttributes);
+            //Task AuthorizeAsync(IMabpAuthorizeAttribute authorizeAttribute);
+            void Authorize(MethodInfo methodInfo);
         }
 }

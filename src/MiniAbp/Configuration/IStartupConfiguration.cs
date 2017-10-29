@@ -17,16 +17,18 @@ namespace MiniAbp.Configuration
         DatabaseConfiguration Database {get;}
         AuditConfiguration Auditing {get;}
         LocalizationConfiguration Localization { get;}
-        CustomConfiguration Custom { get;}
+        CustomConfiguration Custom { get; }
+        /// <summary>
+        /// Used to configure unit of work defaults.
+        /// </summary>
+        IUnitOfWorkDefaultOptions UnitOfWork { get; }
+
+
         void Initialize();
         /// <summary>
         /// 使用Sql server 作为存储
         /// </summary>
         /// <param name="connectStringOrName"></param>
         void UseSqlServerStorage(string connectStringOrName);
-        /// <summary>
-        /// Used to configure unit of work defaults.
-        /// </summary>
-        IUnitOfWorkDefaultOptions UnitOfWork { get; }
     }
 }

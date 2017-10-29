@@ -179,7 +179,7 @@ namespace MiniAbp.Identity.Application
 
             exist.Password = Encryptor.PasswordEncrypt(input.Password);
             exist.IsAlreadyActivated = true;
-            exist.LangName = input.LangName;
+            exist.NickName = input.NickName;
             _userManagerRp.Update(exist);
         }
 
