@@ -1,0 +1,56 @@
+using MiniAbp;
+using MiniAbp.Configuration;
+using MiniAbp.Domain;
+using MiniAbp.Domain.Uow;
+using System;
+using System.Configuration;
+#if NET46
+using System.Configuration;
+#endif
+
+namespace MiniAbp.Domain.Uow
+{
+    /// <summary>
+    /// Default implementation of <see cref="IConnectionStringResolver"/>.
+    /// Get connection string from <see cref="IAbpStartupConfiguration"/>,
+    /// or "Default" connection string in config file,
+    /// or single connection string in config file.
+    /// </summary>
+    public class DefaultConnectionStringResolver : IConnectionStringResolver, ITransientDependency
+    {
+        private readonly IStartupConfiguration _configuration;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultConnectionStringResolver"/> class.
+        /// </summary>
+        public DefaultConnectionStringResolver(IStartupConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public virtual string GetNameOrConnectionString(ConnectionStringResolveArgs args)
+        {
+            Check.NotNull(args, nameof(args));
+
+            var defaultConnectionString = _configuration.Database.ConnectionString;
+            if (!string.IsNullOrWhiteSpace(defaultConnectionString))
+            {
+                return defaultConnectionString;
+            }
+
+#if NET46
+            if (ConfigurationManager.ConnectionStrings["Default"] != null)
+            {
+                return "Default";
+            }
+
+            if (ConfigurationManager.ConnectionStrings.Count == 1)
+            {
+                return ConfigurationManager.ConnectionStrings[0].ConnectionString;
+            }
+#endif
+
+            throw new Exception("Could not find a connection string definition for the application. Set IStartupConfiguration.Database.ConnectionString or add a 'Default' connection string to application .config file.");
+        }
+    }
+}

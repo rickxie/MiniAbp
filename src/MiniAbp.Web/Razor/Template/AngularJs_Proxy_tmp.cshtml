@@ -1,0 +1,42 @@
+﻿@using System.Reflection
+@using System.Web.Mvc
+@using MiniAbp.Extension
+@using MiniAbp.Web.Razor
+@model List<MiniAbp.Web.Razor.ServiceWithMethod>
+@{Layout = null;}
+
+(function(mabp, angular) {
+
+    if (!angular)
+    {
+        return;
+    }
+    var module = angular.module('mabp');
+
+@foreach (ServiceWithMethod item in Model)
+{
+    var serviceName = item.ServiceName.ToCamelCase(); 
+    @:module.factory('mabp.app.@serviceName', [
+    @:'$http', function($http) {
+    @:return new function()
+    @:{
+    foreach (var m in item.MethodNames)
+    {
+       
+        @:    this.@m.ToCamelCase() = function(input, httpParams) {
+        @:    return $http(angular.extend({ 
+        @:              abp: true,
+        @:              url: mabp.appPath + 'api/@serviceName/@m',
+        @:              method: 'POST',
+        @:              data:JSON.stringify(input)
+        @:        }, httpParams));
+        @:    };
+    }
+    @:};
+    @:}
+    @:]);
+    @:
+}
+
+})((mabp || (mabp = { })), (angular || undefined));
+    

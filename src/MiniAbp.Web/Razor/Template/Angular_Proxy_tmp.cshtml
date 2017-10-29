@@ -1,0 +1,33 @@
+﻿@using System.Reflection
+@using System.Web.Mvc
+@using MiniAbp.Extension
+@using MiniAbp.Web.Razor
+@model List<MiniAbp.Web.Razor.ServiceWithMethod>
+@{ Layout = null;}
+import { Injectable } from '@@angular/core';
+import 'rxjs/add/operator/toPromise';
+import { BaseService, AjaxResult } from './base.service';
+
+@foreach (ServiceWithMethod item in Model)
+{
+@: @@Injectable()
+@: export class @(item.ServiceName)Service extends BaseService {
+foreach (string m in item.MethodNames)         
+{
+@: @(m)(input: any): Promise<any> {
+@:    let request = { url: this.BaseUrl + '/api/@item.ServiceName/@m', params: input, options: {} };
+@:    request = this.HandleRequest(request);
+@:    return new Promise((resolve, reject) => {
+@:    const p = { resolve: resolve, reject: reject };
+@:    this.http.post(request.url, request.params, request.options)
+@:    .toPromise()
+@:    .then(response => {
+@:         this.HandleResponse(response, p);
+@:    })
+@:   .catch( (ex) => { this.handleError(ex, p); });
+@:    });
+@:}
+  }
+
+@: }
+}
